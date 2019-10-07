@@ -35,10 +35,12 @@ Versión 1.0: Creación del documento de diseño del juego. Hemos añadido los s
 •	Apartado gráfico.
 
 Objetivos del juego
-Crear un juego en red que emplee el modelo cliente-servidor de forma que dos clientes puedan jugar en la misma partida mediante el servidor. Ofrecer una experiencia multijugador asimétrica que sea divertida y satisfactoria para ambas partes.
+Crear un juego en red que emplee el modelo cliente-servidor de forma que dos clientes puedan jugar en la misma partida mediante el servidor.
+Ofrecer una experiencia multijugador asimétrica que sea divertida y satisfactoria para ambas partes.
 
 Sinopsis de la historia
-Juantankamón es una momia de un museo que cobra vida repentinamente y tiene como objetivo escapar antes de que abra el museo por la mañana. Sin embargo, no será tarea fácil, ya que deberá esquivar al guardia de seguridad que patrulla el museo por la noche.
+Juantankamón es una momia de un museo que cobra vida repentinamente y tiene como objetivo escapar antes de que abra el museo por la mañana.
+Sin embargo, no será tarea fácil, ya que deberá esquivar al guardia de seguridad que patrulla el museo por la noche.
 
 Controles
 •	W - Movimiento hacia arriba.
