@@ -1,5 +1,7 @@
 # Juegos_Red
 
+------------------------------------------------------------------------------------------------------------------
+
 Game desing document
 Juantankamón Redux
 Versión 1.0
@@ -9,6 +11,8 @@ Adrián Vaquero Portillo   (a.vaquero.2017@alumnos.urjc.es   | Git: https://gith
 Iván Sanandrés Gutiérrez  (i.sanandres.2017@alumnos.urjc.es | Git: https://github.com/Ivan-Sanandres)
 Martín Ariza García       (m.ariza.2017@alumnos.urjc.es     | Git: https://github.com/Daoab)
 Pedro Casas Martínez      (p.casas.2017@alumnos.urjc.es     | Git: https://github.com/thePeter876)
+
+El enlace a Trello es el siguiente: https://trello.com/b/K7lkKa6A/juegos-en-red
 
 Índice 
 Historial de versiones
@@ -67,3 +71,7 @@ Hay un único nivel del juego, desarrollado en el museo de donde tendrá que esc
 
 Apartado gráfico
 Se utilizará un estilo 1-bit mediante los assets con licencia CCO 1.0 Universal del artista Kenney. (https://kenney.nl/assets/bit-pack)
+
+------------------------------------------------------------------------------------------------------------------
+
+
