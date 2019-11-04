@@ -18,34 +18,38 @@ var config = {
 
     function preload ()
     {
+
+
+
         //this.load.setBaseURL('http://labs.phaser.io');
 
         //this.load.image('sky', 'assets/skies/space3.png');
-        this.load.image('logo', ['./assets/21749-5-yoshi-file.png' , './assets/normalMap.png']);
+        this.load.image('logo', ['./assets/test/21749-5-yoshi-file.png' , './assets/test/normalMap.png']);
         //this.load.image('red', 'assets/particles/red.png');
     }
 
     function create ()
     {
-        this.lights.enable().setAmbientColor(0x111111);
-        console.log(this.lights.getMaxVisibleLights());
+        //this.lights.enable().setAmbientColor(0x111111);
+        //console.log(this.lights.getMaxVisibleLights());
 
         this.add
           .image(360, 300, 'logo')
           .setOrigin(0.5)
           .setScale(0.5)
-          .setPipeline("Light2D")
+          //.setPipeline("Light2D")
         ;
 
-        var light = this.lights.addLight(400, 300, 400).setIntensity(0.9);
+        //var light = this.lights.addLight(400, 300, 400).setIntensity(0.9);
 
-        this.input.on('pointermove', function(pointer){
+        /*this.input.on('pointermove', function(pointer){
           light.x = pointer.x;
           light.y = pointer.y;
+        });*/
 
 
-        });
-
+        this.grayscalePipeline = this.game.renderer.addPipeline('Grayscale', new GrayscalePipeline(this.game));
+        this.cameras.main.setRenderToTexture(this.grayscalePipeline);
         //this.add.image(400, 300, 'sky');
 
         //var particles = this.add.particles('red');
