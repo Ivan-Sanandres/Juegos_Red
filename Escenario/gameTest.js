@@ -24,7 +24,7 @@ let showDebug = false;
 
 function preload() {
     this.load.image("tiles", "assets/Tilesheet/colored.png");
-    this.load.tilemapTiledJSON("map", "assets/tileset.json");
+    this.load.tilemapTiledJSON("map", "assets/tileset4.json");
 
     // An atlas is a way to pack multiple images together into one texture. I'm using it to load all
     // the player animations (walking left, walking right, etc.) in one image. For more info see:
@@ -42,10 +42,12 @@ function create() {
     const tileset = map.addTilesetImage("colored", "tiles");
 
     // Parameters: layer name (or index) from Tiled, tileset, x, y
-    const belowLayer = map.createStaticLayer("Capa de patrones 2", tileset, 0, 0);
-    const worldLayer = map.createDynamicLayer("Capa de Patrones 1", tileset, 0, 0);
+    const belowLayer = map.createStaticLayer("Floor", tileset, 0, 0);
+    const worldLayer = map.createStaticLayer("Wall", tileset, 0, 0);
+    const objectLayer = map.createStaticLayer("Object", tileset, 0, 0);
 
     worldLayer.setCollisionByProperty({collides: true});
+    objectLayer.setCollisionByProperty({collides: true});
 
     // Object layers in Tiled let you embed extra info into a map - like a spawn point or custom
     // collision shapes. In the tmx file, there's an object layer with a point named "Spawn Point"
@@ -60,6 +62,7 @@ function create() {
 
     // Watch the player and worldLayer for collisions, for the duration of the scene:
     this.physics.add.collider(player, worldLayer);
+    this.physics.add.collider(player, objectLayer);
 
     // Create the player's walking animations from the texture atlas. These are stored in the global
     // animation manager so any sprite can access them.
