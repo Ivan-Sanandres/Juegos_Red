@@ -17,7 +17,7 @@ var config = {
     var game = new Phaser.Game(config);
 
     var pipeline_light;
-    var pipeline_surface;
+    //var pipeline_surface;
     //var rt;
 
     function preload ()
@@ -28,8 +28,11 @@ var config = {
         //this.load.setBaseURL('http://labs.phaser.io');
 
         //this.load.image('sky', 'assets/skies/space3.png');
-        this.load.image('yoshi', ['./assets/test/21749-5-yoshi-file.png' , './assets/test/normalMap.png']);
-        this.load.image('mario', ['./assets/test/mario.png', './assets/test/normalMap.png']);
+        //this.load.image('yoshi', ['./assets/test/21749-5-yoshi-file.png' , './assets/test/normalMap.png']);
+        //this.load.image('mario', ['./assets/test/mario.png', './assets/test/normalMap.png']);
+        this.load.image('tileSheet', './assets/test/tileSheet.png')
+        this.load.image('floor', './assets/test/floor.png');
+        this.load.image('block', './assets/test/block.png');
 
 
 
@@ -45,7 +48,7 @@ var config = {
 
 
 
-        var spriteYoshi = this.add
+        /*var spriteYoshi = this.add
           .sprite(300, 300, 'yoshi')
           .setOrigin(0.5)
           .setScale(0.5)
@@ -59,7 +62,25 @@ var config = {
           .setScale(0.2)
 
           //.setPipeline("Light2D")
+        ;*/
+        var floorSprite = this.add
+        .sprite(0,0,'floor')
+        .setOrigin(0,0)
+        .setScale(5.0)
         ;
+
+        /*var blockSprite = this.add
+        .sprite(200,100,'block')
+        .setOrigin(0,0)
+        .setScale(1.0)
+        ;*/
+
+        var tileSheetSprite = this.add
+        .sprite(0,0,'tileSheet')
+        .setOrigin(0,0)
+        .setScale(5.0)
+        ;
+
         //spriteYoshi.blendMode = Phaser.BlendModes.ADD;
         //spriteMario.blendMode = Phaser.BlendModes.ADD;
 
@@ -83,20 +104,32 @@ var config = {
         //spriteMario.setPipeline('Surface1');
         //spriteMario.pipeline.setFloat1('lightTransfer', 1.0);
 
-        //LIGHT PIPELINE
-        pipeline_light = this.game.renderer.addPipeline('Lighting', new LightingPipeline(this.game));
-        pipeline_light.setFloat2('res', 100, 100);
-        pipeline_light.setFloat2('light1_Pos', 0.5, 0.5);
+
+
 
         //SURFACE PIPELINE
-        pipeline_surface = this.game.renderer.addPipeline('Surface', new SurfacePipeline(this.game));
-        pipeline_surface.setFloat1('lightTransfer', 1.0);
+        //pipeline_surface = this.game.renderer.addPipeline('Surface', new SurfacePipeline(this.game));
+        //pipeline_surface.setFloat1('lightTransfer', 1.0);
+        //pipeline_surface.setChannel1
 
 
-        //CAMERAS
+
+        //LIGHT PIPELINE
+        pipeline_light = this.game.renderer.addPipeline('Lighting', new LightingPipeline(this.game));
+        pipeline_light.setFloat2('res', 800, 800);
+        pipeline_light.setFloat2('light1_Pos', 0.5, 0.5);
+        //pipeline_light.setInt1('rayAccuracy', 100);
+        //pipeline_light.setChannel1(/*cam1.glTexture*/);
+
+        //pipeline_light.setSampler2D()
+        //rt.clear();
+        //rt.draw(spriteMario);
+
+
         var cam1 = this.cameras.main;
         cam1.setRenderToTexture(/*pipeline_light*/pipeline_light);
-
+        //var cam2 = this.cameras.add(0,0,800,800);
+        //cam2.setRenderToTexture(pipeline_light);
 
         //texture2D a = pipeline_light.texture2D;
 
