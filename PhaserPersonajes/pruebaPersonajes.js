@@ -1,6 +1,6 @@
 const config = {
     type: Phaser.AUTO,
-    width: 800,
+    width: 1610,
     height: 600,
     parent: "game-container",
     pixelArt: true,
@@ -22,7 +22,9 @@ const game = new Phaser.Game(config);
 let cursors;
 let player;
 let showDebug = false;
-var objects = {};
+
+var playerCamera;
+var guardCamera;
 
 function preload() {
     this.load.image("tiles", "./Tilesheet/colored.png");
@@ -32,15 +34,6 @@ function preload() {
 }
 
 function create() {
-
-    objects.camera = this.cameras.add(0, 0, 800, 600);
-
-    objects.move = 0.0;
-    objects.camera.zoom = 0.5;
-    objects.camera.scrollX = 200;
-    objects.camera.scrollY = 150;
-    objects.camera.setBackgroundColor('rgba(71, 45, 60, 1)');
-
     const map = this.make.tilemap({key: "map"});
 
     // Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
@@ -62,39 +55,30 @@ function create() {
     player = this.physics.add
             .sprite(spawnPoint.x, spawnPoint.y, "atlas")
             .setSize(16, 16);
+
+    //objects.camera = this.cameras.add(0, 0, 400, 300);
+    playerCamera = this.cameras.main;
+
+    playerCamera.setBackgroundColor('rgba(71, 45, 60, 1)');
+    playerCamera.setViewport(0, 0);
+    playerCamera.setSize(800, 600);
+
+    playerCamera.startFollow(player, true, 1, 1);
+
+    guardCamera = this.cameras.add(0, 0, 0, 0);
+    guardCamera.setViewport(810, 0);
+
+    guardCamera.setScroll(810, 0);
+
+    guardCamera.setSize(800, 600);
+    guardCamera.setBounds(0, 0, 2080, 1200);
+    guardCamera.setBackgroundColor('rgba(71, 45, 60, 1)');
+    guardCamera.startFollow(player, true, 1, 1);
     // .setOffset(0, 24);
 
     // Watch the player and worldLayer for collisions, for the duration of the scene:
     this.physics.add.collider(player, worldLayer);
 
-    // Create the player's walking animations from the texture atlas. These are stored in the global
-    // animation manager so any sprite can access them.
-    /*
-     const anims = this.anims;
-     anims.create({
-     key: "misa-left-walk",
-     frames: anims.generateFrameNames("atlas", { prefix: "misa-left-walk.", start: 0, end: 3, zeroPad: 3 }),
-     frameRate: 10,
-     repeat: -1
-     });
-     anims.create({
-     key: "misa-right-walk",
-     frames: anims.generateFrameNames("atlas", { prefix: "misa-right-walk.", start: 0, end: 3, zeroPad: 3 }),
-     frameRate: 10,
-     repeat: -1
-     });
-     anims.create({
-     key: "misa-front-walk",
-     frames: anims.generateFrameNames("atlas", { prefix: "misa-front-walk.", start: 0, end: 3, zeroPad: 3 }),
-     frameRate: 10,
-     repeat: -1
-     });
-     anims.create({
-     key: "misa-back-walk",
-     frames: anims.generateFrameNames("atlas", { prefix: "misa-back-walk.", start: 0, end: 3, zeroPad: 3 }),
-     frameRate: 10,
-     repeat: -1
-     }); */
 
     const camera = this.cameras.main;
     camera.startFollow(player);
