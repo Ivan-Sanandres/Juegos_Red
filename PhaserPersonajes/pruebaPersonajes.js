@@ -18,23 +18,29 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
+
 let cursors;
 let player;
 let showDebug = false;
+var objects = {};
 
 function preload() {
-    this.load.image("tiles", "./assets/Tilesheet/colored.png");
-    this.load.tilemapTiledJSON("map", "./assets/tileset.json");
+    this.load.image("tiles", "./Tilesheet/colored.png");
+    this.load.tilemapTiledJSON("map", "./tileset.json");
 
-    // An atlas is a way to pack multiple images together into one texture. I'm using it to load all
-    // the player animations (walking left, walking right, etc.) in one image. For more info see:
-    //  https://labs.phaser.io/view.html?src=src/animation/texture%20atlas%20animation.js
-    // If you don't use an atlas, you can do the same thing with a spritesheet, see:
-    //  https://labs.phaser.io/view.html?src=src/animation/single%20sprite%20sheet.js
-    this.load.image("atlas", "assets/Tilesheet/pnj.png");
+    this.load.image("atlas", "./Tilesheet/pnj.png");
 }
 
 function create() {
+
+    objects.camera = this.cameras.add(0, 0, 800, 600);
+
+    objects.move = 0.0;
+    objects.camera.zoom = 0.5;
+    objects.camera.scrollX = 200;
+    objects.camera.scrollY = 150;
+    objects.camera.setBackgroundColor('rgba(71, 45, 60, 1)');
+
     const map = this.make.tilemap({key: "map"});
 
     // Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
@@ -42,7 +48,7 @@ function create() {
     const tileset = map.addTilesetImage("colored", "tiles");
 
     // Parameters: layer name (or index) from Tiled, tileset, x, y
-    const belowLayer = map.createStaticLayer("Capa de patrones 2", tileset, 0, 0);
+    //const belowLayer = map.createStaticLayer("Capa de patrones 2", tileset, 0, 0);
     const worldLayer = map.createStaticLayer("Capa de Patrones 1", tileset, 0, 0);
 
     worldLayer.setCollisionByProperty({collides: true});

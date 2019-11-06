@@ -31,6 +31,8 @@ var game = new Phaser.Game(config);
 
 function preload () //Cargar elementos al abrir la página (Awake)
 {
+
+
   //El primer elemento es el textureKey (un id de la imagen) y el segundo el path
   this.load.image('sky', './phaser3-tutorial-src/assets/sky.png');
   this.load.image('ground', './phaser3-tutorial-src/assets/platform.png');
