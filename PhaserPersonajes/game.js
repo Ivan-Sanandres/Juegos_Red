@@ -14,7 +14,7 @@ const config = {
             gravity: {y: 0}
         }
     },
-    scene = [ Menu, LocalGame ]
+    scene: [ Menu, LocalGame ]
     /*scene: {
         preload: preload,
         create: create,

@@ -2,24 +2,35 @@ var Menu = new Phaser.Class({
 
     Extends: Phaser.Scene,
 
-    initialize:
-
-    function Menu (config)
+    initialize: function Menu ()
     {
-        Phaser.Scene.call(this, config)
+        Phaser.Scene.call(this, { key: 'Menu'} )
     },
 
-    init: function (data) {},
+    /*init: function (data)
+    {
+
+    },*/
+
     preload: function ()
     {
+      var keys;
+    },
 
-    },
-    create: function (data) {
-      this.input.keyboard.on('keyup', function(e){
-        if(e.key == '2'){
-          this.scene.start("LocalGame")
+    create: function ()
+    {
+      keys = this.input.keyboard.addKeys(
+        {
+        space: Phaser.Input.Keyboard.KeyCodes.SPACE
         }
-      })
+      );
     },
-    update: function (time, delta) {}
+
+    update: function (time, delta)
+    {
+      if(keys.space.isDown)
+      {
+        this.scene.start("LocalGame");
+      }
+    }
 });

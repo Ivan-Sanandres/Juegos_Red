@@ -1,54 +1,100 @@
+var juan;
+var juanSpeed;
+var juanMovementVector = new Phaser.Math.Vector2();
+var juanCursors;
+var juanCamera;
+
+var guard;
+var guardSpeed;
+var guardMovementVector = new Phaser.Math.Vector2();
+var guardCursors;
+var guardCamera;
+
+var statics = {};
+
+var doors = {};
+var keys = {};
+//var finalDoor;
+
+const numDoors = 4;
+const numKeys = 4;
+
 var LocalGame = new Phaser.Class({
 
     Extends: Phaser.Scene,
 
-    initialize:
-
-    function Menu (config)
+    initialize: function LocalGame ()
     {
-        Phaser.Scene.call(this, config)
+        Phaser.Scene.call(this, {key: 'LocalGame'})
+
+        /*this.juan;
+        this.juanSpeed;
+        this.juanMovementVector = new Phaser.Math.Vector2();
+        this.juanCursors;
+        this.juanCamera;
+
+        this.guard;
+        this.guardSpeed;
+        this.guardMovementVector = new Phaser.Math.Vector2();
+        this.guardCursors;
+        this.guardCamera;
+
+        this.statics = {};
+
+        this.doors = {};
+        this.keys = {};
+        this.finalDoor;*/
+
+        //const numDoors = 4;
+        //const numKeys = 4;
     },
 
-    init: function (data)
+
+
+    init: function ()
     {
-      const game = new Phaser.Game(config);
 
-      var juan;
-      var juanSpeed;
-      var juanMovementVector = new Phaser.Math.Vector2();
-      var juanCursors;
-      var juanCamera;
-
-      var guard;
-      var guardSpeed;
-      var guardMovementVector = new Phaser.Math.Vector2();
-      var guardCursors;
-      var guardCamera;
-
-      var showDebug = false;
     },
 
     preload: function ()
     {
-          this.load.image("tiles", "./Tilesheet/colored.png");
-          this.load.tilemapTiledJSON("map", "./tileset.json");
+      this.load.image("tiles", "./Tilesheet/tilemap.png");
+      this.load.tilemapTiledJSON("map", "./Tilesheet/tileset7.json");
 
-          this.load.image("juan", "./Tilesheet/pnj.png");
+      this.load.image("juan", "./Tilesheet/juan.png");
+      this.load.image("guard", "./Tilesheet/guardia.png");
+      this.load.image("key", "./Tilesheet/llave1.png");
+      this.load.image("door", "./Tilesheet/puerta32.png");
+      //this.load.image("finalDoor", "./Tilesheet/finalDoor.png");
     },
 
-    create: function (data)
+    create: function ()
     {
       var that = this;
 
       const map = this.make.tilemap({key: "map"});
       const tileset = map.addTilesetImage("colored", "tiles");
-      const worldLayer = map.createStaticLayer("Capa de Patrones 1", tileset, 0, 0);
+      const worldLayer = map.createStaticLayer("Wall", tileset, 0, 0);
+      const propsLayer = map.createStaticLayer("Object", tileset, 0, 0);
 
-      worldLayer.setCollisionByProperty({collides: true});
+      propsLayer.setCollisionByProperty({collides: true});
+
+      this.walls = this.physics.add.group({
+          allowGravity: false,
+          immovable: true
+        });
+
+        const wallCol = map.getObjectLayer('Collide')['objects'];
+
+        wallCol.forEach(wallCol => {
+          const wall = this.walls.create(wallCol.x + (wallCol.width/2), wallCol.y + (wallCol.height/2),'',false);
+          wall.body.setSize(wallCol.width,wallCol.height);
+          wall.setVisible(false);
+        });
 
       function initJuan(speed)
       {
-        const spawnPointJuan = map.findObject("Objects", obj => obj.name === "Spawn Point");
+        const spawnPointJuan = map.findObject("Objects", obj => obj.name === "Spawn Point Juan 1");
 
         juan = that.physics.add
                 .sprite(spawnPointJuan.x, spawnPointJuan.y, "juan")
@@ -75,10 +121,10 @@ var LocalGame = new Phaser.Class({
 
       function initGuard(speed)
       {
-        const spawnPointGuard = map.findObject("Objects", obj => obj.name === "Spawn Point");
+        const spawnPointGuard = map.findObject("Objects", obj => obj.name === "Spawn Point Guard");
 
         guard = that.physics.add
-                .sprite(spawnPointGuard.x, spawnPointGuard.y, "juan")
+                .sprite(spawnPointGuard.x, spawnPointGuard.y, "guard")
                 .setSize(16, 16);
 
         guardCamera = that.cameras.add(0, 0, 0, 0);
@@ -95,6 +141,49 @@ var LocalGame = new Phaser.Class({
         that.physics.add.collider(guard, worldLayer);
       }
       initGuard(100);
+
+      statics = this.physics.add.staticGroup();
+      function initDoors()
+      {
+        var spawnPoint;
+        function createDoor(i)
+        {
+          spawnPoint = map.findObject("Objects", obj => obj.name === "Puerta " + i);
+          doors[i] = this.statics.create(spawnPoint.x + 16, spawnPoint.y + 16, "door").refreshBody();
+          that.physics.add.collider(juan, doors[i], function(){openDoor(i);}, null, this);
+        }
+        for(var i = 0; i < numDoors; i++)
+          createDoor(i);
+      }
+      initDoors();
+
+      function initKeys()
+      {
+        var spawnPoint;
+        function createKey(i)
+        {
+          spawnPoint = map.findObject("Objects", obj => obj.name === "Llave " + i);
+          keys[i] = that.physics.add.sprite(spawnPoint.x, spawnPoint.y, "key");
+          keys[i].picked = false;
+          that.physics.add.overlap(juan, keys[i], function(){pickUpKey(i);}, null, this);
+        }
+        for(var i = 0; i < numKeys; i++)
+          createKey(i);
+      }
+      initKeys();
+
+      /*function initFinalDoor()
+      {
+        spawnPoint = map.findObject("Objects", obj => obj.name === "Puerta Salida");
+        finalDoor = this.statics.create(spawnPoint.x + 16, spawnPoint.y + 16, "finalDoor").refreshBody();
+        that.physics.add.collider(juan, finalDoor, openFinalDoor, null, this);
+      }
+      initFinalDoor();*/
+
+      this.physics.add.collider(juan, this.walls);
+      this.physics.add.collider(guard, this.walls);
+      this.physics.add.collider(juan, propsLayer);
+      this.physics.add.collider(guard, propsLayer);
 
       this.physics.add.overlap(juan, guard, juanCatched, null, this);
     },
@@ -146,4 +235,31 @@ var LocalGame = new Phaser.Class({
       Move(juan, juanCursors, juanSpeed, juanMovementVector);
       Move(guard, guardCursors, guardSpeed, guardMovementVector);
     }
+
+
 });
+
+function juanCatched()
+{
+  console.log("pillao");
+}
+
+function pickUpKey(index)
+{
+    keys[index].picked = true;
+    keys[index].destroy();
+}
+
+function openDoor(index)
+{
+  if(keys[index].picked)
+  {
+    doors[index].destroy();
+  }
+}
+
+/*function openFinalDoor()
+{
+  finalDoor.destroy();
+  console.log("GAME OVER");
+}*/

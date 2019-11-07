@@ -37,8 +37,11 @@ var guardCursors;
 var guardCamera;
 
 var statics = {};
+
 var doors = {};
 var keys = {};
+var finalDoor;
+
 const numDoors = 4;
 const numKeys = 4;
 
@@ -50,6 +53,7 @@ function preload() {
     this.load.image("guard", "./Tilesheet/guardia.png");
     this.load.image("key", "./Tilesheet/llave1.png");
     this.load.image("door", "./Tilesheet/puerta32.png");
+    this.load.image("finalDoor", "./Tilesheet/finalDoor.png");
 }
 
 function create() {
@@ -125,7 +129,6 @@ function create() {
     }
     initGuard(100);
 
-
     statics = this.physics.add.staticGroup();
     function initDoors()
     {
@@ -155,6 +158,14 @@ function create() {
         createKey(i);
     }
     initKeys();
+
+    function initFinalDoor()
+    {
+      spawnPoint = map.findObject("Objects", obj => obj.name === "Puerta Salida");
+      finalDoor = statics.create(spawnPoint.x + 16, spawnPoint.y + 16, "finalDoor").refreshBody();
+      that.physics.add.collider(juan, finalDoor, openFinalDoor, null, this);
+    }
+    initFinalDoor();
 
     this.physics.add.collider(juan, this.walls);
     this.physics.add.collider(guard, this.walls);
@@ -210,6 +221,7 @@ function update(time, delta) {
   }
   Move(juan, juanCursors, juanSpeed, juanMovementVector);
   Move(guard, guardCursors, guardSpeed, guardMovementVector);
+
 }
 
 function juanCatched()
@@ -229,4 +241,10 @@ function openDoor(index)
   {
     doors[index].destroy();
   }
+}
+
+function openFinalDoor()
+{
+  finalDoor.destroy();
+  console.log("GAME OVER");
 }
