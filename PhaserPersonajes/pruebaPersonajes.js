@@ -78,7 +78,7 @@ function create() {
 
       that.physics.add.collider(juan, worldLayer);
     }
-    initJuan(88);
+    initJuan(90);
 
     function initGuard(speed)
     {
@@ -101,7 +101,9 @@ function create() {
 
       that.physics.add.collider(guard, worldLayer);
     }
-    initGuard(120);
+    initGuard(100);
+
+    this.physics.add.overlap(juan, guard, juanCatched, null, this);
 }
 
 function update(time, delta) {
@@ -150,5 +152,9 @@ function update(time, delta) {
   }
   Move(juan, juanCursors, juanSpeed, juanMovementVector);
   Move(guard, guardCursors, guardSpeed, guardMovementVector);
+}
 
+function juanCatched()
+{
+  console.log("pillao");
 }
