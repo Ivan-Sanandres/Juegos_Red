@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="left-up" width="130" height="75" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="85">
+<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="left-up" width="130" height="75" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="91">
  <tileset firstgid="1" name="colored" tilewidth="16" tileheight="16" spacing="1" tilecount="1024" columns="32">
   <image source="Tilesheet/colored.png" width="543" height="543"/>
   <tile id="142">
@@ -565,9 +565,13 @@
   <object id="3" name="Spawn Point Juan 1" x="64" y="125">
    <point/>
   </object>
-  <object id="80" name="Puerta 4" x="1424" y="944" width="32" height="32"/>
-  <object id="81" name="Puerta 3" x="448" y="704" width="32" height="32"/>
-  <object id="82" name="Puerta 1" x="624" y="96" width="32" height="32"/>
-  <object id="83" name="Puerta 2" x="1424" y="96" width="32" height="32"/>
+  <object id="80" name="Puerta 3" x="1424" y="944" width="32" height="32"/>
+  <object id="81" name="Puerta 2" x="448" y="704" width="32" height="32"/>
+  <object id="82" name="Puerta 0" x="624" y="96" width="32" height="32"/>
+  <object id="83" name="Puerta 1" x="1424" y="96" width="32" height="32"/>
+  <object id="85" name="Llave 0" x="16" y="592" width="16" height="16"/>
+  <object id="88" name="Llave 2" x="768" y="112" width="16" height="16"/>
+  <object id="89" name="Llave 0" x="1344" y="496" width="16" height="16"/>
+  <object id="90" name="Llave 0" x="1296" y="112" width="16" height="16"/>
  </objectgroup>
 </map>
