@@ -1,6 +1,6 @@
 const config = {
     type: Phaser.AUTO,
-    width: 352,
+    width: 362,
     height: 176,
     scale: {
       mode: Phaser.Scale.FIT,
@@ -30,7 +30,9 @@ var juanCursors;
 var juanCamera;
 
 var guard;
-var guardCursos;
+var guardSpeed;
+var guardMovementVector = new Phaser.Math.Vector2();
+var guardCursors;
 var guardCamera;
 
 var showDebug = false;
@@ -72,31 +74,34 @@ function create() {
           left:Phaser.Input.Keyboard.KeyCodes.A,
           right:Phaser.Input.Keyboard.KeyCodes.D});
 
-      //juanCursors = that.input.keyboard.createCursorKeys();
-
       juanSpeed = speed;
 
       that.physics.add.collider(juan, worldLayer);
     }
     initJuan(88);
 
-    /*function initGuard()
+    function initGuard(speed)
     {
+      const spawnPointGuard = map.findObject("Objects", obj => obj.name === "Spawn Point");
 
+      guard = that.physics.add
+              .sprite(spawnPointGuard.x, spawnPointGuard.y, "juan")
+              .setSize(16, 16);
+
+      guardCamera = that.cameras.add(0, 0, 0, 0);
+
+      guardCamera.setBackgroundColor('rgba(71, 45, 60, 1)');
+      guardCamera.setViewport(186, 0);
+      guardCamera.setScroll(186, 0);
+      guardCamera.setSize(176, 176);
+      guardCamera.startFollow(guard, true, 1, 1);
+
+      guardCursors = that.input.keyboard.createCursorKeys();
+      guardSpeed = speed;
+
+      that.physics.add.collider(guard, worldLayer);
     }
-    initGuard();
-
-    guardCamera = this.cameras.add(0, 0, 0, 0);
-    guardCamera.setViewport(810, 0);
-
-    guardCamera.setScroll(810, 0);
-
-    guardCamera.setSize(800, 600);
-    //guardCamera.setBounds(0, 0, 2080, 1200);
-    guardCamera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-    guardCamera.setBackgroundColor('rgba(71, 45, 60, 1)');
-    guardCamera.startFollow(juan, true, 1, 1);*/
-
+    initGuard(120);
 }
 
 function update(time, delta) {
@@ -144,6 +149,6 @@ function update(time, delta) {
     }
   }
   Move(juan, juanCursors, juanSpeed, juanMovementVector);
-
+  Move(guard, guardCursors, guardSpeed, guardMovementVector);
 
 }
