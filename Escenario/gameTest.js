@@ -23,7 +23,7 @@ let player;
 let showDebug = false;
 
 function preload() {
-    this.load.image("tiles", "assets/Tilesheet/tilemap.png");
+    this.load.image("tiles", "assets/Tilesheet/tilemap2.png");
     this.load.tilemapTiledJSON("map", "assets/tileset7.json");
 
     // An atlas is a way to pack multiple images together into one texture. I'm using it to load all
