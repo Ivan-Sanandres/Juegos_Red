@@ -23,15 +23,15 @@ let player;
 let showDebug = false;
 
 function preload() {
-    this.load.image("tiles", "assets/Tilesheet/colored.png");
-    this.load.tilemapTiledJSON("map", "assets/tileset4.json");
+    this.load.image("tiles", "assets/Tilesheet/tilemap.png");
+    this.load.tilemapTiledJSON("map", "assets/tileset7.json");
 
     // An atlas is a way to pack multiple images together into one texture. I'm using it to load all
     // the player animations (walking left, walking right, etc.) in one image. For more info see:
     //  https://labs.phaser.io/view.html?src=src/animation/texture%20atlas%20animation.js
     // If you don't use an atlas, you can do the same thing with a spritesheet, see:
     //  https://labs.phaser.io/view.html?src=src/animation/single%20sprite%20sheet.js
-    this.load.image("atlas", "assets/Tilesheet/pnj.png");
+    this.load.image("atlas", "assets/Tilesheet/guardia.png");
 }
 
 function create() {
@@ -46,12 +46,26 @@ function create() {
     const worldLayer = map.createStaticLayer("Wall", tileset, 0, 0);
     const objectLayer = map.createStaticLayer("Object", tileset, 0, 0);
 
-    worldLayer.setCollisionByProperty({collides: true});
+    //worldLayer.setCollisionByProperty({collides: true});
     objectLayer.setCollisionByProperty({collides: true});
+
+    this.walls = this.physics.add.group({
+        allowGravity: false,
+        immovable: true
+      });
+      
+      const wallCol = map.getObjectLayer('Collide')['objects'];
+      
+      wallCol.forEach(wallCol => {
+          console.log(wallCol.width);
+        const wall = this.walls.create(wallCol.x + (wallCol.width/2), wallCol.y + (wallCol.height/2),'',false);
+        wall.body.setSize(wallCol.width,wallCol.height);
+        wall.setVisible(false);
+      });
 
     // Object layers in Tiled let you embed extra info into a map - like a spawn point or custom
     // collision shapes. In the tmx file, there's an object layer with a point named "Spawn Point"
-    const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
+    const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point Guard");
 
     // Create a sprite with physics enabled via the physics system. The image used for the sprite has
     // a bit of whitespace, so I'm using setSize & setOffset to control the size of the player's body.
@@ -61,8 +75,9 @@ function create() {
     // .setOffset(0, 24);
 
     // Watch the player and worldLayer for collisions, for the duration of the scene:
-    this.physics.add.collider(player, worldLayer);
+    //this.physics.add.collider(player, worldLayer);
     this.physics.add.collider(player, objectLayer);
+    this.physics.add.collider(player, this.walls);
 
     // Create the player's walking animations from the texture atlas. These are stored in the global
     // animation manager so any sprite can access them.

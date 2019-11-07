@@ -1,13 +1,18 @@
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 362,
+    height: 176,
+    scale: {
+      mode: Phaser.Scale.FIT,
+      autoCenter: Phaser.Scale.CENTER_BOTH
+    },
     parent: "game-container",
     pixelArt: true,
     physics: {
         default: "arcade",
         arcade: {
-            gravity: {y: 0}
+            gravity: {y: 0},
+            debug: true
         }
     },
     scene: {
@@ -19,160 +24,209 @@ const config = {
 
 const game = new Phaser.Game(config);
 
-let cursors;
-let player;
-let showDebug = false;
-var objects = {};
+var juan;
+var juanSpeed;
+var juanMovementVector = new Phaser.Math.Vector2();
+var juanCursors;
+var juanCamera;
+
+var guard;
+var guardSpeed;
+var guardMovementVector = new Phaser.Math.Vector2();
+var guardCursors;
+var guardCamera;
+
+var statics = {};
+var doors = {};
+var keys = {};
+const numDoors = 4;
+const numKeys = 4;
 
 function preload() {
-    this.load.image("tiles", "./Tilesheet/colored.png");
-    this.load.tilemapTiledJSON("map", "./tileset.json");
+    this.load.image("tiles", "./Tilesheet/tilemap.png");
+    this.load.tilemapTiledJSON("map", "./Tilesheet/tileset7.json");
 
-    this.load.image("atlas", "./Tilesheet/pnj.png");
+    this.load.image("juan", "./Tilesheet/juan.png");
+    this.load.image("guard", "./Tilesheet/guardia.png");
+    this.load.image("key", "./Tilesheet/llave1.png");
+    this.load.image("door", "./Tilesheet/puerta32.png");
 }
 
 function create() {
-
-    objects.camera = this.cameras.add(0, 0, 800, 600);
-
-    objects.move = 0.0;
-    objects.camera.zoom = 0.5;
-    objects.camera.scrollX = 200;
-    objects.camera.scrollY = 150;
-    objects.camera.setBackgroundColor('rgba(71, 45, 60, 1)');
+    var that = this;
 
     const map = this.make.tilemap({key: "map"});
-
-    // Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
-    // Phaser's cache (i.e. the name you used in preload)
     const tileset = map.addTilesetImage("colored", "tiles");
+    const worldLayer = map.createStaticLayer("Wall", tileset, 0, 0);
+    const propsLayer = map.createStaticLayer("Object", tileset, 0, 0);
 
-    // Parameters: layer name (or index) from Tiled, tileset, x, y
-    //const belowLayer = map.createStaticLayer("Capa de patrones 2", tileset, 0, 0);
-    const worldLayer = map.createStaticLayer("Capa de Patrones 1", tileset, 0, 0);
+    propsLayer.setCollisionByProperty({collides: true});
 
-    worldLayer.setCollisionByProperty({collides: true});
+    this.walls = this.physics.add.group({
+        allowGravity: false,
+        immovable: true
+      });
 
-    // Object layers in Tiled let you embed extra info into a map - like a spawn point or custom
-    // collision shapes. In the tmx file, there's an object layer with a point named "Spawn Point"
-    const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
+      const wallCol = map.getObjectLayer('Collide')['objects'];
 
-    // Create a sprite with physics enabled via the physics system. The image used for the sprite has
-    // a bit of whitespace, so I'm using setSize & setOffset to control the size of the player's body.
-    player = this.physics.add
-            .sprite(spawnPoint.x, spawnPoint.y, "atlas")
-            .setSize(16, 16);
-    // .setOffset(0, 24);
+      wallCol.forEach(wallCol => {
+        const wall = this.walls.create(wallCol.x + (wallCol.width/2), wallCol.y + (wallCol.height/2),'',false);
+        wall.body.setSize(wallCol.width,wallCol.height);
+        wall.setVisible(false);
+      });
 
-    // Watch the player and worldLayer for collisions, for the duration of the scene:
-    this.physics.add.collider(player, worldLayer);
+    function initJuan(speed)
+    {
+      const spawnPointJuan = map.findObject("Objects", obj => obj.name === "Spawn Point Juan 1");
 
-    // Create the player's walking animations from the texture atlas. These are stored in the global
-    // animation manager so any sprite can access them.
-    /*
-     const anims = this.anims;
-     anims.create({
-     key: "misa-left-walk",
-     frames: anims.generateFrameNames("atlas", { prefix: "misa-left-walk.", start: 0, end: 3, zeroPad: 3 }),
-     frameRate: 10,
-     repeat: -1
-     });
-     anims.create({
-     key: "misa-right-walk",
-     frames: anims.generateFrameNames("atlas", { prefix: "misa-right-walk.", start: 0, end: 3, zeroPad: 3 }),
-     frameRate: 10,
-     repeat: -1
-     });
-     anims.create({
-     key: "misa-front-walk",
-     frames: anims.generateFrameNames("atlas", { prefix: "misa-front-walk.", start: 0, end: 3, zeroPad: 3 }),
-     frameRate: 10,
-     repeat: -1
-     });
-     anims.create({
-     key: "misa-back-walk",
-     frames: anims.generateFrameNames("atlas", { prefix: "misa-back-walk.", start: 0, end: 3, zeroPad: 3 }),
-     frameRate: 10,
-     repeat: -1
-     }); */
+      juan = that.physics.add
+              .sprite(spawnPointJuan.x, spawnPointJuan.y, "juan")
+              .setSize(16, 16);
 
-    const camera = this.cameras.main;
-    camera.startFollow(player);
-    camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+      juanCamera = that.cameras.main;
 
-    cursors = this.input.keyboard.createCursorKeys();
+      juanCamera.setBackgroundColor('rgba(71, 45, 60, 1)');
+      juanCamera.setViewport(0, 0);
+      juanCamera.setSize(176, 176);
+      juanCamera.startFollow(juan, true, 1, 1);
 
-    // Help text that has a "fixed" position on the screen
-    this.add
-            .text(16, 16, 'Arrow keys to move\nPress "D" to show hitboxes', {
-                font: "18px monospace",
-                fill: "#000000",
-                padding: {x: 20, y: 10},
-                backgroundColor: "#ffffff"
-            })
-            .setScrollFactor(0)
-            .setDepth(30);
+      juanCursors = that.input.keyboard.addKeys(
+         {up:Phaser.Input.Keyboard.KeyCodes.W,
+          down:Phaser.Input.Keyboard.KeyCodes.S,
+          left:Phaser.Input.Keyboard.KeyCodes.A,
+          right:Phaser.Input.Keyboard.KeyCodes.D});
 
-    // Debug graphics
-    this.input.keyboard.once("keydown_D", event => {
-        // Turn on physics debugging to show player's hitbox
-        this.physics.world.createDebugGraphic();
+      juanSpeed = speed;
 
-        // Create worldLayer collision graphic above the player, but below the help text
-        const graphics = this.add
-                .graphics()
-                .setAlpha(0.75)
-                .setDepth(20);
+      that.physics.add.collider(juan, worldLayer);
+    }
+    initJuan(90);
 
-        worldLayer.renderDebug(graphics, {
-            tileColor: null, // Color of non-colliding tiles
-            collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
-            faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
-        });
-    });
+    function initGuard(speed)
+    {
+      const spawnPointGuard = map.findObject("Objects", obj => obj.name === "Spawn Point Guard");
+
+      guard = that.physics.add
+              .sprite(spawnPointGuard.x, spawnPointGuard.y, "guard")
+              .setSize(16, 16);
+
+      guardCamera = that.cameras.add(0, 0, 0, 0);
+
+      guardCamera.setBackgroundColor('rgba(71, 45, 60, 1)');
+      guardCamera.setViewport(186, 0);
+      guardCamera.setScroll(186, 0);
+      guardCamera.setSize(176, 176);
+      guardCamera.startFollow(guard, true, 1, 1);
+
+      guardCursors = that.input.keyboard.createCursorKeys();
+      guardSpeed = speed;
+
+      that.physics.add.collider(guard, worldLayer);
+    }
+    initGuard(100);
+
+
+    statics = this.physics.add.staticGroup();
+    function initDoors()
+    {
+      var spawnPoint;
+      function createDoor(i)
+      {
+        spawnPoint = map.findObject("Objects", obj => obj.name === "Puerta " + i);
+        doors[i] = statics.create(spawnPoint.x + 16, spawnPoint.y + 16, "door").refreshBody();
+        that.physics.add.collider(juan, doors[i], function(){openDoor(i);}, null, this);
+      }
+      for(var i = 0; i < numDoors; i++)
+        createDoor(i);
+    }
+    initDoors();
+
+    function initKeys()
+    {
+      var spawnPoint;
+      function createKey(i)
+      {
+        spawnPoint = map.findObject("Objects", obj => obj.name === "Llave " + i);
+        keys[i] = that.physics.add.sprite(spawnPoint.x, spawnPoint.y, "key");
+        keys[i].picked = false;
+        that.physics.add.overlap(juan, keys[i], function(){pickUpKey(i);}, null, this);
+      }
+      for(var i = 0; i < numKeys; i++)
+        createKey(i);
+    }
+    initKeys();
+
+    this.physics.add.collider(juan, this.walls);
+    this.physics.add.collider(guard, this.walls);
+    this.physics.add.collider(juan, propsLayer);
+    this.physics.add.collider(guard, propsLayer);
+
+    this.physics.add.overlap(juan, guard, juanCatched, null, this);
 }
 
 function update(time, delta) {
-    const speed = 175;
-    const prevVelocity = player.body.velocity.clone();
 
-    // Stop any previous movement from the last frame
-    player.body.setVelocity(0);
+  function Move(character, cursors, speed, movementVector)
+  {
+    movementVector.x = character.body.deltaAbsX();
+    movementVector.y = character.body.deltaAbsY();
 
-    // Horizontal movement
-    if (cursors.left.isDown) {
-        player.body.setVelocityX(-speed);
-    } else if (cursors.right.isDown) {
-        player.body.setVelocityX(speed);
+    movementVector = movementVector.normalize();
+
+    character.setVelocityX(0);
+    character.setVelocityY(0);
+
+    if (cursors.up.isDown)
+    {
+        if(movementVector.y != 0)
+          character.setVelocityY(-speed * movementVector.y);
+        else
+          character.setVelocityY(-speed);
     }
 
-    // Vertical movement
-    if (cursors.up.isDown) {
-        player.body.setVelocityY(-speed);
-    } else if (cursors.down.isDown) {
-        player.body.setVelocityY(speed);
+    if(cursors.down.isDown)
+    {
+        if(movementVector.y != 0)
+          character.setVelocityY(speed * movementVector.y);
+        else
+          character.setVelocityY(speed);
     }
 
-    // Normalize and scale the velocity so that player can't move faster along a diagonal
-    player.body.velocity.normalize().scale(speed);
+    if (cursors.left.isDown)
+    {
+        if(movementVector.x != 0)
+          character.setVelocityX(-speed * movementVector.x);
+        else
+          character.setVelocityX(-speed);
+    }
 
-    // Update the animation last and give left/right animations precedence over up/down animations
-    /*
-     if (cursors.left.isDown) {
-     player.anims.play("misa-left-walk", true);
-     } else if (cursors.right.isDown) {
-     player.anims.play("misa-right-walk", true);
-     } else if (cursors.up.isDown) {
-     player.anims.play("misa-back-walk", true);
-     } else if (cursors.down.isDown) {
-     player.anims.play("misa-front-walk", true);
-     } else {
-     player.anims.stop();
+    if(cursors.right.isDown)
+    {
+        if(movementVector.x != 0)
+          character.setVelocityX(speed * movementVector.x);
+        else
+          character.setVelocityX(speed);
+    }
+  }
+  Move(juan, juanCursors, juanSpeed, juanMovementVector);
+  Move(guard, guardCursors, guardSpeed, guardMovementVector);
+}
 
-     // If we were moving, pick and idle frame to use
-     if (prevVelocity.x < 0) player.setTexture("atlas", "misa-left");
-     else if (prevVelocity.x > 0) player.setTexture("atlas", "misa-right");
-     else if (prevVelocity.y < 0) player.setTexture("atlas", "misa-back");
-     else if (prevVelocity.y > 0) player.setTexture("atlas", "misa-front");
-     } */
+function juanCatched()
+{
+  console.log("pillao");
+}
+
+function pickUpKey(index)
+{
+    keys[index].picked = true;
+    keys[index].destroy();
+}
+
+function openDoor(index)
+{
+  if(keys[index].picked)
+  {
+    doors[index].destroy();
+  }
 }
