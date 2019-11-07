@@ -571,7 +571,7 @@
   <object id="83" name="Puerta 1" x="1424" y="96" width="32" height="32"/>
   <object id="85" name="Llave 0" x="16" y="592" width="16" height="16"/>
   <object id="88" name="Llave 2" x="768" y="112" width="16" height="16"/>
-  <object id="89" name="Llave 0" x="1344" y="496" width="16" height="16"/>
-  <object id="90" name="Llave 0" x="1296" y="112" width="16" height="16"/>
+  <object id="89" name="Llave 1" x="1344" y="496" width="16" height="16"/>
+  <object id="90" name="Llave 3" x="1296" y="112" width="16" height="16"/>
  </objectgroup>
 </map>
