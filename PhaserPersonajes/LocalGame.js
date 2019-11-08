@@ -14,6 +14,7 @@ var statics = {};
 
 var doors = {};
 var keys = {};
+var spawnPoints = {};
 var finalDoor;
 
 const numDoors = 4;
@@ -69,9 +70,13 @@ var LocalGame = new Phaser.Class({
           wall.setVisible(false);
         });
 
+
       function initJuan(speed)
       {
-        const spawnPointJuan = map.findObject("Objects", obj => obj.name === "Spawn Point Juan 1");
+        spawnPoints[0] = map.findObject("Objects", obj => obj.name === "Spawn Point Juan 1");
+        spawnPoints[1] = map.findObject("Objects", obj => obj.name === "Spawn Point Juan 2");
+        
+        var spawnPointJuan = spawnPoints[Phaser.Math.Between(0, 1)];
 
         juan = that.physics.add
                 .sprite(spawnPointJuan.x, spawnPointJuan.y, "juan")
