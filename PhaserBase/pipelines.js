@@ -64,10 +64,9 @@ var LightingPipeline = new Phaser.Class({
 
             //uniform vec2 res;
             uniform vec4 camPosDimensions;
-            uniform float fLights[10*2]; //pos.x, pos.y, dir.x, dir.y, angleRatio, weakness, color.x, color.y, color.z, raytrace
+            uniform float fLights[11*20]; //pos.x, pos.y, dir.x, dir.y, angleRatio, weakness, color.x, color.y, color.z, raytrace
             uniform vec4 camInfo;
-
-            uniform int rayAccuracy;
+            uniform float ambientShadow;
 
             /*vec2 getPixelTexCoord(vec2 coord){
               coord.x = floor(coord.x * res.x)/res.x + (1.0/(res.x*2.0));
@@ -75,8 +74,8 @@ var LightingPipeline = new Phaser.Class({
               return coord;
             }*/
 
-            float rayTrace(vec2 coordSrc, vec2 dir){
-              const int accuracy = 200;
+            float rayTraceOnPoint(vec2 coordSrc, vec2 dir){
+              const int accuracy = 300;
 
               float result = 1.0;
 
@@ -93,12 +92,30 @@ var LightingPipeline = new Phaser.Class({
               }
 
               //RETURN
-              return result;
+              return result + clamp((ambientShadow -result), 0.0, 1.0);
             }
 
+            /*float rayTrace(vec2 coordSrc, vec2 dirB){
+
+              float distance = length(dirB)/5.0;
+              //distance = 0.0;
+              vec2 orthoDir = normalize(vec2(dirB.y, dirB.x));
+              vec2 dirA = ((coordSrc + dirB) + orthoDir * distance) - coordSrc;
+              vec2 dirC = ((coordSrc + dirB) - orthoDir * distance) - coordSrc;
+              float A = rayTraceOnPoint(coordSrc, dirA);
+              float B = rayTraceOnPoint(coordSrc, dirB);
+              float C = rayTraceOnPoint(coordSrc, dirC);
+
+              float occlusion = B * 0.5 + A * 0.25 + C  * 0.25;
 
 
-            vec4 getLightIntensity(vec2 coordDst, vec2 lightPos, vec2 lightDir, float angleRatio, float weakness, vec3 color, float rayTraceActive){
+
+              return occlusion;
+            }*/
+
+
+
+            vec4 getLightIntensity(vec2 coordDst, vec2 lightPos, vec2 lightDir, float angleRatio, float weakness, vec3 color, float lightIntensity, float rayTraceActive){
 
 
               vec2 posSrc = (lightPos - camInfo.xy) / camInfo.zw;
@@ -120,15 +137,15 @@ var LightingPipeline = new Phaser.Class({
                 float clampDotResult = clamp(dotResult, 0.0, abs(dotResult));
                 float focalResult = pow(clampDotResult, angleRatio);
 
-                float puntualEffect = 1.0 - smoothstep(0.2, 1.0, length(dir) * weakness*8.0);
+                float puntualEffect = 1.0 - smoothstep(0.2, 1.0, length(dir) * weakness*6.0);
                 dstIntensity =  puntualEffect + (1.0-puntualEffect) * dstIntensity * focalResult;
                 //dstIntensity = dstIntensity > 0.4 ? /*clamp(dstIntensity, 0.5, 1.0)*/0.8 : 0.0;
                 dstIntensity = clamp(dstIntensity, 0.0, 0.9);
               }
 
-
-              //float levels = 15.0;
-              //dstIntensity = floor(dstIntensity * levels)/levels;
+              //LEVELS
+              float levels = 4.0;
+              dstIntensity = floor(dstIntensity * levels)/levels;
 
               //RAY TRACE
               float transfer = texture2D(uMainSampler, coordDst).x;
@@ -136,11 +153,11 @@ var LightingPipeline = new Phaser.Class({
                 0.0 :
                 transfer == 0.0 || rayTraceActive == 0.0?
                   dstIntensity :
-                  dstIntensity * rayTrace(posSrc, dir);
+                  dstIntensity * rayTraceOnPoint(posSrc, dir);
 
               //return colIntensity;
               //return vec4(dotResult);
-              return vec4(color * dstIntensity, dstIntensity);
+              return vec4(color * dstIntensity, dstIntensity) * lightIntensity;
             }
 
 
@@ -149,8 +166,9 @@ var LightingPipeline = new Phaser.Class({
               vec4 intensity = vec4(0.0);
 
               //FOCAL
-              const int step = 10;
-              for(int i = 0; i < 2; i++){
+              const int step = 11;
+              const int maxLights = 20;
+              for(int i = 0; i < maxLights; i++){
                 intensity = intensity + getLightIntensity(
                   coordDst,
                   vec2(fLights[i*step+0], fLights[i*step+1]),                     //POS
@@ -158,7 +176,8 @@ var LightingPipeline = new Phaser.Class({
                   fLights[i*step+4],                                              //ANGLE
                   fLights[i*step+5],                                              //WEAK
                   vec3(fLights[i*step+6], fLights[i*step+7], fLights[i*step+8]),  //COLOR
-                  fLights[i*step+9]                                               //RAY TRACE
+                  fLights[i*step+9],                                              //INTENSITY
+                  fLights[i*step+10]                                              //RAY TRACE
                 );
               }
 
