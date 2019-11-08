@@ -234,6 +234,8 @@ var LocalGame = new Phaser.Class({
       }
       Move(juan, juanCursors, juanSpeed, juanMovementVector);
       Move(guard, guardCursors, guardSpeed, guardMovementVector);
+
+      console.log(juan.body.x);
     }
 
 
