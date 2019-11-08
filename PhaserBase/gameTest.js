@@ -15,7 +15,8 @@ var config = {
         },
         scene: {
             preload: preload,
-            create: create
+            create: create,
+            update: update
         }
     };
 
@@ -39,42 +40,42 @@ var config = {
 
 
 
-        /*var tileSheetSprite = this.add
+        var tileSheetSprite = this.add
         .sprite(0,0,'tileSheet')
-        .setOrigin(0,0)
-        .setScale(1.0)
-        ;*/
-
-        var blockSprite = this.add
-        .sprite(90,90,'block')
         .setOrigin(0,0)
         .setScale(1.0)
         ;
 
+        /*var blockSprite = this.add
+        .sprite(90,550,'block')
+        .setOrigin(0,0)
+        .setScale(1.0)
+        ;*/
+
         var cam1 = this.cameras.main;
-        cam1.x = 0;
-        cam1.y = 0;
+        cam1.scrollX = 50;
+        cam1.scrollY = 470;
 
         lightManager = new LightingManager(this.game, [cam1]);
 
-        lightManager.addLight(0, new Light_focal([650.0,0.0],[0.0,0.0],4.0,3.0,[1.0,1.0,0.5],1.0));
-        lightManager.addLight(0, new Light_focal([10.0,0.0],[0.0,0.0],0.0,4.0,[0.5,0.5,1.0],1.0));
+        lightManager.addLight(0, new Light_focal([650.0,0.0],[0.0,0.0],4.0,1.5,[1.0,1.0,0.5],1.0,1.0, true, 0.95, 1.0, 0.3));
+        lightManager.addLight(0, new Light_focal([90.0,480.0],[0.0,0.0],0.0,4.0,[0.5,0.5,1.0],1.0,1.0, true));
         lightManager.updateAllUniforms();
 
         //LIGHT POSITION
         this.input.on('pointermove', function(pointer){
           var lastPos = lightManager.cameras[0][1][0].position;
-          //var dir = [pointer.x - lastPos[0], pointer.y - lastPos[1]];
-          lightManager.cameras[0][1][0].position = [pointer.x, pointer.y];
+          //var dir = [pointer.x - lastPos[0] + lightManager.cameras[0][0].scrollX, pointer.y - lastPos[1] + lightManager.cameras[0][0].scrollY];
+          lightManager.cameras[0][1][0].position = [pointer.x + lightManager.cameras[0][0].scrollX, pointer.y + lightManager.cameras[0][0].scrollY];
+
           //if(dir[0] != 0 || dir[1] != 0) lightManager.cameras[0][1][0].direction = dir;
 
 
 
-          /*var pos = lightManager.cameras[0][1][1].position;
-          pos[1] = pos[1] +2.0;
-          if(pos[1] > 800.0) pos[1] = 0.0;*/
-
-          lightManager.updateAllUniforms();
+          var pos = lightManager.cameras[0][1][1].position;
+          pos[1] = pos[1] +0.5;
+          if(pos[1] > 800.0) pos[1] = 0.0;
+          //lightManager.updateAllUniforms();
         });
         //sprite.setPipeline('Invert');
 
@@ -114,4 +115,8 @@ var config = {
         //logo.setPipeline('Light2D');
 
         /*emitter.startFollow(logo);*/
+    }
+    function update (time, delta)
+    {
+      lightManager.updateAllUniforms(delta);
     }
