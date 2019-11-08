@@ -12,11 +12,6 @@ var Menu = new Phaser.Class({
         Phaser.Scene.call(this, { key: 'Menu'} )
     },
 
-    /*init: function (data)
-    {
-
-    },*/
-
     preload: function ()
     {
       var keys;
@@ -44,8 +39,6 @@ var Menu = new Phaser.Class({
       arrows.scale = 2;
 
       space = this.add.bitmapText(x, y, 'fuente', 'Pulsa ESPACIO para comenzar', 11)
-
-
     },
 
     update: function (time, delta)

@@ -14,7 +14,7 @@ var statics = {};
 
 var doors = {};
 var keys = {};
-//var finalDoor;
+var finalDoor;
 
 const numDoors = 4;
 const numKeys = 4;
@@ -26,30 +26,7 @@ var LocalGame = new Phaser.Class({
     initialize: function LocalGame ()
     {
         Phaser.Scene.call(this, {key: 'LocalGame'})
-
-        /*this.juan;
-        this.juanSpeed;
-        this.juanMovementVector = new Phaser.Math.Vector2();
-        this.juanCursors;
-        this.juanCamera;
-
-        this.guard;
-        this.guardSpeed;
-        this.guardMovementVector = new Phaser.Math.Vector2();
-        this.guardCursors;
-        this.guardCamera;
-
-        this.statics = {};
-
-        this.doors = {};
-        this.keys = {};
-        this.finalDoor;*/
-
-        //const numDoors = 4;
-        //const numKeys = 4;
     },
-
-
 
     init: function ()
     {
@@ -59,13 +36,13 @@ var LocalGame = new Phaser.Class({
     preload: function ()
     {
       this.load.image("tiles", "./Tilesheet/tilemap.png");
-      this.load.tilemapTiledJSON("map", "./Tilesheet/tileset7.json");
+      this.load.tilemapTiledJSON("map", "./Tilesheet/tileset8.json");
 
       this.load.image("juan", "./Tilesheet/juan.png");
       this.load.image("guard", "./Tilesheet/guardia.png");
       this.load.image("key", "./Tilesheet/llave1.png");
       this.load.image("door", "./Tilesheet/puerta32.png");
-      //this.load.image("finalDoor", "./Tilesheet/finalDoor.png");
+      this.load.image("finalDoor", "./Tilesheet/puertasalida.png");
     },
 
     create: function ()
@@ -172,20 +149,20 @@ var LocalGame = new Phaser.Class({
       }
       initKeys();
 
-      /*function initFinalDoor()
+      function initFinalDoor()
       {
         spawnPoint = map.findObject("Objects", obj => obj.name === "Puerta Salida");
         finalDoor = this.statics.create(spawnPoint.x + 16, spawnPoint.y + 16, "finalDoor").refreshBody();
-        that.physics.add.collider(juan, finalDoor, openFinalDoor, null, this);
       }
-      initFinalDoor();*/
+      initFinalDoor();
 
       this.physics.add.collider(juan, this.walls);
       this.physics.add.collider(guard, this.walls);
       this.physics.add.collider(juan, propsLayer);
       this.physics.add.collider(guard, propsLayer);
 
-      this.physics.add.overlap(juan, guard, juanCatched, null, this);
+      this.physics.add.collider(juan, finalDoor, endGame, null, this);
+      this.physics.add.overlap(juan, guard, endGame, null, this);
     },
 
     update: function (time, delta)
@@ -234,17 +211,8 @@ var LocalGame = new Phaser.Class({
       }
       Move(juan, juanCursors, juanSpeed, juanMovementVector);
       Move(guard, guardCursors, guardSpeed, guardMovementVector);
-
-      console.log(juan.body.x);
     }
-
-
 });
-
-function juanCatched()
-{
-  console.log("pillao");
-}
 
 function pickUpKey(index)
 {
@@ -260,8 +228,7 @@ function openDoor(index)
   }
 }
 
-/*function openFinalDoor()
+function endGame()
 {
-  finalDoor.destroy();
-  console.log("GAME OVER");
-}*/
+  this.scene.start("Menu");
+}
