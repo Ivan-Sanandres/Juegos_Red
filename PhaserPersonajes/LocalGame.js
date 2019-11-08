@@ -1,3 +1,5 @@
+var lightManager;
+
 var juan;
 var juanSpeed;
 var juanMovementVector = new Phaser.Math.Vector2();
@@ -75,7 +77,7 @@ var LocalGame = new Phaser.Class({
       {
         spawnPoints[0] = map.findObject("Objects", obj => obj.name === "Spawn Point Juan 1");
         spawnPoints[1] = map.findObject("Objects", obj => obj.name === "Spawn Point Juan 2");
-        
+
         var spawnPointJuan = spawnPoints[Phaser.Math.Between(0, 1)];
 
         juan = that.physics.add
@@ -160,6 +162,8 @@ var LocalGame = new Phaser.Class({
         finalDoor = this.statics.create(spawnPoint.x + 16, spawnPoint.y + 16, "finalDoor").refreshBody();
       }
       initFinalDoor();
+
+      lightManager = new LightingManager(this.game, [juanCamera, guardCamera]);
 
       this.physics.add.collider(juan, this.walls);
       this.physics.add.collider(guard, this.walls);
