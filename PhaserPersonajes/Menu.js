@@ -17,6 +17,7 @@ var Menu = new Phaser.Class({
       var keys;
       this.load.bitmapFont('fuente', './Tilesheet/font/MC_0.png', './Tilesheet/font/MC.fnt');
 
+      this.load.image("background", "./Tilesheet/background.png");
       this.load.image("wasd", "./Tilesheet/wasd.png");
       this.load.image("arrows", "./Tilesheet/arrows.png");
     },
@@ -27,9 +28,10 @@ var Menu = new Phaser.Class({
       keys = this.input.keyboard.addKeys({
         space: Phaser.Input.Keyboard.KeyCodes.SPACE
       });
+      this.add.image(0, 0, "background").setOrigin(0, 0);
 
-      this.add.bitmapText(75, 30, 'fuente', 'JUANTANKAMÓN', 33); //
-      this.add.bitmapText(151, 60, 'fuente', 'REDUX', 22);
+      this.add.bitmapText(75, 25, 'fuente', 'JUANTANKAMÓN', 33); //
+      this.add.bitmapText(151, 55, 'fuente', 'REDUX', 22);
       this.add.bitmapText(15, 153, 'fuente', 'Juantankamón');
       this.add.bitmapText(295, 153, 'fuente', 'Guardia');
 
