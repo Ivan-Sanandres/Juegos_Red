@@ -18,7 +18,7 @@ var Menu = new Phaser.Class({
       this.load.image("wasd", "./Tilesheet/wasd.png");
       this.load.image("arrows", "./Tilesheet/arrows.png");
 
-      this.load.audio("menuMusic", "./menuMusic.wav");
+      this.load.audio("menuMusic", "./menuMusic.mp3");
     },
 
     create: function ()
@@ -54,7 +54,8 @@ var Menu = new Phaser.Class({
                                                           'con el ratón. Puedes',
                                                           'atravesar puertas.'], 11, 1);
 
-      txtPause = this.add.bitmapText(134, 100, 'fuente', 'P: Pausa (en juego)', 11, 1);
+      txtPause = this.add.bitmapText(134, 110, 'fuente', ['P: Pausa (en juego)',
+                                                          'J: Volver al menú'], 11, 1);
 
       txtJuantankamon.visible = false;
       txtGuardia.visible = false;

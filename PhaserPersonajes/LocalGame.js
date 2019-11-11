@@ -61,7 +61,7 @@ var LocalGame = new Phaser.Class({
 
       this.load.image("backGround", "./Tilesheet/backgroundColor.png");
 
-      this.load.audio("gameMusic", "gameMusic.wav");
+      this.load.audio("gameMusic", "gameMusic.mp3");
     },
 
     create: function ()
@@ -370,5 +370,6 @@ function openDoor(index)
 function endGame()
 {
   //Se vuelve a la escena de menu
+  gameMusic.stop();
   this.scene.start("Menu");
 }
