@@ -21,7 +21,7 @@ var LightingPipeline = new Phaser.Class({
             uniform float ambientShadow;
 
             float rayFlexing(vec2 coordSrc, vec2 dir){
-              const int accuracy = 300;
+              const int accuracy = 100;
 
               float result = 1.0;
 
@@ -108,7 +108,7 @@ var LightingPipeline = new Phaser.Class({
               //UNLIT
               vec4 colorOriginal = texture2D(uMainSampler, outTexCoord);
 
-              vec4 colorUnlit = vec4(0.5/* * colorOriginal.w*/, colorOriginal.yz*0.8 /** colorOriginal.w*/, 1.0);
+              vec4 colorUnlit = vec4(0.5, colorOriginal.yz*0.8 , 1.0);
               colorUnlit = vec4(colorUnlit.xyz * 1.6, 1.0);
 
               //LIT
