@@ -58,7 +58,7 @@ var config = {
 
         lightManager = new LightingManager(this.game, [cam1]);
 
-        lightManager.addLight(0, new Light_focal([650.0,0.0],[0.0,0.0],4.0,1.5,[1.0,1.0,0.5],1.0,1.0, true, 0.95, 1.0, 0.3));
+        lightManager.addLight(0, new Light_focal([650.0,0.0],[0.0,-1.0],4.0,1.5,[1.0,1.0,0.5],1.0,1.0, true, 0.95, 1.0, 0.3));
         lightManager.addLight(0, new Light_focal([90.0,480.0],[0.0,0.0],0.0,4.0,[0.5,0.5,1.0],1.0,1.0, true));
         lightManager.updateAllUniforms();
 
