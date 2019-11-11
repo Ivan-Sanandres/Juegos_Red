@@ -2,14 +2,17 @@ var lightManager;
 
 var juan; //Contiene el objeto físico de Juan
 var juanSpeed;
-var juanMovementVector = new Phaser.Math.Vector2();
+var juanMovementVector = new Phaser.Math.Vector2(0, 0);
+var juanPreviousPos = new Phaser.Math.Vector2(0, 0);
 var juanCursors; //Teclas con las que se mueve Juan
 var juanCamera;
 var juanLight;
 
 var guard; //Contiene el objeto físico del guardia
 var guardSpeed;
-var guardMovementVector = new Phaser.Math.Vector2();
+var guardMovementVector = new Phaser.Math.Vector2(0, 0);
+var guardPreviousPos = new Phaser.Math.Vector2(0, 0);
+var guardMouseVector = new Phaser.Math.Vector2(0, 0);
 var guardCursors; //Teclas con las que se mueve el guardia
 var guardCamera;
 var guardLight;
@@ -20,6 +23,9 @@ var doors = {};
 var keys = {};
 var spawnPoints = {};
 var finalDoor;
+
+var pointer;
+var pointerInScene;
 
 const numDoors = 4;
 const numKeys = 4;
@@ -55,6 +61,8 @@ var LocalGame = new Phaser.Class({
     create: function ()
     {
       var that = this;
+
+      pointer = this.input.mousePointer;
 
       this.add.image(0, 0, 'backGround').setScale(130 * 64, 75 * 64);
 
@@ -207,12 +215,18 @@ var LocalGame = new Phaser.Class({
 
     update: function (time, delta)
     {
+
+      var pointerInScene = guardCamera.getWorldPoint(pointer.x, pointer.y);
       //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
-      function Move(character, cursors, speed, movementVector)
+      juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
+      guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
+
+      function Move(character, cursors, speed, characterMovementVector)
       {
+        var movementVector = new Phaser.Math.Vector2(0, 0);
         //Se obtiene el vector de movimiento del personaje y se noramliza
-        movementVector.x = character.body.deltaAbsX();
-        movementVector.y = character.body.deltaAbsY();
+        //movementVector.x = character.x - characterMovementVector.x;
+        //movementVector.y = character.y - characterMovementVector.y;
 
         movementVector = movementVector.normalize();
 
@@ -226,7 +240,7 @@ var LocalGame = new Phaser.Class({
           //Si ya lleva una dirección se multiplica por el vector normalizado
           //Para que mantenga la misma velocidad aunque vaya en diagonal
             if(movementVector.y != 0)
-              character.setVelocityY(-speed * movementVector.y);
+              character.setVelocityY(speed * movementVector.y);
             else
               character.setVelocityY(-speed);
         }
@@ -242,7 +256,7 @@ var LocalGame = new Phaser.Class({
         if (cursors.left.isDown)
         {
             if(movementVector.x != 0)
-              character.setVelocityX(-speed * movementVector.x);
+              character.setVelocityX(speed * movementVector.x);
             else
               character.setVelocityX(-speed);
         }
@@ -258,9 +272,16 @@ var LocalGame = new Phaser.Class({
       Move(juan, juanCursors, juanSpeed, juanMovementVector);
       Move(guard, guardCursors, guardSpeed, guardMovementVector);
 
+      juanPreviousPos.set(juan.x, juan.y);
+      guardPreviousPos.set(guard.x, guard.y);
+
       juanLight.position = [juan.x, juan.y];
       guardLight.position = [guard.x, guard.y];
-      //guardLight.direction = [guardMovementVector.x, guardMovementVector.y];
+
+      guardMouseVector.set(pointerInScene.x - guard.x, pointerInScene.y - guard.y).normalize();
+
+      guardLight.direction = [guardMouseVector.x, guardMouseVector.y];
+
       lightManager.updateAllUniforms(delta);
     }
 });
