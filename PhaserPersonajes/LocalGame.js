@@ -5,12 +5,14 @@ var juanSpeed;
 var juanMovementVector = new Phaser.Math.Vector2();
 var juanCursors; //Teclas con las que se mueve Juan
 var juanCamera;
+var juanLight;
 
 var guard; //Contiene el objeto físico del guardia
 var guardSpeed;
 var guardMovementVector = new Phaser.Math.Vector2();
 var guardCursors; //Teclas con las que se mueve el guardia
 var guardCamera;
+var guardLight;
 
 var statics = {}; //Objetos estáticos de la escena
 
@@ -46,11 +48,15 @@ var LocalGame = new Phaser.Class({
       this.load.image("key", "./Tilesheet/llave1.png");
       this.load.image("door", "./Tilesheet/puerta32.png");
       this.load.image("finalDoor", "./Tilesheet/puertasalida.png");
+
+      this.load.image("backGround", "./Tilesheet/backgroundColor.png");
     },
 
     create: function ()
     {
       var that = this;
+
+      this.add.image(0, 0, 'backGround').setScale(130 * 64, 75 * 64);
 
       const map = this.make.tilemap({key: "map"});
       const tileset = map.addTilesetImage("colored", "tiles");
@@ -90,7 +96,7 @@ var LocalGame = new Phaser.Class({
         juanCamera = that.cameras.main;
 
         //Ajustes de cámara
-        juanCamera.setBackgroundColor('rgba(71, 45, 60, 1)');
+        //juanCamera.setBackgroundColor('rgba(255, 100, 160, 1)');
         juanCamera.setViewport(0, 0);
         juanCamera.setSize(176, 176);
         juanCamera.startFollow(juan, true, 1, 1);
@@ -121,7 +127,7 @@ var LocalGame = new Phaser.Class({
         //Se crea una nueva cámara para guardia y se ajusta
         guardCamera = that.cameras.add(0, 0, 0, 0);
 
-        guardCamera.setBackgroundColor('rgba(71, 45, 60, 1)');
+        //guardCamera.setBackgroundColor('rgba(255, 100, 160, 1)');
         guardCamera.setViewport(186, 0);
         guardCamera.setScroll(186, 0);
         guardCamera.setSize(176, 176);
@@ -179,6 +185,14 @@ var LocalGame = new Phaser.Class({
       initFinalDoor();
 
       lightManager = new LightingManager(this.game, [juanCamera, guardCamera]);
+
+      juanLight = new Light_focal([juan.x, juan.y], [0.0, 0.0], 0.0, 1.5, [1.0, 1.0, 1.0], 1.0, 1.0, 1.0);
+      lightManager.addLight(0, juanLight);
+
+      guardLight = new Light_focal([guard.x, guard.y], [0.0, 0.0], 2.5, 1.5, [1.0, 1.0, 0.5], 1.0, 1.0, 1.0);
+      lightManager.addLight(1, guardLight);
+      lightManager.addLight(0, guardLight);
+
 
       //Colisiones de juan y el guardia con las paredes y props
       this.physics.add.collider(juan, this.walls);
@@ -243,6 +257,11 @@ var LocalGame = new Phaser.Class({
       }
       Move(juan, juanCursors, juanSpeed, juanMovementVector);
       Move(guard, guardCursors, guardSpeed, guardMovementVector);
+
+      juanLight.position = [juan.x, juan.y];
+      guardLight.position = [guard.x, guard.y];
+      //guardLight.direction = [guardMovementVector.x, guardMovementVector.y];
+      lightManager.updateAllUniforms(delta);
     }
 });
 

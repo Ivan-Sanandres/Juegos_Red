@@ -108,12 +108,14 @@ var LightingPipeline = new Phaser.Class({
               //UNLIT
               vec4 colorOriginal = texture2D(uMainSampler, outTexCoord);
 
-              vec4 colorUnlit = vec4(0.5 * colorOriginal.w, colorOriginal.yz*0.8 * colorOriginal.w, 1.0);
+              vec4 colorUnlit = vec4(0.5/* * colorOriginal.w*/, colorOriginal.yz*0.8 /** colorOriginal.w*/, 1.0);
               colorUnlit = vec4(colorUnlit.xyz * 1.6, 1.0);
 
               //LIT
               vec4 colorLit = vec4(colorUnlit.xyz * calculateLighting(outTexCoord), 1.0);
               gl_FragColor = colorLit;
+              //gl_FragColor = vec4(vec3(fLights[6], fLights[7], fLights[8]), 1.0);
+              //gl_FragColor = colorUnlit;
             }
           `
       });
