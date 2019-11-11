@@ -48,10 +48,11 @@ var LocalGame = new Phaser.Class({
 
     preload: function ()
     {
+      //En esta función se cargan los recursos externos que utilizará el juego
       this.load.bitmapFont('fuente', './Tilesheet/font/MC_0.png', './Tilesheet/font/MC.fnt');
 
       this.load.image("tiles", "./Tilesheet/tilemap.png");
-      this.load.tilemapTiledJSON("map", "./Tilesheet/tileset8.json");
+      this.load.tilemapTiledJSON("map", "./Tilesheet/tileset8.json"); //Este archivo json contiene la información del tilemap
 
       this.load.image("juan", "./Tilesheet/juan.png");
       this.load.image("guard", "./Tilesheet/guardia.png");
@@ -78,20 +79,29 @@ var LocalGame = new Phaser.Class({
 
       this.add.image(0, 0, 'backGround').setScale(130 * 64, 75 * 64);
 
+      //Se crea un mapa de tiles 
       const map = this.make.tilemap({key: "map"});
+
+      //Se añaden las tiles al mapa tomando la información del archivo json y la tilesheet que se ha cargado  
       const tileset = map.addTilesetImage("colored", "tiles");
+
+      //Creamos 2 capas de mapas de tiles
       const worldLayer = map.createStaticLayer("Wall", tileset, 0, 0);
       const propsLayer = map.createStaticLayer("Object", tileset, 0, 0);
 
+      //Agregamos colisión a aquellas tiles de la capa de props que contienen un booleano llamado collides que vale true
       propsLayer.setCollisionByProperty({collides: true});
 
+      //Se crea un grupo de físicas para la colisión con las paredes  
       this.walls = this.physics.add.group({
           allowGravity: false,
           immovable: true
         });
 
+        //Se almacenan las propiedades los objetos del mapa de la capa de objetos llamada Collide  
         const wallCol = map.getObjectLayer('Collide')['objects'];
 
+        //Se crean las cajas de colisión de las paredes en base a las propiedades almacenadas y el grupo de físicas 
         wallCol.forEach(wallCol => {
           const wall = this.walls.create(wallCol.x + (wallCol.width/2), wallCol.y + (wallCol.height/2),'',false);
           wall.body.setSize(wallCol.width,wallCol.height);
