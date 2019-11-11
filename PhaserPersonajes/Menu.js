@@ -2,6 +2,8 @@ var y = 120;
 var x = 107;
 
 var aux = 0;
+var music;
+var muted = false;
 
 var Menu = new Phaser.Class({
 
@@ -45,7 +47,8 @@ var Menu = new Phaser.Class({
 
       space = this.add.bitmapText(x, y, 'fuente', 'Pulsa ESPACIO para comenzar', 11)
 
-      var music = this.sound.add("menuMusic", {mute: false, loop:true});
+      music = this.sound.add("menuMusic");
+      music.play({mute: false, loop: true})
     },
 
     update: function (time, delta)
@@ -56,7 +59,8 @@ var Menu = new Phaser.Class({
       }
       if(keys.mute.isDown)
       {
-        music.setMute(!mute);
+        muted = !muted;
+        music.mute = muted;
       }
 
       aux++;
