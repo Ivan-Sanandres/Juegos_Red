@@ -20,13 +20,16 @@ var Menu = new Phaser.Class({
       this.load.image("background", "./Tilesheet/background.png");
       this.load.image("wasd", "./Tilesheet/wasd.png");
       this.load.image("arrows", "./Tilesheet/arrows.png");
+
+      this.load.audio("menuMusic", "./menuMusic.wav");
     },
 
     create: function ()
     {
       this.cameras.main.setBackgroundColor('rgba(71, 45, 60, 1)');
       keys = this.input.keyboard.addKeys({
-        space: Phaser.Input.Keyboard.KeyCodes.SPACE
+        space: Phaser.Input.Keyboard.KeyCodes.SPACE,
+        mute: Phaser.Input.Keyboard.KeyCodes.M
       });
       this.add.image(0, 0, "background").setOrigin(0, 0);
 
@@ -41,6 +44,8 @@ var Menu = new Phaser.Class({
       arrows.scale = 2;
 
       space = this.add.bitmapText(x, y, 'fuente', 'Pulsa ESPACIO para comenzar', 11)
+
+      var music = this.sound.add("menuMusic", {mute: false, loop:true});
     },
 
     update: function (time, delta)
@@ -48,6 +53,10 @@ var Menu = new Phaser.Class({
       if(keys.space.isDown)
       {
         this.scene.start("LocalGame");
+      }
+      if(keys.mute.isDown)
+      {
+        music.setMute(!mute);
       }
 
       aux++;
