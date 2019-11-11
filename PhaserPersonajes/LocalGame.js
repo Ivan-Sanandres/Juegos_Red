@@ -28,7 +28,6 @@ var pointer;
 var pointerInScene;
 
 var configKeys;
-var paused = false;
 
 const numDoors = 4;
 const numKeys = 4;
@@ -49,6 +48,8 @@ var LocalGame = new Phaser.Class({
 
     preload: function ()
     {
+      this.load.bitmapFont('fuente', './Tilesheet/font/MC_0.png', './Tilesheet/font/MC.fnt');
+
       this.load.image("tiles", "./Tilesheet/tilemap.png");
       this.load.tilemapTiledJSON("map", "./Tilesheet/tileset8.json");
 
@@ -59,6 +60,8 @@ var LocalGame = new Phaser.Class({
       this.load.image("finalDoor", "./Tilesheet/puertasalida.png");
 
       this.load.image("backGround", "./Tilesheet/backgroundColor.png");
+
+      this.load.audio("gameMusic", "gameMusic.wav");
     },
 
     create: function ()
@@ -69,7 +72,8 @@ var LocalGame = new Phaser.Class({
 
       configKeys = this.input.keyboard.addKeys({ //Teclas usadas para opciones de configuración
         pause: Phaser.Input.Keyboard.KeyCodes.P,
-        mute: Phaser.Input.Keyboard.KeyCodes.M
+        mute: Phaser.Input.Keyboard.KeyCodes.M,
+        space: Phaser.Input.Keyboard.KeyCodes.SPACE
         });
 
       this.add.image(0, 0, 'backGround').setScale(130 * 64, 75 * 64);
@@ -244,18 +248,35 @@ var LocalGame = new Phaser.Class({
       //Se asocia la callback endGame a la colisión de Juan con la puerta de salida y con el guardia
       this.physics.add.collider(juan, finalDoor, endGame, null, this);
       this.physics.add.overlap(juan, guard, endGame, null, this);
+
+      txtMP = this.add.bitmapText(juan.x, juan.y, "fuente", "ESPACIO para volver").setOrigin(0.5, 0.5);
+      txtMP.visible = false;
+
+      gameMusic = this.sound.add("gameMusic");
+      gameMusic.play({mute: muted, loop: true});
+
+      paused = false;
     },
 
     update: function (time, delta)
     {
-
+      txtMP.x = juan.x;
+      txtMP.y = juan.y;
       //Si se pulsa la P se pausa el juego y no se actualizan las posiciones y luces
       if(Phaser.Input.Keyboard.JustDown(configKeys.pause))
       {
         paused = !paused;
+        txtMP.visible = !txtMP.visible;
 
         juan.setVelocityX(0); juan.setVelocityY(0);
         guard.setVelocityX(0); guard.setVelocityY(0);
+      }if(Phaser.Input.Keyboard.JustDown(configKeys.mute)){
+          muted = !muted;
+          gameMusic.mute = muted;
+      }
+      if(Phaser.Input.Keyboard.JustDown(configKeys.space) && paused){
+        gameMusic.stop();
+        this.scene.start("Menu");
       }
 
       if(!paused)
