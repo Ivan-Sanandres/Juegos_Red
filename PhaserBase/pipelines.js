@@ -11,14 +11,11 @@ var LightingPipeline = new Phaser.Class({
           fragShader:`
             precision mediump float;
             uniform sampler2D uMainSampler;
-
             varying vec2 outTexCoord;
 
-            //uniform vec2 res;
-            uniform vec4 camPosDimensions;
-            uniform float fLights[11*20]; //pos.x, pos.y, dir.x, dir.y, angleRatio, weakness, color.x, color.y, color.z, raytrace
-            uniform vec4 camInfo;
-            uniform float ambientShadow;
+            uniform float fLights[11*20]; //pos.x, pos.y, dir.x, dir.y, angleRatio, weakness, color.x, color.y, color.z, intensity, raytrace
+            uniform vec4 camInfo;         //posición y dimensiones de la cámara
+            uniform float ambientShadow;  //iluminación ambiental de las sombras (nosotros la queremos a 0, pero si quisieramos cambiarla ahí está)
 
             float rayFlexing(vec2 coordSrc, vec2 dir){
               const int accuracy = 300;
