@@ -13,7 +13,7 @@ var LightingPipeline = new Phaser.Class({
 
             uniform sampler2D uMainSampler;                                 //Textura de la imagen renderizada antes de aplicar el shader de iluminación
             varying vec2 outTexCoord;                                       //Coordenadas de textura del fragmento
-            uniform float fLights[11*20];                                   //pos.x, pos.y, dir.x, dir.y, angleRatio, weakness, color.x, color.y, color.z, intensity, waraytrace
+            uniform float fLights[11*18];                                   //pos.x, pos.y, dir.x, dir.y, angleRatio, weakness, color.x, color.y, color.z, intensity, waraytrace
             uniform vec4 camInfo;                                           //posición y dimensiones de la cámara
 
 
@@ -85,7 +85,7 @@ var LightingPipeline = new Phaser.Class({
 
               //PER LIGHT
               const int step = 11;                                                //parámetros por cada luz
-              const int maxLights = 20;                                           //número máximo de luces
+              const int maxLights = 18;                                           //número máximo de luces
 
               for(int i = 0; i < maxLights; i++){                                 //bucle que itera sobre todas las luces
                 intensity = intensity + getLightIntensity(                        //Se suma a la intensidad actual la intensidad de la siguiente luz
