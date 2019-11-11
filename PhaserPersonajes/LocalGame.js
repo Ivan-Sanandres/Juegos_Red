@@ -67,7 +67,7 @@ var LocalGame = new Phaser.Class({
 
       pointer = this.input.mousePointer; //Referencia al ratón
 
-      configKeys = this.input.keyboard.addKeys({
+      configKeys = this.input.keyboard.addKeys({ //Teclas usadas para opciones de configuración
         pause: Phaser.Input.Keyboard.KeyCodes.P,
         mute: Phaser.Input.Keyboard.KeyCodes.M
         });
@@ -158,6 +158,7 @@ var LocalGame = new Phaser.Class({
       initGuard(100);
 
       statics = this.physics.add.staticGroup();
+      //Crea las puertas de la escena
       function initDoors()
       {
         var spawnPoint;
@@ -175,6 +176,7 @@ var LocalGame = new Phaser.Class({
       }
       initDoors();
 
+      //Crea las llaves de la escena
       function initKeys()
       {
         var spawnPoint;
@@ -192,6 +194,7 @@ var LocalGame = new Phaser.Class({
       }
       initKeys();
 
+      //Crea la puerta de salida
       function initFinalDoor()
       {
         //Se crea la puerta de salida según el punto de spawn del json
@@ -200,6 +203,7 @@ var LocalGame = new Phaser.Class({
       }
       initFinalDoor();
 
+      //Instanciación de luces de los personajes
       lightManager = new LightingManager(this.game, [juanCamera, guardCamera]);
 
       juanLight = new Light_focal([juan.x, juan.y], [0.0, 0.0], 0.0, 1.5, [1.0, 1.0, 1.0], 1.0, 1.0, 1.0);
@@ -209,6 +213,7 @@ var LocalGame = new Phaser.Class({
       lightManager.addLight(1, guardLight);
       lightManager.addLight(0, guardLight);
 
+      //Instanciación de luces del escenario
       function initLights(numLights)
       {
         var lightJson;
@@ -244,6 +249,7 @@ var LocalGame = new Phaser.Class({
     update: function (time, delta)
     {
 
+      //Si se pulsa la P se pausa el juego y no se actualizan las posiciones y luces
       if(Phaser.Input.Keyboard.JustDown(configKeys.pause))
       {
         paused = !paused;
@@ -324,13 +330,14 @@ var LocalGame = new Phaser.Class({
       }
     }
 });
-
+  //Actualiza una llave para indicar que ha sido recogida y la destruye
 function pickUpKey(index)
 {
     keys[index].picked = true;
     keys[index].destroy();
 }
 
+//Actualiza una puerta para abrirla si se ha recogido su llave
 function openDoor(index)
 {
   if(keys[index].picked)
