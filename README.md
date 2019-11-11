@@ -1,4 +1,4 @@
-# Juegos_Red
+﻿# Juegos_Red
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -74,4 +74,48 @@ Se utilizará un estilo 1-bit mediante los assets con licencia CCO 1.0 Universal
 
 ------------------------------------------------------------------------------------------------------------------
 
+Juego desarrollado hasta ahora:
+En esta fase del desarrollo hemos creado un juego en navegador para dos jugadores en pantalla partida. Está programado en JavaScript, utilizando el framework para videojuegos Phaser 3. Está dividido en dos escenas de Phaser: Menu, que ofrece información sobre cómo jugar, y LocalGame, que incluye todo lo relacionado con el modo de juego local.
+
+Detalles clave de la implementación:
+SHADER:
+
+Programas usados:
+• Atom, VS Code: IDEs para programación
+• Sourcetree, GitHub Desktop: Gestión del repositorio.
+• Piskel, Photoshop: Creación y edición de sprites.
+• Tiled: Creación del mapa, colisiones, spawn points...
+• Trello: Gestión del proyecto (TO DO, DOING, DONE).
+
+Assets usados:
+• Fuente texto: https://www.dafont.com/es/minecraftia.font?text=JUANTANKAM%D3N&back=bitmap
+• Tilesheet 1-bit:https://www.kenney.nl/assets/bit-pack
+• Música menú:
+• Música juego:
+•
+
+Assets creados:
+• Mapa (no las tiles, sino su disposición y diseño de habitaciones)
+• Fondo del menú
+• Iconos de las teclas
+
+Bibliografía:
+• https://www.dynetisgames.com/2018/12/09/shaders-phaser-3/
+• https://stackabuse.com/phaser-3-and-tiled-building-a-platformer/
+• https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6
+• https://www.youtube.com/watch?v=2_x1dOvgF1E
+• https://www.youtube.com/watch?v=uznkhVMbVr8
+
+Aspectos desarrollados en esta fase
+• Movimiento de los personajes
+• Eventos de colisión
+• Sistema de iluminación y sombreado
+• Sistema de escenas
+• Diseño e implementación del nivel
+• Implementación de sonido
+
+ASSETS/PROGRAMAS USADOS
+• Tile (PREGUNTAR A IVÁN)
+
+FISICAS/CÓDIGO NUESTRO
 
