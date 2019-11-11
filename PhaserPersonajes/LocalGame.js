@@ -209,11 +209,11 @@ var LocalGame = new Phaser.Class({
       lightManager.addLight(1, guardLight);
       lightManager.addLight(0, guardLight);
 
-      function initLights()
+      function initLights(numLights)
       {
         var lightJson;
 
-        for(var i = 0; i < 18; i++)
+        for(var i = 0; i < numLights; i++)
         {
           lightJson = map.findObject("Objects", obj => obj.name === "Luz " + i);
 
@@ -228,7 +228,7 @@ var LocalGame = new Phaser.Class({
           lightManager.addLight(0, light);
           lightManager.addLight(1, light);
         }
-      }//initLights();
+      }initLights(16);
 
       //Colisiones de juan y el guardia con las paredes y props
       this.physics.add.collider(juan, this.walls);
