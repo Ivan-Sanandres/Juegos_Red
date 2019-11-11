@@ -27,6 +27,9 @@ var finalDoor;
 var pointer;
 var pointerInScene;
 
+var configKeys;
+var paused = false;
+
 const numDoors = 4;
 const numKeys = 4;
 
@@ -62,7 +65,12 @@ var LocalGame = new Phaser.Class({
     {
       var that = this;
 
-      pointer = this.input.mousePointer;
+      pointer = this.input.mousePointer; //Referencia al ratón
+
+      configKeys = this.input.keyboard.addKeys({
+        pause: Phaser.Input.Keyboard.KeyCodes.P,
+        mute: Phaser.Input.Keyboard.KeyCodes.M
+        });
 
       this.add.image(0, 0, 'backGround').setScale(130 * 64, 75 * 64);
 
@@ -201,6 +209,26 @@ var LocalGame = new Phaser.Class({
       lightManager.addLight(1, guardLight);
       lightManager.addLight(0, guardLight);
 
+      function initLights()
+      {
+        var lightJson;
+
+        for(var i = 0; i < 18; i++)
+        {
+          lightJson = map.findObject("Objects", obj => obj.name === "Luz " + i);
+
+          light = new Light_focal(
+            [lightJson.x, lightJson.y],
+            [0.0, 0.0],
+            0.0,
+            lightJson.properties[0].value, //weakness
+            [lightJson.properties[1].value, lightJson.properties[2].value, lightJson.properties[3].value], //color
+            0.4);
+
+          lightManager.addLight(0, light);
+          lightManager.addLight(1, light);
+        }
+      }//initLights();
 
       //Colisiones de juan y el guardia con las paredes y props
       this.physics.add.collider(juan, this.walls);
@@ -216,73 +244,84 @@ var LocalGame = new Phaser.Class({
     update: function (time, delta)
     {
 
-      var pointerInScene = guardCamera.getWorldPoint(pointer.x, pointer.y);
-      //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
-      juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
-      guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
-
-      function Move(character, cursors, speed, characterMovementVector)
+      if(Phaser.Input.Keyboard.JustDown(configKeys.pause))
       {
-        var movementVector = new Phaser.Math.Vector2(0, 0);
-        //Se obtiene el vector de movimiento del personaje y se noramliza
-        //movementVector.x = character.x - characterMovementVector.x;
-        //movementVector.y = character.y - characterMovementVector.y;
+        paused = !paused;
 
-        movementVector = movementVector.normalize();
-
-        //Se elimina la velocidad que pudiera llevar el personaje
-        character.setVelocityX(0);
-        character.setVelocityY(0);
-
-        //Se mueve hacia arriba, abajo, izquieda o derecha según la tecla pulsada
-        if (cursors.up.isDown)
-        {
-          //Si ya lleva una dirección se multiplica por el vector normalizado
-          //Para que mantenga la misma velocidad aunque vaya en diagonal
-            if(movementVector.y != 0)
-              character.setVelocityY(speed * movementVector.y);
-            else
-              character.setVelocityY(-speed);
-        }
-
-        if(cursors.down.isDown)
-        {
-            if(movementVector.y != 0)
-              character.setVelocityY(speed * movementVector.y);
-            else
-              character.setVelocityY(speed);
-        }
-
-        if (cursors.left.isDown)
-        {
-            if(movementVector.x != 0)
-              character.setVelocityX(speed * movementVector.x);
-            else
-              character.setVelocityX(-speed);
-        }
-
-        if(cursors.right.isDown)
-        {
-            if(movementVector.x != 0)
-              character.setVelocityX(speed * movementVector.x);
-            else
-              character.setVelocityX(speed);
-        }
+        juan.setVelocityX(0); juan.setVelocityY(0);
+        guard.setVelocityX(0); guard.setVelocityY(0);
       }
-      Move(juan, juanCursors, juanSpeed, juanMovementVector);
-      Move(guard, guardCursors, guardSpeed, guardMovementVector);
 
-      juanPreviousPos.set(juan.x, juan.y);
-      guardPreviousPos.set(guard.x, guard.y);
+      if(!paused)
+      {
+        var pointerInScene = guardCamera.getWorldPoint(pointer.x, pointer.y);
+        //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
+        juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
+        guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
 
-      juanLight.position = [juan.x, juan.y];
-      guardLight.position = [guard.x, guard.y];
+        function Move(character, cursors, speed, characterMovementVector)
+        {
+          var movementVector = new Phaser.Math.Vector2(0, 0);
+          //Se obtiene el vector de movimiento del personaje y se noramliza
+          //movementVector.x = character.x - characterMovementVector.x;
+          //movementVector.y = character.y - characterMovementVector.y;
 
-      guardMouseVector.set(pointerInScene.x - guard.x, pointerInScene.y - guard.y).normalize();
+          movementVector = movementVector.normalize();
 
-      guardLight.direction = [guardMouseVector.x, guardMouseVector.y];
+          //Se elimina la velocidad que pudiera llevar el personaje
+          character.setVelocityX(0);
+          character.setVelocityY(0);
 
-      lightManager.updateAllUniforms(delta);
+          //Se mueve hacia arriba, abajo, izquieda o derecha según la tecla pulsada
+          if (cursors.up.isDown)
+          {
+            //Si ya lleva una dirección se multiplica por el vector normalizado
+            //Para que mantenga la misma velocidad aunque vaya en diagonal
+              if(movementVector.y != 0)
+                character.setVelocityY(speed * movementVector.y);
+              else
+                character.setVelocityY(-speed);
+          }
+
+          if(cursors.down.isDown)
+          {
+              if(movementVector.y != 0)
+                character.setVelocityY(speed * movementVector.y);
+              else
+                character.setVelocityY(speed);
+          }
+
+          if (cursors.left.isDown)
+          {
+              if(movementVector.x != 0)
+                character.setVelocityX(speed * movementVector.x);
+              else
+                character.setVelocityX(-speed);
+          }
+
+          if(cursors.right.isDown)
+          {
+              if(movementVector.x != 0)
+                character.setVelocityX(speed * movementVector.x);
+              else
+                character.setVelocityX(speed);
+          }
+        }
+        Move(juan, juanCursors, juanSpeed, juanMovementVector);
+        Move(guard, guardCursors, guardSpeed, guardMovementVector);
+
+        juanPreviousPos.set(juan.x, juan.y);
+        guardPreviousPos.set(guard.x, guard.y);
+
+        juanLight.position = [juan.x, juan.y];
+        guardLight.position = [guard.x, guard.y];
+
+        guardMouseVector.set(pointerInScene.x - guard.x, pointerInScene.y - guard.y).normalize();
+
+        guardLight.direction = [guardMouseVector.x, guardMouseVector.y];
+
+        lightManager.updateAllUniforms(delta);
+      }
     }
 });
 
