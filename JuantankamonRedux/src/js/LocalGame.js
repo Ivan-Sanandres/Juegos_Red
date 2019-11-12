@@ -3,7 +3,7 @@ var lightManager;
 var juan; //Contiene el objeto físico de Juan
 var juanSpeed;
 var juanMovementVector = new Phaser.Math.Vector2(0, 0);
-//var juanPreviousPos = new Phaser.Math.Vector2(0, 0);
+var juanPreviousPos = new Phaser.Math.Vector2(0, 0);
 var juanCursors; //Teclas con las que se mueve Juan
 var juanCamera;
 var juanLight;
@@ -11,7 +11,7 @@ var juanLight;
 var guard; //Contiene el objeto físico del guardia
 var guardSpeed;
 var guardMovementVector = new Phaser.Math.Vector2(0, 0);
-//var guardPreviousPos = new Phaser.Math.Vector2(0, 0);
+var guardPreviousPos = new Phaser.Math.Vector2(0, 0);
 var guardMouseVector = new Phaser.Math.Vector2(0, 0);
 var guardCursors; //Teclas con las que se mueve el guardia
 var guardCamera;
@@ -260,6 +260,7 @@ var LocalGame = new Phaser.Class({
     {
       txtMP.x = juan.x;
       txtMP.y = juan.y;
+
       //Si se pulsa la P se pausa el juego y no se actualizan las posiciones y luces
       if(Phaser.Input.Keyboard.JustDown(configKeys.pause))
       {
@@ -286,30 +287,53 @@ var LocalGame = new Phaser.Class({
         var pointerInWorldCoordinates = guardCamera.getWorldPoint(pointer.x, pointer.y);
 
         //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
-        //juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
-        //guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
+        juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
+        guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
 
-        function Move(character, cursors, speed)
+        function Move(character, cursors, speed, characterMovementVector)
         {
+          var horizontalInput = 0; //Input horizontal del jugador (-1 a la izquieda y 1 a la derecha)
+          var verticalInput = 0; // Input vercial del jugador (-1 arriba y 1 abajo)
+
           //Se elimina la velocidad que pudiera llevar el personaje
           character.setVelocityX(0);
           character.setVelocityY(0);
 
-          //Se mueve hacia arriba, abajo, izquieda o derecha según la tecla pulsada
-          if (cursors.up.isDown) character.setVelocityY(-speed);
+          horizontalInput = 0;
+          verticalInput = 0;
 
-          if(cursors.down.isDown) character.setVelocityY(speed);
+          //Usamos el vector de dirección de los jugadores normalizado y en valor absoluto
+          characterMovementVector = characterMovementVector.normalize();
+          characterMovementVector = new Phaser.Math.Vector2(Math.abs(characterMovementVector.x), Math.abs(characterMovementVector.y));
 
-          if (cursors.left.isDown) character.setVelocityX(-speed);
+          //Si pulsamos Up o Down quitamos o añadimos respectivamente 1 a verticalInput
+          //De esta forma si se pulsan las dos a la vez es = 0 y el personaje no se Mueve
+          //Misma lógica para horizontalInput con Left y Right
+          if (cursors.up.isDown) verticalInput += -1;
 
-          if(cursors.right.isDown) character.setVelocityX(speed);
+          if(cursors.down.isDown) verticalInput += 1;
+
+          if (cursors.left.isDown) horizontalInput += -1;
+
+          if(cursors.right.isDown) horizontalInput += 1;
+
+          //Si el jugador se estaba movimiendo lo tenemos en cuenta para que no vaya más rápido en diaganol
+          if(characterMovementVector.x != 0)
+            character.setVelocityX(speed * horizontalInput * characterMovementVector.x);
+          else
+            character.setVelocityX(speed * horizontalInput);
+
+          if(characterMovementVector.y != 0)
+            character.setVelocityY(speed * verticalInput * characterMovementVector.y);
+          else
+            character.setVelocityY(speed * verticalInput);
         }
-        Move(juan, juanCursors, juanSpeed);
-        Move(guard, guardCursors, guardSpeed);
+        Move(juan, juanCursors, juanSpeed, juanMovementVector);
+        Move(guard, guardCursors, guardSpeed, guardMovementVector);
 
         //Posición que llevan los personajes en el frame anterior
-        //juanPreviousPos.set(juan.x, juan.y);
-        //guardPreviousPos.set(guard.x, guard.y);
+        juanPreviousPos.set(juan.x, juan.y);
+        guardPreviousPos.set(guard.x, guard.y);
 
         juanLight.position = [juan.x, juan.y];
         guardLight.position = [guard.x, guard.y];
