@@ -1467,6 +1467,15 @@
                         }]
                 }, 
                 {
+                 "id":221,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
                  "id":224,
                  "properties":[
                         {
