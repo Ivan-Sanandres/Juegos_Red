@@ -41,11 +41,6 @@ var LocalGame = new Phaser.Class({
         Phaser.Scene.call(this, {key: 'LocalGame'})
     },
 
-    init: function ()
-    {
-
-    },
-
     preload: function ()
     {
       //En esta función se cargan los recursos externos que utilizará el juego
