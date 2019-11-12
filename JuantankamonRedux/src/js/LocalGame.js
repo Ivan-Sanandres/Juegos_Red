@@ -25,7 +25,6 @@ var spawnPoints = {};
 var finalDoor;
 
 var pointer;
-var pointerInScene;
 
 var configKeys;
 
@@ -98,6 +97,7 @@ var LocalGame = new Phaser.Class({
 
         //Se crean las cajas de colisión de las paredes en base a las propiedades almacenadas y el grupo de físicas
         wallCol.forEach(wallCol => {
+          //create( [x] [, y] [, key] [, frame] [, visible] [, active])
           const wall = this.walls.create(wallCol.x + (wallCol.width/2), wallCol.y + (wallCol.height/2),'',false);
           wall.body.setSize(wallCol.width,wallCol.height);
           wall.setVisible(false);
@@ -121,10 +121,9 @@ var LocalGame = new Phaser.Class({
         juanCamera = that.cameras.main;
 
         //Ajustes de cámara
-        //juanCamera.setBackgroundColor('rgba(255, 100, 160, 1)');
         juanCamera.setViewport(0, 0);
         juanCamera.setSize(176, 176);
-        juanCamera.startFollow(juan, true, 1, 1);
+        juanCamera.startFollow(juan, true, 1, 1); //true indica que no hay movimientos en subpíxeles. Los 1 sirven para que el movimiento se más suave
 
         //Se establecen las teclas que usa Juan para moverse
         juanCursors = that.input.keyboard.addKeys(
@@ -152,7 +151,6 @@ var LocalGame = new Phaser.Class({
         //Se crea una nueva cámara para guardia y se ajusta
         guardCamera = that.cameras.add(0, 0, 0, 0);
 
-        //guardCamera.setBackgroundColor('rgba(255, 100, 160, 1)');
         guardCamera.setViewport(186, 0);
         guardCamera.setScroll(186, 0);
         guardCamera.setSize(176, 176);
@@ -195,7 +193,7 @@ var LocalGame = new Phaser.Class({
           spawnPoint = map.findObject("Objects", obj => obj.name === "Llave " + i);
           keys[i] = that.physics.add.sprite(spawnPoint.x, spawnPoint.y, "key");
           keys[i].picked = false;
-          //Se asocia una callback al evento de colisión de Juan con las llaves
+          //Se asocia una callback al evento de overlap (trigger) de Juan con las llaves
           that.physics.add.overlap(juan, keys[i], function(){pickUpKey(i);}, null, this);
         }
         for(var i = 0; i < numKeys; i++)
@@ -203,14 +201,9 @@ var LocalGame = new Phaser.Class({
       }
       initKeys();
 
-      //Crea la puerta de salida
-      function initFinalDoor()
-      {
-        //Se crea la puerta de salida según el punto de spawn del json
-        spawnPoint = map.findObject("Objects", obj => obj.name === "Puerta Salida");
-        finalDoor = this.statics.create(spawnPoint.x + 16, spawnPoint.y + 16, "finalDoor").refreshBody();
-      }
-      initFinalDoor();
+      //Se crea la puerta de salida según el punto de spawn del json
+      spawnPoint = map.findObject("Objects", obj => obj.name === "Puerta Salida");
+      finalDoor = this.statics.create(spawnPoint.x + 16, spawnPoint.y + 16, "finalDoor").refreshBody();
 
       //Instanciación de luces de los personajes
       lightManager = new LightingManager(this.game, [juanCamera, guardCamera]);
@@ -275,29 +268,30 @@ var LocalGame = new Phaser.Class({
 
         juan.setVelocityX(0); juan.setVelocityY(0);
         guard.setVelocityX(0); guard.setVelocityY(0);
-      }if(Phaser.Input.Keyboard.JustDown(configKeys.mute)){
+      }
+      if(Phaser.Input.Keyboard.JustDown(configKeys.mute))
+      {
           muted = !muted;
           gameMusic.mute = muted;
       }
-      if(Phaser.Input.Keyboard.JustDown(configKeys.space) && paused){
+      if(Phaser.Input.Keyboard.JustDown(configKeys.space) && paused)
+      {
         gameMusic.stop();
         this.scene.start("Menu");
       }
 
       if(!paused)
       {
-        var pointerInScene = guardCamera.getWorldPoint(pointer.x, pointer.y);
+        //Pasamos el ratón de coordenadas de la ventana a coordenadas de la escena
+        var pointerInWorldCoordinates = guardCamera.getWorldPoint(pointer.x, pointer.y);
+
         //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
         juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
         guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
 
-        function Move(character, cursors, speed, characterMovementVector)
+        function Move(character, cursors, speed, movementVector)
         {
-          var movementVector = new Phaser.Math.Vector2(0, 0);
-          //Se obtiene el vector de movimiento del personaje y se noramliza
-          //movementVector.x = character.x - characterMovementVector.x;
-          //movementVector.y = character.y - characterMovementVector.y;
-
+          //Normalizamos el vector de movimiento de cada personaje
           movementVector = movementVector.normalize();
 
           //Se elimina la velocidad que pudiera llevar el personaje
@@ -342,13 +336,14 @@ var LocalGame = new Phaser.Class({
         Move(juan, juanCursors, juanSpeed, juanMovementVector);
         Move(guard, guardCursors, guardSpeed, guardMovementVector);
 
+        //Posición que llevan los personajes en el frame anterior
         juanPreviousPos.set(juan.x, juan.y);
         guardPreviousPos.set(guard.x, guard.y);
 
         juanLight.position = [juan.x, juan.y];
         guardLight.position = [guard.x, guard.y];
 
-        guardMouseVector.set(pointerInScene.x - guard.x, pointerInScene.y - guard.y).normalize();
+        guardMouseVector.set(pointerInWorldCoordinates.x - guard.x, pointerInWorldCoordinates.y - guard.y).normalize();
 
         guardLight.direction = [guardMouseVector.x, guardMouseVector.y];
 
