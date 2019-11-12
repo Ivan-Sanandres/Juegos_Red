@@ -3,7 +3,7 @@ var lightManager;
 var juan; //Contiene el objeto físico de Juan
 var juanSpeed;
 var juanMovementVector = new Phaser.Math.Vector2(0, 0);
-var juanPreviousPos = new Phaser.Math.Vector2(0, 0);
+//var juanPreviousPos = new Phaser.Math.Vector2(0, 0);
 var juanCursors; //Teclas con las que se mueve Juan
 var juanCamera;
 var juanLight;
@@ -11,7 +11,7 @@ var juanLight;
 var guard; //Contiene el objeto físico del guardia
 var guardSpeed;
 var guardMovementVector = new Phaser.Math.Vector2(0, 0);
-var guardPreviousPos = new Phaser.Math.Vector2(0, 0);
+//var guardPreviousPos = new Phaser.Math.Vector2(0, 0);
 var guardMouseVector = new Phaser.Math.Vector2(0, 0);
 var guardCursors; //Teclas con las que se mueve el guardia
 var guardCamera;
@@ -286,59 +286,30 @@ var LocalGame = new Phaser.Class({
         var pointerInWorldCoordinates = guardCamera.getWorldPoint(pointer.x, pointer.y);
 
         //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
-        juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
-        guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
+        //juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
+        //guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
 
-        function Move(character, cursors, speed, movementVector)
+        function Move(character, cursors, speed)
         {
-          //Normalizamos el vector de movimiento de cada personaje
-          movementVector = movementVector.normalize();
-
           //Se elimina la velocidad que pudiera llevar el personaje
           character.setVelocityX(0);
           character.setVelocityY(0);
 
           //Se mueve hacia arriba, abajo, izquieda o derecha según la tecla pulsada
-          if (cursors.up.isDown)
-          {
-            //Si ya lleva una dirección se multiplica por el vector normalizado
-            //Para que mantenga la misma velocidad aunque vaya en diagonal
-              if(movementVector.y != 0)
-                character.setVelocityY(speed * movementVector.y);
-              else
-                character.setVelocityY(-speed);
-          }
+          if (cursors.up.isDown) character.setVelocityY(-speed);
 
-          if(cursors.down.isDown)
-          {
-              if(movementVector.y != 0)
-                character.setVelocityY(speed * movementVector.y);
-              else
-                character.setVelocityY(speed);
-          }
+          if(cursors.down.isDown) character.setVelocityY(speed);
 
-          if (cursors.left.isDown)
-          {
-              if(movementVector.x != 0)
-                character.setVelocityX(speed * movementVector.x);
-              else
-                character.setVelocityX(-speed);
-          }
+          if (cursors.left.isDown) character.setVelocityX(-speed);
 
-          if(cursors.right.isDown)
-          {
-              if(movementVector.x != 0)
-                character.setVelocityX(speed * movementVector.x);
-              else
-                character.setVelocityX(speed);
-          }
+          if(cursors.right.isDown) character.setVelocityX(speed);
         }
-        Move(juan, juanCursors, juanSpeed, juanMovementVector);
-        Move(guard, guardCursors, guardSpeed, guardMovementVector);
+        Move(juan, juanCursors, juanSpeed);
+        Move(guard, guardCursors, guardSpeed);
 
         //Posición que llevan los personajes en el frame anterior
-        juanPreviousPos.set(juan.x, juan.y);
-        guardPreviousPos.set(guard.x, guard.y);
+        //juanPreviousPos.set(juan.x, juan.y);
+        //guardPreviousPos.set(guard.x, guard.y);
 
         juanLight.position = [juan.x, juan.y];
         guardLight.position = [guard.x, guard.y];
