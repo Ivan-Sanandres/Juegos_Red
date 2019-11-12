@@ -202,8 +202,8 @@ var LocalGame = new Phaser.Class({
       initKeys();
 
       //Se crea la puerta de salida según el punto de spawn del json
-      spawnPoint = map.findObject("Objects", obj => obj.name === "Puerta Salida");
-      finalDoor = this.statics.create(spawnPoint.x + 16, spawnPoint.y + 16, "finalDoor").refreshBody();
+      var spawnPoint = map.findObject("Objects", obj => obj.name === "Puerta Salida");
+      finalDoor = statics.create(spawnPoint.x + 16, spawnPoint.y + 16, "finalDoor").refreshBody();
 
       //Instanciación de luces de los personajes
       lightManager = new LightingManager(this.game, [juanCamera, guardCamera]);
