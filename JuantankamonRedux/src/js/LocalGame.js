@@ -293,14 +293,11 @@ var LocalGame = new Phaser.Class({
         function Move(character, cursors, speed, characterMovementVector)
         {
           var horizontalInput = 0; //Input horizontal del jugador (-1 a la izquieda y 1 a la derecha)
-          var verticalInput = 0; // Input vercial del jugador (-1 arriba y 1 abajo)
+          var verticalInput = 0; // Input vertical del jugador (-1 arriba y 1 abajo)
 
           //Se elimina la velocidad que pudiera llevar el personaje
           character.setVelocityX(0);
           character.setVelocityY(0);
-
-          horizontalInput = 0;
-          verticalInput = 0;
 
           //Usamos el vector de dirección de los jugadores normalizado y en valor absoluto
           characterMovementVector = characterMovementVector.normalize();
