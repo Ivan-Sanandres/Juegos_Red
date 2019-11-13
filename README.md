@@ -13,6 +13,7 @@ Martín Ariza García       (m.ariza.2017@alumnos.urjc.es     | Git: https://git
 Pedro Casas Martínez      (p.casas.2017@alumnos.urjc.es     | Git: https://github.com/thePeter876)
 
 El enlace a Trello es el siguiente: https://trello.com/b/K7lkKa6A/juegos-en-red
+El enlace al repositorio de GitHub es el siguiente: https://github.com/Ivan-Sanandres/Juegos_Red
 
 Índice 
 Historial de versiones
@@ -86,6 +87,19 @@ Apartado gráfico
 Se utilizará un estilo 1-bit mediante los assets con licencia CCO 1.0 Universal del artista Kenney. (https://kenney.nl/assets/bit-pack)
 Para la iluminación hemos desarrollado un shader de iluminación y sombreado.
 
+Pantallas del juego
+![](Imágenes/captura.png)
+Esta es la pantalla del menú principal del juego, en la que se pueden ver los nombres de los desarrolladores, el título del juego, y las teclas que se pueden utilizar para pasar a otras pantallas.
+
+![](Imágenes/captura2.png)
+Esta pantalla muestra las instrucciones del juego. Esto incluye las teclas de movimiento de los personajes, así como cuáles son los objetivos de cada uno. También se indican las teclas usadas para pasar a otras pantallas.
+
+![](Imágenes/captura3.png)
+Esta es la pantalla de juego. Al estar jugando localmente ambos jugadores en esta fase, se ha optado por utilizar una pantalla partida, mostrando la de la izquierda a Juantankamón, y la de la derecha al guardia.
+
+Finalmente, aquí se puede ver el diagrama de navegación de las distintas pantallas.
+![](Imágenes/diagrama.png)
+
 ------------------------------------------------------------------------------------------------------------------
 
 Juego desarrollado hasta ahora:
@@ -108,8 +122,8 @@ Programas usados:
 Assets usados:
 • Fuente texto: https://www.dafont.com/es/minecraftia.font?text=JUANTANKAM%D3N&back=bitmap
 • Tilesheet 1-bit:https://www.kenney.nl/assets/bit-pack
-• Música menú:
-• Música juego:
+• Música menú: https://opengameart.org/content/perpetual-tension
+• Música juego: https://opengameart.org/content/kokopellis-graveyard-theme
 
 Assets creados:
 • Mapa (no las tiles, sino su disposición y diseño de habitaciones)
