@@ -97,6 +97,9 @@ Esta pantalla muestra las instrucciones del juego. Esto incluye las teclas de mo
 ![](Imágenes/captura3.png)
 Esta es la pantalla de juego. Al estar jugando localmente ambos jugadores en esta fase, se ha optado por utilizar una pantalla partida, mostrando la de la izquierda a Juantankamón, y la de la derecha al guardia.
 
+![](Imágenes/captura4.png)
+Esta es la pantalla de pausa. 
+
 Finalmente, aquí se puede ver el diagrama de navegación de las distintas pantallas.
 ![](Imágenes/diagrama.png)
 
