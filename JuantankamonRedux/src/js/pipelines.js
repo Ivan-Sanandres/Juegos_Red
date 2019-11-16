@@ -15,7 +15,7 @@ var LightingPipeline = new Phaser.Class({
             varying vec2 outTexCoord;                                       //Coordenadas de textura del fragmento
             uniform float fLights[11*18];                                   //pos.x, pos.y, dir.x, dir.y, angleRatio, weakness, color.x, color.y, color.z, intensity, waraytrace
             uniform vec4 camInfo;                                           //posición y dimensiones de la cámara
-
+            uniform float bloom;                                            //Bloom que debe aplicarse a las luces
 
 
             float rayFlexing(vec2 coordSrc, vec2 dir){                      //calcula la luz que llega al fragmento desde una fuente de luz en la dirección al fragmento
@@ -57,11 +57,13 @@ var LightingPipeline = new Phaser.Class({
               float focalIntensity = 1.0 - smoothstep(0.6, 1.0, dirMagnitude * weakness);                               //Se calcula la intensidad base de la luz focal
               float dotResult = clamp(dot(normalize(dir), normalize(lightDir)), 0.0, 1.0);                              //Se hacen los calculos necesarios para el efecto focal
               float focalResult = pow(dotResult, angleRatio);
-              float puntualEffect = 1.0 - smoothstep(0.2, 1.0, dirMagnitude * weakness*6.0);                            //Se calcula el efecto puntual reducido para la focal
+              float puntualEffect = 1.0 - smoothstep(0.1, 1.0, dirMagnitude * weakness*5.5);                            //Se calcula el efecto puntual reducido para la focal
               focalIntensity =  puntualEffect + (1.0-puntualEffect) * focalIntensity * focalResult;                     //Se juntan la intensidad focal y el efecto puntual
-              focalIntensity = clamp(focalIntensity, 0.0, 0.9);                                                         //Se clampea la intensidad focal
+              focalIntensity = smoothstep(0.0, 1.0, focalIntensity);                                                    //Se suaviza el efecto
 
               dstIntensity = dstIntensity * (1.0 - focalCondition) + focalIntensity * focalCondition;                   //Se asigna a la intensidad de luz la intensidad puntual o focal según la condición
+
+              dstIntensity = 0.95 * dstIntensity;                                                                       //Se ajusta la intensidad máxima
 
               //RAY TRACE
               float transfer = texture2D(uMainSampler, coordDst).x;                                                     //Se comprueba si el fragmento es traslúcido o no
@@ -70,10 +72,11 @@ var LightingPipeline = new Phaser.Class({
 
               //LEVELS
               float levels = 4.0;                                                                                       //Número de niveles en los que se divide la intensidad de luz
-              dstIntensity = floor(dstIntensity * levels)/levels;                                                       //Se asigna un nivel de luz a la intensidad
+              dstIntensity = (floor(dstIntensity * levels)/levels
+                + (dstIntensity * bloom))/(1.0 + bloom);                                                                //Se asigna un nivel de luz a la intensidad
 
               //RETURN
-              return color * dstIntensity * lightIntensity;                                                             //Se devuelve la iluminación multiplicada por la intensidad general de la luz
+              return vec3(color * dstIntensity * lightIntensity);                                                       //Se devuelve la iluminación multiplicada por la intensidad general de la luz
             }
 
 
@@ -88,6 +91,7 @@ var LightingPipeline = new Phaser.Class({
               const int maxLights = 18;                                           //número máximo de luces
 
               for(int i = 0; i < maxLights; i++){                                 //bucle que itera sobre todas las luces
+
                 intensity = intensity + getLightIntensity(                        //Se suma a la intensidad actual la intensidad de la siguiente luz
                   coordDst,                                                       //Coordenada del fragmento a iluminar
                   vec2(fLights[i*step+0], fLights[i*step+1]),                     //POS
@@ -98,7 +102,17 @@ var LightingPipeline = new Phaser.Class({
                   fLights[i*step+9],                                              //INTENSITY
                   fLights[i*step+10]                                              //RAY TRACE
                 );
+
               }
+
+              //float levels = 4.0;
+              //intensity.w = floor(intensity.w * levels) / levels;
+
+              //intensity = intensity * levels;
+              //intensity.x = floor(intensity.x) / levels;
+              //intensity.y = floor(intensity.y) / levels;
+              //intensity.z = floor(intensity.z) / levels;
+
 
               //FINAL
               return intensity;                                                   //Se devuelve la intensidad calculada
@@ -118,6 +132,7 @@ var LightingPipeline = new Phaser.Class({
               //LIT
               vec4 colorLit = vec4(colorUnlit.xyz * calculateLighting(outTexCoord), 1.0); //Se calcula el color iluminado
               gl_FragColor = colorLit;                                                    //Se asigna el color del fragmento iluminado como color definitivo del fragmento
+              //gl_FragColor = vec4(vec3(fLights[9]),1.0);
             }
           `
       });

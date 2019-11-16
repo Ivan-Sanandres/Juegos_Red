@@ -208,10 +208,10 @@ var LocalGame = new Phaser.Class({
       //Instanciación de luces de los personajes
       lightManager = new LightingManager(this.game, [juanCamera, guardCamera]);
 
-      juanLight = new Light_focal([juan.x, juan.y], [0.0, 0.0], 0.0, 1.5, [1.0, 1.0, 1.0], 1.0, 1.0, 1.0);
+      juanLight = new Light_focal([juan.x, juan.y], [0.0, 0.0], 0.0, 1.5, [1.0, 1.0, 1.0], 1.3, 1.0, true, 0.9, 1.0, 1.0);
       lightManager.addLight(0, juanLight);
 
-      guardLight = new Light_focal([guard.x, guard.y], [0.0, 0.0], 2.5, 1.5, [1.0, 1.0, 0.5], 1.0, 1.0, 1.0);
+      guardLight = new Light_focal([guard.x, guard.y], [0.0, 0.0], 2.5, 1.5, [1.0, 1.0, 0.5], 1.3, 1.0, true, 0.9, 1.0, 0.5);
       lightManager.addLight(1, guardLight);
       lightManager.addLight(0, guardLight);
 
@@ -230,7 +230,7 @@ var LocalGame = new Phaser.Class({
             0.0,
             lightJson.properties[0].value, //weakness
             [lightJson.properties[1].value, lightJson.properties[2].value, lightJson.properties[3].value], //color
-            0.4);
+            1.3);
 
           lightManager.addLight(0, light);
           lightManager.addLight(1, light);

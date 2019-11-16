@@ -1,5 +1,5 @@
 function Light_focal //Esta función crea un objeto que guarda las propiedades de una luz
-(pos, dir, angle, weak, col, intensity, ray = 1.0, irr = true, min = 0.8, max = 1.0, irrSpd = 2)
+(pos, dir, angle, weak, col, intensity, ray = 1.0, irr = true, min = 0.9, max = 1.0, irrSpd = 0.5)
 {
   this.position = pos;                      //posición de la luz en coordenadas del mundo
   this.weakness = weak;                     //debilidad de la luz en función de la distancia (0.0 sería una luz que no se atenua jamás)
@@ -12,8 +12,8 @@ function Light_focal //Esta función crea un objeto que guarda las propiedades d
 
   this.irregular = irr;                     //En caso de serlo, la luz cambia su intensidad y debilidad con el tiempo
   this.sign = -1.0;                         //Sentido en el que la luz varía con el tiempo
-  this.minIntensity = min;                  //Intensidad mínima que la luz toma al variar en el tiempo
-  this.maxIntensity = max;                  //Intensidad máxima que la luz toma al variar en el tiempo
+  this.minIntensity = min * intensity;      //Intensidad mínima que la luz toma al variar en el tiempo
+  this.maxIntensity = max * intensity;      //Intensidad máxima que la luz toma al variar en el tiempo
   this.irregularSpeed = irrSpd;             //Velocidad con la que la luz varía en el tiempo
 
   this.originalIntensity = this.intensity;  //Intensidad original de la luz (usado para variar sus datos en el tiempo)
@@ -43,7 +43,7 @@ function Light_focal //Esta función crea un objeto que guarda las propiedades d
 }
 
 
-function LightingManager (g, cams = []){    //Esta función crea un objeto capaz de gestionar las distintas luces del juego y comunicarse con los pipelines
+function LightingManager (g, cams = [], bloom = 0.75){    //Esta función crea un objeto capaz de gestionar las distintas luces del juego y comunicarse con los pipelines
   for(var i = 0; i < cams.length; i++) {    //Como primer paso se crean los arrays
     var aux = cams[i];                      //guardo la cámara en una variable auxiliar
     cams[i] = new Array(2);                 //Reservo espacio para guardar una referencia a la cámara y su array de luces
@@ -51,9 +51,11 @@ function LightingManager (g, cams = []){    //Esta función crea un objeto capaz
     cams[i][1] = new Array(0);              //El segundo elemento del array será un array con las luces (cams[i][1][0] guarda la primera luz de la cámara)
   }
 
+
   this.game = g;                            //guardo una referencia a game
   this.cameras = cams;                      //guardo el array cams calculado
   this.numCameras = cams.length;            //guardo el número de cámaras
+  this.bloom = bloom;
 
   this.setUpPipeline = function(cam, index){  //dada una cámara y su index en el array crea una pipeline y se la asigna
     if(!this.game.renderer.hasPipeline("Lighting" + index)){  //Si la pipeline ya existía no la crea
@@ -101,6 +103,7 @@ function LightingManager (g, cams = []){    //Esta función crea un objeto capaz
 
       pipeline.setFloat1v('fLights', lightArray);                     //paso al shader el array de luces
       pipeline.setFloat4('camInfo', this.cameras[i][0].scrollX, this.cameras[i][0].scrollY,this.cameras[i][0].width, this.cameras[i][0].height); //paso al array la información de la cámara
+      pipeline.setFloat1('bloom', this.bloom);
     }
   }
 }
