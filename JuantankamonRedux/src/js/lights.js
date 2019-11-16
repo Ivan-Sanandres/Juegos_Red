@@ -43,7 +43,7 @@ function Light_focal //Esta función crea un objeto que guarda las propiedades d
 }
 
 
-function LightingManager (g, cams = [], bloom = 0.75){    //Esta función crea un objeto capaz de gestionar las distintas luces del juego y comunicarse con los pipelines
+function LightingManager (g, cams = [], bloom = 0.9, maxIntensity = 1.5){    //Esta función crea un objeto capaz de gestionar las distintas luces del juego y comunicarse con los pipelines
   for(var i = 0; i < cams.length; i++) {    //Como primer paso se crean los arrays
     var aux = cams[i];                      //guardo la cámara en una variable auxiliar
     cams[i] = new Array(2);                 //Reservo espacio para guardar una referencia a la cámara y su array de luces
@@ -55,7 +55,8 @@ function LightingManager (g, cams = [], bloom = 0.75){    //Esta función crea u
   this.game = g;                            //guardo una referencia a game
   this.cameras = cams;                      //guardo el array cams calculado
   this.numCameras = cams.length;            //guardo el número de cámaras
-  this.bloom = bloom;
+  this.bloom = bloom;                       //guardo el valor del bloom
+  this.maxIntensity = maxIntensity;         //guardo el valor de la intensidad máxima
 
   this.setUpPipeline = function(cam, index){  //dada una cámara y su index en el array crea una pipeline y se la asigna
     if(!this.game.renderer.hasPipeline("Lighting" + index)){  //Si la pipeline ya existía no la crea
@@ -104,6 +105,7 @@ function LightingManager (g, cams = [], bloom = 0.75){    //Esta función crea u
       pipeline.setFloat1v('fLights', lightArray);                     //paso al shader el array de luces
       pipeline.setFloat4('camInfo', this.cameras[i][0].scrollX, this.cameras[i][0].scrollY,this.cameras[i][0].width, this.cameras[i][0].height); //paso al array la información de la cámara
       pipeline.setFloat1('bloom', this.bloom);
+      pipeline.setFloat1('maxIntensity', this.maxIntensity);
     }
   }
 }

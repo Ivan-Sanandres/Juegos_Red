@@ -16,6 +16,7 @@ var LightingPipeline = new Phaser.Class({
             uniform float fLights[11*18];                                   //pos.x, pos.y, dir.x, dir.y, angleRatio, weakness, color.x, color.y, color.z, intensity, waraytrace
             uniform vec4 camInfo;                                           //posición y dimensiones de la cámara
             uniform float bloom;                                            //Bloom que debe aplicarse a las luces
+            uniform float maxIntensity;                                     //Máxima iluminación en un punto
 
 
             float rayFlexing(vec2 coordSrc, vec2 dir){                      //calcula la luz que llega al fragmento desde una fuente de luz en la dirección al fragmento
@@ -39,7 +40,7 @@ var LightingPipeline = new Phaser.Class({
 
 
 
-            vec3 getLightIntensity        //Dados los datos de una luz y la coordenada del fragmento a iluminar, devuelve la luz que llega al fragmento
+            vec4 getLightIntensity        //Dados los datos de una luz y la coordenada del fragmento a iluminar, devuelve la luz que llega al fragmento
               (vec2 coordDst, vec2 lightPos, vec2 lightDir, float angleRatio, float weakness, vec3 color, float lightIntensity, float rayTraceActive){
 
 
@@ -71,16 +72,16 @@ var LightingPipeline = new Phaser.Class({
               dstIntensity = dstIntensity * (1.0 - condition) + dstIntensity * rayFlexing(posSrc, dir) * condition;     //Se añade el sombreado a la intensidad (a los objetos no traslúcidos no les afecta el sombreado)
 
               //LEVELS
-              float levels = 4.0;                                                                                       //Número de niveles en los que se divide la intensidad de luz
-              dstIntensity = (floor(dstIntensity * levels)/levels
-                + (dstIntensity * bloom))/(1.0 + bloom);                                                                //Se asigna un nivel de luz a la intensidad
+              //float levels = 4.0;                                                                                       //Número de niveles en los que se divide la intensidad de luz
+              //dstIntensity = (floor(dstIntensity * levels)/levels
+              //  + (dstIntensity * bloom))/(1.0 + bloom);                                                                //Se asigna un nivel de luz a la intensidad
 
               //RETURN
-              return vec3(color * dstIntensity * lightIntensity);                                                       //Se devuelve la iluminación multiplicada por la intensidad general de la luz
+              return vec4(color * dstIntensity * lightIntensity, dstIntensity * lightIntensity);                                                       //Se devuelve la iluminación multiplicada por la intensidad general de la luz
             }
 
             vec3 calculateLighting(vec2 coordDst){                                //Esta función calcula la iluminación de todas las luces para el fragmento
-              vec3 intensity = vec3(0.0);                                         //Se crea la variable intensidad que guarda (color * intensidad)
+              vec4 intensity = vec4(0.0);                                         //Se crea la variable intensidad que guarda (color * intensidad)
 
               //PER LIGHT
               const int step = 11;                                                //parámetros por cada luz
@@ -100,18 +101,16 @@ var LightingPipeline = new Phaser.Class({
                 );
 
               }
+              intensity.xyz = clamp(intensity.xyz, 0.0, 1.0);
+              intensity.w = clamp(intensity.w, 0.0, maxIntensity);
 
-              //float levels = 4.0;
-              //intensity.w = floor(intensity.w * levels) / levels;
-
-              //intensity = intensity * levels;
-              //intensity.x = floor(intensity.x) / levels;
-              //intensity.y = floor(intensity.y) / levels;
-              //intensity.z = floor(intensity.z) / levels;
-
+              //LEVELS
+              float levels = 4.0;                                                  //Número de niveles en los que se divide la intensidad de luz
+              intensity.w = (floor(intensity.w * levels)/levels
+                + (intensity.w * bloom))/(1.0 + bloom);                            //Se asigna un nivel de luz a la intensidad
 
               //FINAL
-              return intensity;                                                   //Se devuelve la intensidad calculada
+              return vec3(intensity.w * intensity.xyz);                            //Se devuelve la intensidad calculada
             }
 
 
