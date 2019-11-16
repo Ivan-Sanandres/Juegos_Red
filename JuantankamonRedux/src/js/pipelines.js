@@ -79,10 +79,6 @@ var LightingPipeline = new Phaser.Class({
               return vec3(color * dstIntensity * lightIntensity);                                                       //Se devuelve la iluminación multiplicada por la intensidad general de la luz
             }
 
-
-
-
-
             vec3 calculateLighting(vec2 coordDst){                                //Esta función calcula la iluminación de todas las luces para el fragmento
               vec3 intensity = vec3(0.0);                                         //Se crea la variable intensidad que guarda (color * intensidad)
 

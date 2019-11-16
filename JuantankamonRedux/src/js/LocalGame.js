@@ -332,12 +332,15 @@ var LocalGame = new Phaser.Class({
         juanPreviousPos.set(juan.x, juan.y);
         guardPreviousPos.set(guard.x, guard.y);
 
+        //LIGHT POSITION
         juanLight.position = [juan.x, juan.y];
-        guardLight.position = [guard.x, guard.y];
 
         guardMouseVector.set(pointerInWorldCoordinates.x - guard.x, pointerInWorldCoordinates.y - guard.y).normalize();
-
         guardLight.direction = [guardMouseVector.x, guardMouseVector.y];
+
+        var guardLightDistance = 3.0;
+        guardLight.position = [guard.x + guardLight.direction[0] * guardLightDistance, guard.y + guardLight.direction[1] * guardLightDistance];
+
 
         lightManager.updateAllUniforms(delta);
       }
