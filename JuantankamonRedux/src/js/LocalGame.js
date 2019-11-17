@@ -211,7 +211,7 @@ var LocalGame = new Phaser.Class({
       juanLight = new Light_focal([juan.x, juan.y], [0.0, 0.0], 0.0, 1.5, [1.0, 1.0, 1.0], 1.3, 1.0, true, 0.9, 1.0, 1.0);
       lightManager.addLight(0, juanLight);
 
-      guardLight = new Light_focal([guard.x, guard.y], [0.0, 0.0], 2.5, 1.5, [1.0, 1.0, 0.5], 1.3, 1.0, true, 0.9, 1.0, 0.5);
+      guardLight = new Light_focal([guard.x, guard.y], [0.0, 0.0], 1.5, 1.5, [1.0, 1.0, 0.5], 1.3, 1.0, true, 0.9, 1.0, 0.5);
       lightManager.addLight(1, guardLight);
       lightManager.addLight(0, guardLight);
 
