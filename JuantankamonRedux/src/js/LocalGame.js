@@ -57,11 +57,20 @@ var LocalGame = new Phaser.Class({
       this.load.image("backGround", "./resources/sprites/backgroundColor.png");
 
       this.load.audio("gameMusic", "./resources/sound/gameMusic.mp3");
+
+      //ANIMATIONS
+      this.load.spritesheet('guardAnim', 'resources/sprites/guardWalk.png', {frameWidth: 16, frameHeight: 16});
+      this.load.spritesheet('juanAnim', 'resources/sprites/juanWalk.png', {frameWidth: 16, frameHeight: 16});
+
     },
 
     create: function ()
     {
+
+
       var that = this;
+
+
 
       pointer = this.input.mousePointer; //Referencia al ratón
 
@@ -106,6 +115,13 @@ var LocalGame = new Phaser.Class({
         //Inicializa a Juan y todas sus variables
       function initJuan(speed)
       {
+        that.anims.create({
+          key : 'juanWalkAnim',
+          frames: that.anims.generateFrameNumbers('juanAnim', {start : 0, end: 3}),
+          frameRate: 6,
+          repeat: -1
+        });
+
         //Se elige un punto de spawn aleatorio
         spawnPoints[0] = map.findObject("Objects", obj => obj.name === "Spawn Point Juan 1");
         spawnPoints[1] = map.findObject("Objects", obj => obj.name === "Spawn Point Juan 2");
@@ -136,12 +152,21 @@ var LocalGame = new Phaser.Class({
 
         //Juan colisiona con los props y las paredes
         that.physics.add.collider(juan, worldLayer);
+
+        juan.anims.play('juanWalkAnim', true);
       }
       initJuan(90);
 
       //Inicializa al guardia y todas sus variables
       function initGuard(speed)
       {
+        that.anims.create({
+          key : 'guardWalkAnim',
+          frames: that.anims.generateFrameNumbers('guardAnim', {start : 0, end: 3}),
+          frameRate: 6,
+          repeat: -1
+        });
+
         const spawnPointGuard = map.findObject("Objects", obj => obj.name === "Spawn Point Guard");
         //Se crea un objeto físico guardia con el spawnPoint determinado en el jSon
         guard = that.physics.add
@@ -161,6 +186,8 @@ var LocalGame = new Phaser.Class({
         guardSpeed = speed;
 
         that.physics.add.collider(guard, worldLayer);
+
+        guard.anims.play('guardWalkAnim', true);
       }
       initGuard(100);
 
@@ -302,6 +329,17 @@ var LocalGame = new Phaser.Class({
           //Usamos el vector de dirección de los jugadores normalizado y en valor absoluto
           characterMovementVector = characterMovementVector.normalize();
           characterMovementVector = new Phaser.Math.Vector2(Math.abs(characterMovementVector.x), Math.abs(characterMovementVector.y));
+
+
+          //ANIMATIONS
+          var movVecLength = characterMovementVector.length();
+          if(movVecLength == 0.0 && !character.anims.currentAnim.paused){
+            //console.log("Pausando");
+            character.anims.currentAnim.pause();
+          } else if (movVecLength > 0.0 && character.anims.currentAnim.paused){
+            //console.log("Continuando");
+            character.anims.currentAnim.resume();
+          }
 
           //Si pulsamos Up o Down quitamos o añadimos respectivamente 1 a verticalInput
           //De esta forma si se pulsan las dos a la vez es = 0 y el personaje no se Mueve
