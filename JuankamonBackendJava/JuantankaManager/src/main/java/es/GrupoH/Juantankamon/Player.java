@@ -6,7 +6,6 @@ import java.time.temporal.TemporalUnit;
 public class Player {
 	//STATICS
 	public static double maxInactivityTime = 60; //in seconds
-	//public static int playerCount = 0;
 	
 	//VARIABLES
 	private long id;
@@ -15,22 +14,7 @@ public class Player {
 	private LocalDateTime lastInteractionDate;
 
 	//CONSTRUCTORS
-	public Player() {
-		//playerCount++;
-		//id = playerCount;
-		//name = "unknown" + id;
-		//logInDate = LocalDateTime.now();
-		//lastInteractionDate = logInDate;
-	}
-	
-	/*public Player(String playerName) {
-		//playerCount++;
-		//id = playerCount;
-		//name = playerName;
-		//logInDate = LocalDateTime.now();
-		//lastInteractionDate = logInDate;
-	}
-	*/
+	public Player() {}
 	
 	//METHODS
 	public void setUp(long id) {
@@ -38,8 +22,6 @@ public class Player {
 		logInDate = LocalDateTime.now();
 		lastInteractionDate = logInDate;
 	}
-	
-	
 	
 	public long getId() { return id; }
 	public void setId(long newId) { id = newId; }
@@ -53,6 +35,7 @@ public class Player {
 	public LocalDateTime getLastInteractionDate() { return lastInteractionDate; }
 	public void updateLastInteractionDate() {lastInteractionDate = LocalDateTime.now(); }
 	
+	//POR ALGÚN MOTIVO PILLA INACTIVE COMO PARÁMETRO
 	public boolean isInactive() {
 		Duration diff = Duration.between(LocalDateTime.now(), lastInteractionDate);
 		double inactiveTime = (double)diff.abs().getSeconds();
