@@ -1,8 +1,7 @@
 package es.GrupoH.Juantankamon;
 
-public class Item {
-
-	private long id;
+public class Room {
+	/*private long id;
 	private String description;
 	private boolean checked;
 
@@ -36,6 +35,5 @@ public class Item {
 	@Override
 	public String toString() {
 		return "Item [id=" + id + ", description=" + description + ", checked=" + checked + "]";
-	}
-
+	}*/
 }
