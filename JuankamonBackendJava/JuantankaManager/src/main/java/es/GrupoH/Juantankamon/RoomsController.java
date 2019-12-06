@@ -28,7 +28,7 @@ public class RoomsController {
 	 * HAY QUE VER COMO GESTIONAR TODO ESTO EN BUCLE DESDE EL SERVIDOR
 	 */
 	
-	Map<Long, Room> rooms = new ConcurrentHashMap<>(); 
+	public static Map<Long, Room> rooms = new ConcurrentHashMap<>(); 
 	AtomicLong nextId = new AtomicLong(0);
 	
 	@GetMapping
@@ -44,6 +44,11 @@ public class RoomsController {
 		newRoom.setId(id);
 		rooms.put(id, newRoom);
 
+		Player juan = PlayersController.players.get(newRoom.getJuantankamonId());
+		Player guard = PlayersController.players.get(newRoom.getGuardId());
+		if(juan != null) juan.setRoomId(newRoom.getId());
+		if(guard != null) guard.setRoomId(newRoom.getId());
+		
 		return newRoom;
 	}
 
@@ -53,6 +58,12 @@ public class RoomsController {
 		Room savedRoom = rooms.get(updatedRoom.getId());
 		if (savedRoom != null) {
 			rooms.put(id, updatedRoom);
+			
+			Player juan = PlayersController.players.get(savedRoom.getJuantankamonId());
+			Player guard = PlayersController.players.get(savedRoom.getGuardId());
+			if(juan != null) juan.setRoomId(savedRoom.getId());
+			if(guard != null) guard.setRoomId(savedRoom.getId());
+			
 			return new ResponseEntity<>(updatedRoom, HttpStatus.OK);
 		}
 		
@@ -81,6 +92,12 @@ public class RoomsController {
 			rooms.remove(savedRoom.getId());
 			return new ResponseEntity<>(savedRoom, HttpStatus.OK);
 		}
+		
+		Player juan = PlayersController.players.get(savedRoom.getJuantankamonId());
+		Player guard = PlayersController.players.get(savedRoom.getGuardId());
+		
+		if(juan != null) juan.expelFromRoom();
+		if(guard != null) guard.expelFromRoom();
 		
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
