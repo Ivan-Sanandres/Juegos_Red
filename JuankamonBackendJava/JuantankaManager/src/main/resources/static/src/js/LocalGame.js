@@ -66,11 +66,7 @@ var LocalGame = new Phaser.Class({
 
     create: function ()
     {
-
-
       var that = this;
-
-
 
       pointer = this.input.mousePointer; //Referencia al ratón
 
@@ -285,6 +281,8 @@ var LocalGame = new Phaser.Class({
 
     update: function (time, delta)
     {
+      getPlayers();
+
       txtMP.x = juan.x;
       txtMP.y = juan.y;
 
