@@ -72,6 +72,11 @@ var LocalGame = new Phaser.Class({
       var that = this;
 
       pointer = this.input.mousePointer; //Referencia al ratón
+      
+      this.input.keyboard.on('keydown', function (event) {anyInput = true;})
+      //this.input.keyboard.on('keyup', function (event) {anyInput = false;})
+
+      this.input.on('pointermove', function (pointer) {anyInput = true;});
 
       configKeys = this.input.keyboard.addKeys({ //Teclas usadas para opciones de configuración
         pause: Phaser.Input.Keyboard.KeyCodes.P,
@@ -289,7 +294,7 @@ var LocalGame = new Phaser.Class({
 
       var timerInput = this.time.addEvent({
         delay: 1000,
-        callback: function(){ console.log("HOLA SOY EL TIEMPO") },//periodicPut,
+        callback: function(){ /*put...*/ anyInput = false; },
         //args: [],
         callbackScope: this,
         loop: true
@@ -302,6 +307,8 @@ var LocalGame = new Phaser.Class({
     {
       txtMP.x = juan.x;
       txtMP.y = juan.y;
+
+      console.log(anyInput);
 
       //Si se pulsa la P se pausa el juego y no se actualizan las posiciones y luces
       if(Phaser.Input.Keyboard.JustDown(configKeys.pause))
@@ -326,6 +333,7 @@ var LocalGame = new Phaser.Class({
       if(!paused)
       {
         pointerInWorldCoordinates = guardCamera.getWorldPoint(pointer.x, pointer.y); //console.log(pointerInWorldCoordinates);
+
         //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
         juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
         guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);

@@ -1,6 +1,7 @@
 var lightManager;
 
 var anyInput = false;
+var pointerInWorldCoordinates = {x: 0, y: 0};
 
 var juan; //Contiene el objeto físico de Juan
 var juanSpeed;
@@ -71,19 +72,6 @@ var LocalGame = new Phaser.Class({
       var that = this;
 
       pointer = this.input.mousePointer; //Referencia al ratón
-      
-      this.input.keyboard.on('keydown', function(event)
-      {
-        anyInput = true;
-        //console.log(anyInput);
-      })
-      this.input.keyboard.on('keyup', function(event)
-      {
-        anyInput = false;
-        //console.log(anyInput);
-      })
-
-      //this.input.mousePointer.
 
       configKeys = this.input.keyboard.addKeys({ //Teclas usadas para opciones de configuración
         pause: Phaser.Input.Keyboard.KeyCodes.P,
@@ -299,13 +287,13 @@ var LocalGame = new Phaser.Class({
       gameMusic = this.sound.add("gameMusic");
       gameMusic.play({mute: muted, loop: true});
 
-      /*var timerInput = this.time.addEvent({
+      var timerInput = this.time.addEvent({
         delay: 1000,
-        callback: checkInput,
+        callback: function(){ console.log("HOLA SOY EL TIEMPO") },//periodicPut,
         //args: [],
         callbackScope: this,
         loop: true
-    });*/
+      });
 
       paused = false;
     },
@@ -314,8 +302,6 @@ var LocalGame = new Phaser.Class({
     {
       txtMP.x = juan.x;
       txtMP.y = juan.y;
-
-      console.log(anyInput);
 
       //Si se pulsa la P se pausa el juego y no se actualizan las posiciones y luces
       if(Phaser.Input.Keyboard.JustDown(configKeys.pause))
@@ -339,9 +325,7 @@ var LocalGame = new Phaser.Class({
 
       if(!paused)
       {
-        //Pasamos el ratón de coordenadas de la ventana a coordenadas de la escena
-        var pointerInWorldCoordinates = guardCamera.getWorldPoint(pointer.x, pointer.y);
-
+        pointerInWorldCoordinates = guardCamera.getWorldPoint(pointer.x, pointer.y); //console.log(pointerInWorldCoordinates);
         //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
         juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
         guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
@@ -435,9 +419,4 @@ function endGame(state)
 
   gameMusic.stop();
   that.scene.start("EndScreen");
-}
-
-function checkInput()
-{
-
 }
