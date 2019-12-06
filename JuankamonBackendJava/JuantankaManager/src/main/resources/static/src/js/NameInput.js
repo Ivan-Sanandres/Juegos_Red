@@ -15,7 +15,8 @@ var NameInput = new Phaser.Class({
     create: function()
     {
         that = this;
-
+        var inputContainer = document.getElementById("input-container");
+        inputContainer.style.display = "block";
         var button = document.getElementById("confirm-button");
         var textbox = document.getElementById("name-field");
         button.addEventListener("click", function(event)
