@@ -1,5 +1,7 @@
 var lightManager;
 
+var anyInput = false;
+
 var juan; //Contiene el objeto físico de Juan
 var juanSpeed;
 var juanMovementVector = new Phaser.Math.Vector2(0, 0);
@@ -66,13 +68,20 @@ var LocalGame = new Phaser.Class({
 
     create: function ()
     {
-
-
       var that = this;
 
-
-
       pointer = this.input.mousePointer; //Referencia al ratón
+      
+      this.input.keyboard.on('keydown', function(event)
+      {
+        anyInput = true;
+        //console.log(anyInput);
+      })
+      this.input.keyboard.on('keyup', function(event)
+      {
+        anyInput = false;
+        //console.log(anyInput);
+      })
 
       configKeys = this.input.keyboard.addKeys({ //Teclas usadas para opciones de configuración
         pause: Phaser.Input.Keyboard.KeyCodes.P,
@@ -271,15 +280,30 @@ var LocalGame = new Phaser.Class({
       this.physics.add.collider(guard, propsLayer);
 
       //Se asocia la callback endGame a la colisión de Juan con la puerta de salida y con el guardia
-      this.physics.add.collider(juan, finalDoor, endGame(endGameStates.JUAN_WINS), null, this);
+      this.physics.add.collider(juan, finalDoor, function() {
+        endGameState = endGameStates.JUAN_WINS;
+        endGame();
+      }, null, this);
 
-      this.physics.add.overlap(juan, guard, endGame(endGameStates.GUARD_WINS), null, this);
+      this.physics.add.overlap(juan, guard, function()
+      {
+        endGameState = endGameStates.GUARD_WINS;
+        endGame();
+      }, null, this);
 
       txtMP = this.add.bitmapText(juan.x, juan.y, "fuente", "ESPACIO para volver").setOrigin(0.5, 0.5);
       txtMP.visible = false;
 
       gameMusic = this.sound.add("gameMusic");
       gameMusic.play({mute: muted, loop: true});
+
+      /*var timerInput = this.time.addEvent({
+        delay: 1000,
+        callback: checkInput,
+        //args: [],
+        callbackScope: this,
+        loop: true
+    });*/
 
       paused = false;
     },
@@ -288,6 +312,8 @@ var LocalGame = new Phaser.Class({
     {
       txtMP.x = juan.x;
       txtMP.y = juan.y;
+
+      console.log(anyInput);
 
       //Si se pulsa la P se pausa el juego y no se actualizan las posiciones y luces
       if(Phaser.Input.Keyboard.JustDown(configKeys.pause))
@@ -345,11 +371,11 @@ var LocalGame = new Phaser.Class({
           //Si pulsamos Up o Down quitamos o añadimos respectivamente 1 a verticalInput
           //De esta forma si se pulsan las dos a la vez es = 0 y el personaje no se Mueve
           //Misma lógica para horizontalInput con Left y Right
-          if (cursors.up.isDown) verticalInput += -1;
+          if(cursors.up.isDown) verticalInput += -1;
 
           if(cursors.down.isDown) verticalInput += 1;
 
-          if (cursors.left.isDown) horizontalInput += -1;
+          if(cursors.left.isDown) horizontalInput += -1;
 
           if(cursors.right.isDown) horizontalInput += 1;
 
@@ -405,8 +431,11 @@ function endGame(state)
 {
   //Se dirige a la escena de fin de juego
 
-  endGameState = state;
-  console.log(endGameState);
   gameMusic.stop();
-  this.scene.start("EndScreen");
+  that.scene.start("EndScreen");
+}
+
+function checkInput()
+{
+
 }
