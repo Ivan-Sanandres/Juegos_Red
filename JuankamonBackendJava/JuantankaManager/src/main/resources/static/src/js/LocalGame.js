@@ -281,8 +281,6 @@ var LocalGame = new Phaser.Class({
 
     update: function (time, delta)
     {
-      getPlayers();
-
       txtMP.x = juan.x;
       txtMP.y = juan.y;
 
