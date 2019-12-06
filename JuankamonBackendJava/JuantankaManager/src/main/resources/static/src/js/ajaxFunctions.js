@@ -4,7 +4,7 @@ var serverUrl = window.location.href; //Obtenemos la url del servidor al que hac
 
 /***************************PLAYERS******************************/
 //Get players desde el server
-function getPlayers(callback, failCallback) {
+function AJAX_getPlayers(callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: "GET",
         url: serverUrl + 'players'
@@ -12,12 +12,13 @@ function getPlayers(callback, failCallback) {
         console.log('Players loaded: ' + JSON.stringify(players));
         callback(players);
     }).fail(function() {
-      failCallback();
+        console.log('Players loaded FAIL: ' + JSON.stringify(players));
+        failCallback();
     })
 }
 
 //Get player concreto desde el server
-function getPlayer(playerId, callback, failCallback) {
+function AJAX_getPlayer(playerId, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: "GET",
         url: serverUrl + 'players/' + playerId
@@ -25,12 +26,13 @@ function getPlayer(playerId, callback, failCallback) {
         console.log('Player loaded: ' + JSON.stringify(player));
         callback(player);
     }).fail(function() {
-      failCallback();
+        console.log('Player loaded FAIL: ' + JSON.stringify(player));
+        failCallback();
     })
 }
 
 //Post player al servidor
-function createPlayer(player, callback, failCallback) {
+function AJAX_createPlayer(player, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: "POST",
         url: serverUrl + 'players',
@@ -43,12 +45,13 @@ function createPlayer(player, callback, failCallback) {
         console.log("Player created: " + JSON.stringify(player));
         callback(player);
     }).fail(function() {
-      failCallback();
+        console.log("Player created FAIL: " + JSON.stringify(player));
+        failCallback();
     })
 }
 
 //Update player en el servidor
-function updatePlayer(player, callback, failCallback) {
+function AJAX_updatePlayer(player, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: 'PUT',
         url: serverUrl + 'players/' + player.id,
@@ -61,26 +64,28 @@ function updatePlayer(player, callback, failCallback) {
         console.log("Updated player: " + JSON.stringify(player));
         callback(player);
     }).fail(function() {
-      failCallback();
+        console.log("Updated player FAIL: " + JSON.stringify(player));
+        failCallback();
     })
 }
 
 //Delete player del servidor
-function deletePlayer(playerId, callback, failCallback) {
+function AJAX_deletePlayer(playerId, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: 'DELETE',
         url: serverUrl + 'players/' + playerId
     }).done(function (player) {
-        console.log("Deleted player " + playerId)
+        console.log("Deleted player: " + playerId)
         callback(player);
     }).fail(function() {
+      console.log("Deleted player FAIL: " + playerId)
       failCallback();
     })
 }
 
 /***************************ROOMS*****************************/
 //Get rooms desde el server
-function getRooms(callback, failCallback) {
+function AJAX_getRooms(callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: "GET",
         url: serverUrl + 'rooms'
@@ -88,12 +93,13 @@ function getRooms(callback, failCallback) {
         console.log('Rooms loaded: ' + JSON.stringify(rooms));
         callback(rooms);
     }).fail(function() {
-      failCallback();
+        console.log('Rooms loaded FAIL: ' + JSON.stringify(rooms));
+        failCallback();
     })
 }
 
 //Get room concreta desde el server
-function getRoom(roomId, callback, failCallback) {
+function AJAX_getRoom(roomId, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: "GET",
         url: serverUrl + 'rooms/' + roomId
@@ -101,12 +107,13 @@ function getRoom(roomId, callback, failCallback) {
         console.log('Room loaded: ' + JSON.stringify(room));
         callback(room);
     }).fail(function() {
-      failCallback();
+        console.log('Rooms loaded FAIL: ' + JSON.stringify(rooms));
+        failCallback();
     })
 }
 
 //Post room al servidor
-function createRoom(room, callback, failCallback) {
+function AJAX_createRoom(room, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: "POST",
         url: serverUrl + 'rooms',
@@ -119,12 +126,13 @@ function createRoom(room, callback, failCallback) {
         console.log("Room created: " + JSON.stringify(room));
         callback(room);
     }).fail(function() {
-      failCallback();
+        console.log("Room created FAIL: " + JSON.stringify(room));
+        failCallback();
     })
 }
 
 //Update room en el servidor
-function updateRoom(room, callback, failCallback) {
+function AJAX_updateRoom(room, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: 'PUT',
         url: serverUrl + 'rooms/' + room.id,
@@ -137,18 +145,20 @@ function updateRoom(room, callback, failCallback) {
         console.log("Updated room: " + JSON.stringify(room));
         callback(room);
     }).fail(function() {
-      failCallback();
+        console.log("Updated room FAIL: " + JSON.stringify(room));
+        failCallback();
     })
 }
 
 //Delete room del servidor
-function deleteRoom(roomId, callback, failCallback) {
+function AJAX_deleteRoom(roomId, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: 'DELETE',
         url: serverUrl + 'rooms/' + roomId
     }).done(function (player) {
         console.log("Deleted room: " + roomId)
     }).fail(function() {
-      failCallback();
+        console.log("Deleted room FAIL: " + roomId)
+        failCallback();
     })
 }
