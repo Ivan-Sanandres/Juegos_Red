@@ -267,8 +267,9 @@ var LocalGame = new Phaser.Class({
       this.physics.add.collider(guard, propsLayer);
 
       //Se asocia la callback endGame a la colisión de Juan con la puerta de salida y con el guardia
-      this.physics.add.collider(juan, finalDoor, endGame, null, this);
-      this.physics.add.overlap(juan, guard, endGame, null, this);
+      this.physics.add.collider(juan, finalDoor, endGame(endGameStates.JUAN_WINS), null, this);
+
+      this.physics.add.overlap(juan, guard, endGame(endGameStates.GUARD_WINS), null, this);
 
       txtMP = this.add.bitmapText(juan.x, juan.y, "fuente", "ESPACIO para volver").setOrigin(0.5, 0.5);
       txtMP.visible = false;
@@ -396,9 +397,12 @@ function openDoor(index)
   }
 }
 
-function endGame()
+function endGame(state)
 {
-  //Se vuelve a la escena de menu
+  //Se dirige a la escena de fin de juego
+
+  endGameState = state;
+  console.log(endGameState);
   gameMusic.stop();
-  this.scene.start("Menu");
+  this.scene.start("EndScreen");
 }
