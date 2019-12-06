@@ -13,7 +13,7 @@
     <script type="text/javascript" src = "./src/js/pipelines.js">No se pudo cargar la pipeline gráfica</script>
     <script type="text/javascript" src = "./src/js/lights.js"></script>
 
-    <!--<script type="text/javascript" src = "./src/js/NameInput.js">No se pudo cargar la escena de introducir nombre</script>!-->
+    <script type="text/javascript" src = "./src/js/NameInput.js">No se pudo cargar la escena de introducir nombre</script>
     <script type="text/javascript" src = "./src/js/Menu.js">No se pudo cargar la escena de menu</script>
     <script type="text/javascript" src = "./src/js/LocalGame.js">No se pudo cargar la escena de juego</script>
     <script type="text/javascript" src = "./src/js/GameConfig.js">No se pudo cargar la configuración del juego</script>
@@ -21,9 +21,11 @@
   </head>
 
   <body style="background-color:#472D3C;">
-    <div class="">
-      <input type="text" name="nameField" value="Introduce tu nombre">
-      <canvas id="canvas" width="300" height="300"></canvas>
+    <div id="game-container" style="position: absolute; top: 10%; bottom: 10%; left:10%; right: 10%;">
+      <div id="input-container" style="display: block; position: absolute; width: 300px; height: 150px; top: 50%; left: 50%; margin: -100px 0 0 -150px">
+        <input type="text" id="name-field" placeholder="Introduce tu nombre">
+        <input type="button" id="confirm-button" value="Confirmar">
+      </div>
     </div>
   </body>
 </html>

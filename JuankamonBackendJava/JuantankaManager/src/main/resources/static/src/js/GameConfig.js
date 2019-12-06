@@ -15,7 +15,7 @@ const config = {
             gravity: {y: 0}
         }
     },
-    scene: [ Menu, LocalGame ]              //Configuración escenas del juego y su orden
+    scene: [ NameInput, Menu, LocalGame ]              //Configuración escenas del juego y su orden
 };
 
 var game = new Phaser.Game(config);

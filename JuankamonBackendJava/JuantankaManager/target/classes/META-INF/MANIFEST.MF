@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Implementation-Title: JuantankamonRedux
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: m-ari
+Built-By: ivan-
 Implementation-Vendor-Id: es.EjSpring
 Build-Jdk: 1.8.0_231
 Implementation-URL: http://maven.apache.org
