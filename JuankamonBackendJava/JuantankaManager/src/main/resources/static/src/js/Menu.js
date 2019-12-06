@@ -23,16 +23,19 @@ var Menu = new Phaser.Class({
       this.load.image("arrows", "./resources/sprites/arrows.png");
 
       this.load.audio("menuMusic", "./resources/sound/menuMusic.mp3");
+
+      this.load.image("buttonIcon", "./resources/sprites/sobreBoton2.png");
+      this.load.image("buttonIconHover", "./resources/sprites/sobreBoton.png");
     },
 
     create: function () //Código que se ejecuta al generarse la escena
     {
       //Se configuran las teclas espacio, M y J para ser usadas
-      keys = this.input.keyboard.addKeys({
+      /*keys = this.input.keyboard.addKeys({
         space: Phaser.Input.Keyboard.KeyCodes.SPACE,
         mute: Phaser.Input.Keyboard.KeyCodes.M,
         controls: Phaser.Input.Keyboard.KeyCodes.J
-      });
+      });*/
 
       //Se añade la imagen de fondo del menú
       this.add.image(0, 0, "background").setOrigin(0, 0);
@@ -40,9 +43,53 @@ var Menu = new Phaser.Class({
       //CREACIÓN DE TEXTOS
       this.add.bitmapText(74, 25, 'fuente', 'JUANTANKAMÓN', 33);
       this.add.bitmapText(152, 55, 'fuente', 'REDUX', 22);
-      space = this.add.bitmapText(122, 150, 'fuente', 'ESPACIO para comenzar', 11);
-      actions = this.add.bitmapText(143, 110, 'fuente', ['J: ¿Cómo jugar?',
-                                                        'M: Quitar música'], 11, 1);
+
+      playButton = new Button(this, this.cameras.main.width/2, 160, 'buttonIcon', 'buttonIconHover', "Pulsa para comenzar", 'fuente', function(that){
+        menuMusic.stop();
+        that.scene.start("LocalGame");
+      }, 0.25);
+
+      musicButton = new Button(this, this.cameras.main.width/2, 130, 'buttonIcon', 'buttonIconHover', "Desactivar música", 'fuente', function(that){
+        muted = !muted;
+        menuMusic.mute = muted;
+        if(muted) {
+          musicButton.info.setText("Activar música");
+        } else {
+          musicButton.info.setText("Desactivar música");
+        }
+      }, 0.2);
+
+      function control(){
+        musicButton.icon.visible = !musicButton.icon.visible;
+        musicButton.info.visible = !musicButton.info.visible;
+
+        backButton.icon.visible = !backButton.icon.visible;
+        backButton.info.visible = !backButton.info.visible;
+
+        howToButton.icon.visible = !howToButton.icon.visible;
+        howToButton.info.visible = !howToButton.info.visible;
+
+        txtJuantankamon.visible = !txtJuantankamon.visible;
+        txtGuardia.visible = !txtGuardia.visible;
+        txtDescJ.visible = !txtDescJ.visible;
+        txtDescG.visible = !txtDescG.visible;
+        names1.visible = !names1.visible;
+        names2.visible = !names2.visible;
+        wasd.visible = !wasd.visible;
+        arrows.visible = !arrows.visible;
+      }
+
+      backButton = new Button(this, this.cameras.main.width/2, 110, 'buttonIcon', 'buttonIconHover', "Volver", 'fuente', function(that){
+        control();
+      }, 0.1);
+
+      backButton.icon.visible = false;
+      backButton.info.visible = false;
+
+      howToButton = new Button(this, this.cameras.main.width/2, 110, 'buttonIcon', 'buttonIconHover', "Instrucciones", 'fuente', function(that){
+
+        control();
+      }, 0.2);
 
       names1 = this.add.bitmapText(35, 80, 'fuente', ['Martín Ariza',
                                                       'Iván Sanandrés'], 11, 1);
@@ -60,15 +107,12 @@ var Menu = new Phaser.Class({
                                                           'con el ratón. Puedes',
                                                           'atravesar puertas.'], 11, 1);
 
-      txtPause = this.add.bitmapText(134, 110, 'fuente', ['P: Pausa (en juego)',
-                                                          'J: Volver al menú'], 11, 1);
 
       //Los textos que forman parte de la sección ¿Cómo jugar? se esconden para ser revelados cuando se active
       txtJuantankamon.visible = false;
       txtGuardia.visible = false;
       txtDescJ.visible = false;
       txtDescG.visible = false;
-      txtPause.visible = false;
 
       //Se añaden las imágenes de las teclas para la sección ¿Cómo jugar? y se ocultan, igual que los textos
       wasd = this.add.image(43, 90, 'wasd').setOrigin(0, 0);
@@ -86,11 +130,7 @@ var Menu = new Phaser.Class({
 
     update: function (time, delta) //Código que se ejecuta en cada frame de la escena
     {
-      //Handle de pulsaciones de teclas
-      if(Phaser.Input.Keyboard.JustDown(keys.space)){ //Comenzar juego
-        menuMusic.stop();
-        this.scene.start("LocalGame");
-      }if(Phaser.Input.Keyboard.JustDown(keys.mute)){ //Desactivar sonido música
+      /*if(Phaser.Input.Keyboard.JustDown(keys.mute)){ //Desactivar sonido música
         muted = !muted;
         menuMusic.mute = muted;
       }if(Phaser.Input.Keyboard.JustDown(keys.controls)){ //Pantalla ¿Cómo jugar?
@@ -105,11 +145,6 @@ var Menu = new Phaser.Class({
         names2.visible = !names2.visible;
         wasd.visible = !wasd.visible;
         arrows.visible = !arrows.visible;
-      }
-
-      //Se incrementa la variable una unidad, y se calcula un incremento de los valores de x e y de acuerdo a una función sinusoidal
-      sineValue++;
-      space.y += Phaser.Math.Easing.Sine.Out(sineValue/20)/3;
-      space.x += Phaser.Math.Easing.Sine.Out(sineValue/25)/5;
+      }*/
     }
 });

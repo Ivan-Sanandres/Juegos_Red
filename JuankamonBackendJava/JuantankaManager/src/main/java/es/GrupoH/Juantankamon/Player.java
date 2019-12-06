@@ -5,7 +5,7 @@ import java.time.temporal.TemporalUnit;
 
 public class Player {
 	//STATICS
-	public static double maxInactivityTime = 60; //in seconds
+	public static double maxInactivityTime = 600000000; //in seconds
 	
 	//VARIABLES
 	private long id;

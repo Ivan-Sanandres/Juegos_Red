@@ -1,4 +1,5 @@
-var name;
+var playerName;
+var playerId = -1;
 
 var NameInput = new Phaser.Class({
 
@@ -21,10 +22,34 @@ var NameInput = new Phaser.Class({
         {
             if(textbox.value !== "")
             {
-                name = textbox.value;
-                button.style.display = "none";
-                textbox.style.display = "none";
-                that.scene.start("Menu");
+                playerName = textbox.value;
+
+
+                var player = {
+                  name : playerName
+                }
+
+                //get all PLAYERS
+                AJAX_getPlayers(function(p){
+                  var exists = false;
+                  for(var i = 0; i < p.length; i++){
+                    if(playerName === p[i].name) exists = true;
+                  }
+
+                  if(exists){
+                    textbox.value = "";
+                    textbox.placeholder = "Ese nombre ya existe";
+                  } else {
+                    AJAX_createPlayer(player, function(p){
+                      playerId = p.id;
+                      console.log("id: " + playerId);
+                    });
+                    that.scene.start("Menu");
+                    button.style.display = "none";
+                    textbox.style.display = "none";
+
+                  }
+                });
             }
         })
     }
