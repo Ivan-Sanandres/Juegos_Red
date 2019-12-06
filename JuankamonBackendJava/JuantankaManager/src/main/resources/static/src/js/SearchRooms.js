@@ -5,13 +5,13 @@ var endGameStates = {JUAN_WINS: "JUAN_WINS", GUARD_WINS: "GUARD_WINS", DISCONNEC
 var endGameState;
 
 //ESCENA MENÚ
-var Menu = new Phaser.Class({
+var SearchRooms = new Phaser.Class({
 
     Extends: Phaser.Scene,
 
     initialize: function Menu ()
     {
-        Phaser.Scene.call(this, { key: 'Menu'} ) //La key es la referencia en el código de esta escena para cuando la llamemos
+        Phaser.Scene.call(this, { key: 'SearchRooms'} ) //La key es la referencia en el código de esta escena para cuando la llamemos
     },
 
     preload: function () //Se cargan la fuente, las imágenes y la música de la escena

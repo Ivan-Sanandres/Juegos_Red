@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/players")
 public class PlayersController {
 	
-	/*public static */Map<Long, Player> players = new ConcurrentHashMap<>(); 
+	public static Map<Long, Player> players = new ConcurrentHashMap<>();
 	AtomicLong nextId = new AtomicLong(0);
 	
 	@GetMapping
