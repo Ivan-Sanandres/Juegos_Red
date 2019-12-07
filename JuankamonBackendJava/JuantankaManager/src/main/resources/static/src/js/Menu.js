@@ -30,26 +30,25 @@ var Menu = new Phaser.Class({
 
     create: function () //Código que se ejecuta al generarse la escena
     {
-      //Se configuran las teclas espacio, M y J para ser usadas
-      /*keys = this.input.keyboard.addKeys({
-        space: Phaser.Input.Keyboard.KeyCodes.SPACE,
-        mute: Phaser.Input.Keyboard.KeyCodes.M,
-        controls: Phaser.Input.Keyboard.KeyCodes.J
-      });*/
 
       //Se añade la imagen de fondo del menú
       this.add.image(0, 0, "background").setOrigin(0, 0);
 
       //CREACIÓN DE TEXTOS
-      this.add.bitmapText(74, 25, 'fuente', 'JUANTANKAMÓN', 33);
-      this.add.bitmapText(152, 55, 'fuente', 'REDUX', 22);
+      this.add.bitmapText(74, 15, 'fuente', 'JUANTANKAMÓN', 33);
+      this.add.bitmapText(152, 45, 'fuente', 'REDUX', 22);
 
-      playButton = new Button(this, this.cameras.main.width/2, 160, 'buttonIcon', 'buttonIconHover', "Pulsa para comenzar", 'fuente', function(that){
+      var playButton = new Button(this, this.cameras.main.width/2, 90, 'buttonIcon', 'buttonIconHover', "Jugar en local", 'fuente', function(that){
         menuMusic.stop();
         that.scene.start("LocalGame");
-      }, 0.25);
+      }, 0.15);
 
-      musicButton = new Button(this, this.cameras.main.width/2, 130, 'buttonIcon', 'buttonIconHover', "Desactivar música", 'fuente', function(that){
+      var playOnlineButton = new Button(this, this.cameras.main.width/2, 110, 'buttonIcon', 'buttonIconHover', "Jugar online", 'fuente', function(that){
+        menuMusic.stop();
+        that.scene.start("SearchRooms");
+      }, 0.15);
+
+      var musicButton = new Button(this, this.cameras.main.width/2 - 55, 165, 'buttonIcon', 'buttonIconHover', "Desactivar música", 'fuente', function(that){
         muted = !muted;
         menuMusic.mute = muted;
         if(muted) {
@@ -57,7 +56,7 @@ var Menu = new Phaser.Class({
         } else {
           musicButton.info.setText("Desactivar música");
         }
-      }, 0.2);
+      }, 0.17);
 
       function control(){
         musicButton.icon.visible = !musicButton.icon.visible;
@@ -66,8 +65,8 @@ var Menu = new Phaser.Class({
         backButton.icon.visible = !backButton.icon.visible;
         backButton.info.visible = !backButton.info.visible;
 
-        howToButton.icon.visible = !howToButton.icon.visible;
-        howToButton.info.visible = !howToButton.info.visible;
+        controlsButton.icon.visible = !controlsButton.icon.visible;
+        controlsButton.info.visible = !controlsButton.info.visible;
 
         txtJuantankamon.visible = !txtJuantankamon.visible;
         txtGuardia.visible = !txtGuardia.visible;
@@ -79,17 +78,16 @@ var Menu = new Phaser.Class({
         arrows.visible = !arrows.visible;
       }
 
-      backButton = new Button(this, this.cameras.main.width/2, 110, 'buttonIcon', 'buttonIconHover', "Volver", 'fuente', function(that){
+      var backButton = new Button(this, this.cameras.main.width/2, 165, 'buttonIcon', 'buttonIconHover', "Volver", 'fuente', function(that){
         control();
       }, 0.1);
 
       backButton.icon.visible = false;
       backButton.info.visible = false;
 
-      howToButton = new Button(this, this.cameras.main.width/2, 110, 'buttonIcon', 'buttonIconHover', "Instrucciones", 'fuente', function(that){
-
+      var controlsButton = new Button(this, this.cameras.main.width/2 + 55, 165, 'buttonIcon', 'buttonIconHover', "Cómo jugar", 'fuente', function(that){
         control();
-      }, 0.2);
+      }, 0.17);
 
       names1 = this.add.bitmapText(35, 80, 'fuente', ['Martín Ariza',
                                                       'Iván Sanandrés'], 11, 1);
@@ -130,21 +128,6 @@ var Menu = new Phaser.Class({
 
     update: function (time, delta) //Código que se ejecuta en cada frame de la escena
     {
-      /*if(Phaser.Input.Keyboard.JustDown(keys.mute)){ //Desactivar sonido música
-        muted = !muted;
-        menuMusic.mute = muted;
-      }if(Phaser.Input.Keyboard.JustDown(keys.controls)){ //Pantalla ¿Cómo jugar?
-        //Se revelan y esconden los textos
-        actions.visible = !actions.visible;
-        txtJuantankamon.visible = !txtJuantankamon.visible;
-        txtGuardia.visible = !txtGuardia.visible;
-        txtDescJ.visible = !txtDescJ.visible;
-        txtDescG.visible = !txtDescG.visible;
-        txtPause.visible = !txtPause.visible;
-        names1.visible = !names1.visible;
-        names2.visible = !names2.visible;
-        wasd.visible = !wasd.visible;
-        arrows.visible = !arrows.visible;
-      }*/
+
     }
 });

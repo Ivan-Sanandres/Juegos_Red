@@ -24,8 +24,6 @@ var NameInput = new Phaser.Class({
             if(textbox.value !== "")
             {
                 playerName = textbox.value;
-
-
                 var player = {
                   name : playerName
                 }
@@ -48,7 +46,7 @@ var NameInput = new Phaser.Class({
                     that.scene.start("Menu");
                     button.style.display = "none";
                     textbox.style.display = "none";
-
+                    inputContainer.style.display = "none";
                   }
                 });
             }

@@ -34,12 +34,12 @@ public class Player {
 	//public void setName(String newName) { name = newName; }
 	
 	public LocalDateTime getLogInDate () { return logInDate; }
-	public void setLogInDate(LocalDateTime newTime) { logInDate = newTime; }
+	public void setLogInDate(LocalDateTime newTime) { logInDate = newTime; } //IGUAL ESTO DEBERÍA QUITARLO XD
 	
 	public LocalDateTime getLastInteractionDate() { return lastInteractionDate; }
 	public void updateLastInteractionDate() {lastInteractionDate = LocalDateTime.now(); }
 	
-	//POR ALGÚN MOTIVO PILLA INACTIVE COMO PARÁMETRO
+	
 	public boolean checkInactive() {
 		Duration diff = Duration.between(LocalDateTime.now(), lastInteractionDate);
 		double inactiveTime = (double)diff.abs().getSeconds();
