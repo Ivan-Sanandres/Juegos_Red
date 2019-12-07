@@ -39,6 +39,8 @@ var TextButton = function(scene, posX, posY, text, font = 'fuente', clickCallbac
   .on('pointerdown', () => this.clickState()
   );
 
+  this.auxValue = 0;
+
   this.enterButtonHoverState = function()
   {
     this.info.tint = 0xda85b9;
