@@ -1,8 +1,9 @@
-var Button = function(scene, posX, posY, image, hoverImage, text, font = 'fuente', clickCallback = function() {console.log("callback not defined")}, scaleX = 0.1, scaleY = 0.1)
+var Button = function(scene, posX, posY, image, hoverImage, text, font = 'fuente', clickCallback = function() {console.log("callback not defined")}, scaleX = 0.1, scaleY = 0.1, hoverScale = 1.15)
 {
   this.image = image;
   this.hoverImage = hoverImage;
   this.scene = scene;
+  this.hoverScale = hoverScale;
 
   this.icon = scene.add.sprite(posX, posY, image).setScale(scaleX, scaleY)
     .setOrigin(0.5, 0.5)
@@ -16,7 +17,7 @@ var Button = function(scene, posX, posY, image, hoverImage, text, font = 'fuente
   this.enterButtonHoverState = function()
   {
     this.icon.setTexture(this.hoverImage);
-    this.icon.setScale(scaleX *1.15, scaleY * 1.15);
+    this.icon.setScale(scaleX *this.hoverScale, scaleY * this.hoverScale);
   }
 
   this.enterButtonRestState = function()
