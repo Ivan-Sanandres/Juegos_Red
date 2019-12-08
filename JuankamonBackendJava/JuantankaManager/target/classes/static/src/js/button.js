@@ -31,14 +31,25 @@ var Button = function(scene, posX, posY, image, hoverImage, text, font = 'fuente
 
 var TextButton = function(scene, posX, posY, text, font = 'fuente', clickCallback = function() {console.log("callback not defined")})
 {
+  this.posX = posX;
+  this.posY = posY;
+  this.font = font;
   this.scene = scene;
-  this.info = scene.add.bitmapText(posX, posY, font, text + "999999999999999999999999999999999999", 11)
-  .setOrigin(0.5, 0.5)
-  .setInteractive({ useHandCursor: true })
-  .on('pointerover', () => this.enterButtonHoverState() )
-  .on('pointerout', () => this.enterButtonRestState() )
-  .on('pointerdown', () => this.clickState()
-  );
+  this.info = scene.add.bitmapText(posX, posY, font, text/* + "999999999999999999999999999999999999"*/, 11)
+  .setOrigin(0.5, 0.5);
+
+  this.updateInteraction = function(){
+    var t = this.info.text;
+    this.info.destroy();
+    this.info = scene.add.bitmapText(this.posX, this.posY, this.font, t, 11);
+    this.info.setInteractive({ useHandCursor: true })
+    .on('pointerover', () => this.enterButtonHoverState() )
+    .on('pointerout', () => this.enterButtonRestState() )
+    .on('pointerdown', () => this.clickState()
+    );
+  }
+
+  this.updateInteraction();
 
   this.auxValue = 0;
 
@@ -82,19 +93,20 @@ var TextButtonList = function(scene, posX, posY, size, updateCallBack, font = 'f
   this.updateButtons = function(){
     for(var i = 0; i < this.size; i++){
       this.buttons[i].info.text = this.info[this.currentStart + i];
+      this.buttons[i].updateInteraction();
     }
   }
 
   this.goUp = function(){
-    this.currentStart--;
+    /*if(this.currentStart > 0)*/ this.currentStart--;
     this.clampStart();
   }
   this.goDown = function(){
-    this.currentStart++;
+    /*if(this.currentStart < this.info.length -1)*/ this.currentStart++;
     this.clampStart();
   }
   this.clampStart = function(){
     if(this.currentStart < 0) this.currentStart = 0;
-    if(this.currentStart >= this.info.length - this.size) this.currentStart = this.info.length - this.size;
+    if(this.currentStart >= this.info.length - 1) this.currentStart = this.info.length - 1;
   }
 }
