@@ -17,6 +17,11 @@ var NameInput = new Phaser.Class({
 
     create: function()
     {
+        that = this;
+        var inputContainer = document.getElementById("input-container");  // Se recibe  del DOM el div que contiene el botón y el campo de texto
+        inputContainer.style.display = "block";                           // Se muestra por pantalla (estaba en "none", oculto)
+        var button = document.getElementById("confirm-button");           // Se recibe el botón de confirmación
+        var textbox = document.getElementById("name-field");              // Se recibe el campo de texto
       this.add.image(0, 0, "genericBackground").setOrigin(0, 0);
 
       that = this;

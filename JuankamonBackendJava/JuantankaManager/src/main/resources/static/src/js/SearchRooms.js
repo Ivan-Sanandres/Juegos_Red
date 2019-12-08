@@ -1,7 +1,7 @@
 //La variable la declaro global para que se guarde el valor para el juego. Si ya es true, cuando empiece el juego tampoco sonará música
 var muted = false;
 var playerRoomId = 0;
-//ESCENA MENÚ
+
 var SearchRooms = new Phaser.Class({
 
     Extends: Phaser.Scene,
