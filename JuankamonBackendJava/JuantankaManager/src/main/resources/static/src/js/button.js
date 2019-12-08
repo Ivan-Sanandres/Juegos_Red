@@ -12,6 +12,8 @@ var Button = function(scene, posX, posY, image, hoverImage, text, font = 'fuente
     .on('pointerout', () => this.enterButtonRestState() )
     .on('pointerdown', () => this.clickCallback(this.scene) );
 
+    this.icon.input.cursor = 'url("resources/sprites/calaquita sonriente.png"), pointer';
+
   this.info = scene.add.bitmapText(posX, posY, font, text, 11).setOrigin(0.5, 0.4);
 
   this.enterButtonHoverState = function()
@@ -73,7 +75,6 @@ var TextButton = function(scene, parent, posX, posY, text, font = 'fuente', clic
       this.clickCallback(this.scene, this.parent);
     }
   }
-
 }
 
 var TextButtonList = function(scene, posX, posY, size, updateCallBack, font = 'fuente'){
@@ -115,5 +116,5 @@ var TextButtonList = function(scene, posX, posY, size, updateCallBack, font = 'f
     if(this.currentStart >= this.info.length - 1) this.currentStart = this.info.length - 1;
   }
 
-  this.input.cursor = 'url("resources/sprites/calaquita sonriente.png"), pointer';
+
 }

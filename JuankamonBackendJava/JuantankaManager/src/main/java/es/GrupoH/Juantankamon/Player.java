@@ -5,7 +5,7 @@ import java.time.temporal.TemporalUnit;
 
 public class Player {
 	//STATICS
-	public static double maxInactivityTime = 600000000; //in seconds
+	public static double maxInactivityTime = 60; //in seconds
 	
 	//VARIABLES
 	private long id;
@@ -39,17 +39,24 @@ public class Player {
 	public LocalDateTime getLastInteractionDate() { return lastInteractionDate; }
 	public void updateLastInteractionDate() {lastInteractionDate = LocalDateTime.now(); }
 	
-	
-	public boolean checkInactive() {
+	public double getInactiveTime() {
 		Duration diff = Duration.between(LocalDateTime.now(), lastInteractionDate);
 		double inactiveTime = (double)diff.abs().getSeconds();
-		if(inactiveTime > maxInactivityTime) return true;
+		return inactiveTime;
+	}
+	
+	public boolean checkInactive() {
+		
+		if(getInactiveTime() > maxInactivityTime) return true;
 		return false;
 	}
 	
 	public void expelFromRoom() {
+		
 		Room r = RoomsController.rooms.get(roomId);
+		System.out.println("Echando de la habitación" + roomId);
 		if(r != null) {
+			System.out.println("Habitación encontrada");
 			if(r.getJuantankamonId() == id) r.setJuantankamonId(0);
 			if(r.getGuardId() == id) r.setGuardId(0);
 		}
@@ -58,6 +65,6 @@ public class Player {
 
 	@Override
 	public String toString() {
-		return "Player [id= " + id + ", name= " + name + ", Log in date= " + logInDate.toString() + "]";
+		return "Player [id= " + id + ", name= " + name + ", roomId: " + roomId +", Inactive time:" + getInactiveTime() + "]";
 	}
 }

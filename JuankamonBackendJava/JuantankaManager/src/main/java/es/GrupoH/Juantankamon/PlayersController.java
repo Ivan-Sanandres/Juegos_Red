@@ -77,6 +77,7 @@ public class PlayersController {
 		Player savedPlayer = players.get(id);
 
 		if (savedPlayer != null) {
+			savedPlayer.expelFromRoom();
 			players.remove(savedPlayer.getId());
 			return new ResponseEntity<>(savedPlayer, HttpStatus.OK);
 		}

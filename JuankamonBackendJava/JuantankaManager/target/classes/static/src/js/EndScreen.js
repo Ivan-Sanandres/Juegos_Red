@@ -31,17 +31,21 @@ var EndScreen = new Phaser.Class({
         else if(endGameState == endGameStates.DISCONNECT)
         {
           this.add.image(0, 0, 'disconnectBackground').setOrigin(0, 0);
-          this.add.bitmapText(122, 25, 'fuente', 'Desconexión', 22);
+          this.add.bitmapText(122, 30, 'fuente', 'Desconexión', 22);
         }
 
         var backButton = new Button(this, this.cameras.main.width/2, 20, 'buttonIcon', 'buttonIconHover', "Volver al menú", 'fuente', function(that){
           menuMusic.stop();
-          that.scene.start("Menu");
+          if(endGameState != endGameStates.DISCONNECT) that.scene.start("Menu");
+          else that.scene.start("NameInput");
+
         }, 1.6,1);
 
         var timerInput = this.time.addEvent({
           delay: 5000,
-          callback: periodicPut,
+          callback: function(){
+            if(endGameState != endGameStates.DISCONNECT) periodicPut();
+          },
           //args: [],
           callbackScope: this,
           loop: true

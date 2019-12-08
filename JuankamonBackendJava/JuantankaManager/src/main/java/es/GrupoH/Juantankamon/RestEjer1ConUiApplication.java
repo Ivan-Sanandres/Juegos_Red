@@ -21,7 +21,7 @@ public class RestEjer1ConUiApplication {
 			@Override
 		    public void run () {
 		        //code
-				//System.out.println("looping");
+				System.out.println();
 				loopBody();
 		    }
 		};
@@ -41,6 +41,7 @@ public class RestEjer1ConUiApplication {
 		
 		for(Long id : RoomsController.rooms.keySet()) {
 			Room r = RoomsController.rooms.get(id);
+			System.out.println(r.toString());
 			if(r.checkMustDelete()) {
 				System.out.println("La partida " + id + " será eliminada");
 				RoomsController.rooms.remove(id);

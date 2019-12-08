@@ -37,6 +37,8 @@ var Menu = new Phaser.Class({
       //CREACIÓN DE TEXTOS
       this.add.bitmapText(74, 10, 'fuente', 'JUANTANKAMÓN', 33);
       this.add.bitmapText(152, 40, 'fuente', 'REDUX', 22);
+      var musicText = this.add.bitmapText(this.cameras.main.width/2, 120, 'fuente', 'M: Poner/quitar música', 11).setOrigin(0.5,0);
+      musicText.visible = false;
 
       var playButton = new Button(this, this.cameras.main.width/2, 80, 'buttonIcon', 'buttonIconHover', "Jugar en local", 'fuente', function(that){
         menuMusic.stop();
@@ -45,7 +47,6 @@ var Menu = new Phaser.Class({
 
       var playOnlineButton = new Button(this, this.cameras.main.width/2, 105, 'buttonIcon', 'buttonIconHover', "Jugar online", 'fuente', function(that){
         menuMusic.stop();
-        console.log("HUMMMDKLFSJSKL");
         that.scene.start("SearchRooms");
       }, 1.3,1);
 
@@ -62,6 +63,8 @@ var Menu = new Phaser.Class({
       function control(){
         musicButton.icon.visible = !musicButton.icon.visible;
         musicButton.info.visible = !musicButton.info.visible;
+
+        musicText.visible = !musicText.visible;
 
         backButton.icon.visible = !backButton.icon.visible;
         backButton.info.visible = !backButton.info.visible;
@@ -129,7 +132,7 @@ var Menu = new Phaser.Class({
         //args: [],
         callbackScope: this,
         loop: true
-    });
+      });
     },
 
     update: function (time, delta) //Código que se ejecuta en cada frame de la escena
