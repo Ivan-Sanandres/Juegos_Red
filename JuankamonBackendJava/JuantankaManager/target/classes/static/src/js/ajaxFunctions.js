@@ -4,6 +4,7 @@ var serverUrl = window.location.href; //Obtenemos la url del servidor al que hac
 
 /***************************PLAYERS******************************/
 //Get players desde el server
+//Ejecuta la primera callback en el done y la segunda en el fail
 function AJAX_getPlayers(callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: "GET",
@@ -18,6 +19,7 @@ function AJAX_getPlayers(callback = function(){}, failCallback = function(){}) {
 }
 
 //Get player concreto desde el server
+//Ejecuta la primera callback en el done y la segunda en el fail
 function AJAX_getPlayer(playerId, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: "GET",
@@ -32,6 +34,7 @@ function AJAX_getPlayer(playerId, callback = function(){}, failCallback = functi
 }
 
 //Post player al servidor
+//Ejecuta la primera callback en el done y la segunda en el fail
 function AJAX_createPlayer(player, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: "POST",
@@ -51,6 +54,7 @@ function AJAX_createPlayer(player, callback = function(){}, failCallback = funct
 }
 
 //Update player en el servidor
+//Ejecuta la primera callback en el done y la segunda en el fail
 function AJAX_updatePlayer(player, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: 'PUT',
@@ -70,6 +74,7 @@ function AJAX_updatePlayer(player, callback = function(){}, failCallback = funct
 }
 
 //Delete player del servidor
+//Ejecuta la primera callback en el done y la segunda en el fail
 function AJAX_deletePlayer(playerId, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: 'DELETE',
@@ -85,6 +90,7 @@ function AJAX_deletePlayer(playerId, callback = function(){}, failCallback = fun
 
 /***************************ROOMS*****************************/
 //Get rooms desde el server
+//Ejecuta la primera callback en el done y la segunda en el fail
 function AJAX_getRooms(callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: "GET",
@@ -99,6 +105,7 @@ function AJAX_getRooms(callback = function(){}, failCallback = function(){}) {
 }
 
 //Get room concreta desde el server
+//Ejecuta la primera callback en el done y la segunda en el fail
 function AJAX_getRoom(roomId, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: "GET",
@@ -113,6 +120,7 @@ function AJAX_getRoom(roomId, callback = function(){}, failCallback = function()
 }
 
 //Post room al servidor
+//Ejecuta la primera callback en el done y la segunda en el fail
 function AJAX_createRoom(room, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: "POST",
@@ -132,6 +140,7 @@ function AJAX_createRoom(room, callback = function(){}, failCallback = function(
 }
 
 //Update room en el servidor
+//Ejecuta la primera callback en el done y la segunda en el fail
 function AJAX_updateRoom(room, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: 'PUT',
@@ -151,6 +160,7 @@ function AJAX_updateRoom(room, callback = function(){}, failCallback = function(
 }
 
 //Delete room del servidor
+//Ejecuta la primera callback en el done y la segunda en el fail
 function AJAX_deleteRoom(roomId, callback = function(){}, failCallback = function(){}) {
     $.ajax({
         method: 'DELETE',
