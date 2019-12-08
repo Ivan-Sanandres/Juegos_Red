@@ -266,7 +266,7 @@ var LocalGame = new Phaser.Class({
       gameMusic.play({mute: muted, loop: true});
 
       var timerInput = this.time.addEvent({
-        delay: 1000,
+        delay: 5000,
         callback: periodicPut,
         //args: [],
         callbackScope: this,

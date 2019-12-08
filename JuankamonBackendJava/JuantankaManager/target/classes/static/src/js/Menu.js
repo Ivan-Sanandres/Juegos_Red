@@ -126,7 +126,7 @@ var Menu = new Phaser.Class({
       sineValue = 0;
 
       var timerInput = this.time.addEvent({
-        delay: 1000,
+        delay: 5000,
         callback: periodicPut,
         //args: [],
         callbackScope: this,

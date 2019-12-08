@@ -46,6 +46,7 @@ var SearchRooms = new Phaser.Class({
         AJAX_getRooms(function(rooms)
         {
           var line = "";
+
           for(var i = 0; i < rooms.length; i++)
           {
             if(rooms[i].open)
@@ -70,16 +71,35 @@ var SearchRooms = new Phaser.Class({
 
       });
       roomList.updateInfo();
+      roomList.updateButtons();
 
       var refreshButton = new Button(this, this.cameras.main.width/2 + 70, 15, 'buttonIcon', 'buttonIconHover', "actualizar", 'fuente', function(that){
         roomList.updateInfo();
       });
 
       var hostAsJuanButton = new Button(this, this.cameras.main.width/2 + 125, 65, 'buttonIcon', 'buttonIconHover', ["Crear partida", "como Juantankamón"], 'fuente', function(that){
-        console.log("host as juantankamon");
+        that.scene.start("WaitingRoom");
+
+        var roomData = {
+          juantankamonId : playerId
+        };
+
+        AJAX_createRoom(roomData, function(r){console.log("Partida creada")}, function(r)
+        {
+          that.scene.start("SearchRooms");
+        });
       }, 0.18, 0.3, 1);
-      var hostAsGuardButton = new Button(this, this.cameras.main.width/2 + 125, 125, 'buttonIcon', 'buttonIconHover', ["Crear partida", "como Juantankamón"], 'fuente', function(that){
-        console.log("host as juantankamon");
+      var hostAsGuardButton = new Button(this, this.cameras.main.width/2 + 125, 125, 'buttonIcon', 'buttonIconHover', ["Crear partida", "como guardia"], 'fuente', function(that){
+        that.scene.start("WaitingRoom");
+
+        var roomData = {
+          guardId : playerId
+        };
+
+        AJAX_createRoom(roomData, function(r){console.log("Partida creada")}, function(r)
+        {
+          that.scene.start("SearchRooms");
+        });
       }, 0.18, 0.3, 1);
 
       var upButton = new Button(this, this.cameras.main.width/2 - 150, 60, 'arrowUpOff', 'arrowUpOn', "-", 'fuente', function(that){
@@ -93,7 +113,7 @@ var SearchRooms = new Phaser.Class({
       }, 1, 1, 1);
 
       var timerInput = this.time.addEvent({
-        delay: 1000,
+        delay: 5000,
         callback: periodicPut,
         //args: [],
         callbackScope: this,
