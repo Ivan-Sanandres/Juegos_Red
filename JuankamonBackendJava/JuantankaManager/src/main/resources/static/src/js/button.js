@@ -114,4 +114,6 @@ var TextButtonList = function(scene, posX, posY, size, updateCallBack, font = 'f
     if(this.currentStart < 0) this.currentStart = 0;
     if(this.currentStart >= this.info.length - 1) this.currentStart = this.info.length - 1;
   }
+
+  this.input.cursor = 'url("resources/sprites/calaquita sonriente.png"), pointer';
 }
