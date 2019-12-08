@@ -1,5 +1,3 @@
-
-
 var OnlineGame = new Phaser.Class({
 
     Extends: Phaser.Scene,
@@ -36,7 +34,7 @@ var OnlineGame = new Phaser.Class({
     create: function ()
     {
       var that = this;
-
+      var defaultCursors;
       pointer = this.input.mousePointer; //Referencia al ratón
 
       this.input.keyboard.on('keydown', function (event) {anyInput = true;})
@@ -82,7 +80,9 @@ var OnlineGame = new Phaser.Class({
           wall.setVisible(false);
         });
 
-        //Inicializa a Juan y todas sus variables
+        console.log(that.input.keyboard.createCursorKeys());
+
+      //Inicializa a Juan y todas sus variables
       function initJuan(speed)
       {
         that.anims.create({
@@ -104,19 +104,28 @@ var OnlineGame = new Phaser.Class({
                 .setSize(16, 16);
 
         //La cámara principal será la cámara principal
-        juanCamera = that.cameras.main;
+        if(playingAsJuantankamon)
+        {
+          juanCamera = that.cameras.main;
+          //Ajustes de cámara
+          juanCamera.setViewport(93, 0);
+          juanCamera.setSize(176, 176);
+          juanCamera.setScroll(93, 0);
+          juanCamera.startFollow(juan, true, 1, 1); //true indica que no hay movimientos en subpíxeles. Los 1 sirven para que el movimiento se más suave
+        }
 
-        //Ajustes de cámara
-        juanCamera.setViewport(0, 0);
-        juanCamera.setSize(176, 176);
-        juanCamera.startFollow(juan, true, 1, 1); //true indica que no hay movimientos en subpíxeles. Los 1 sirven para que el movimiento se más suave
-
+        defaultCursors = that.input.keyboard.createCursorKeys();
         //Se establecen las teclas que usa Juan para moverse
         juanCursors = that.input.keyboard.addKeys(
-           {up:Phaser.Input.Keyboard.KeyCodes.W,
-            down:Phaser.Input.Keyboard.KeyCodes.S,
-            left:Phaser.Input.Keyboard.KeyCodes.A,
-            right:Phaser.Input.Keyboard.KeyCodes.D});
+           {w:Phaser.Input.Keyboard.KeyCodes.W,
+            s:Phaser.Input.Keyboard.KeyCodes.S,
+            a:Phaser.Input.Keyboard.KeyCodes.A,
+            d:Phaser.Input.Keyboard.KeyCodes.D,
+            up: defaultCursors.up,
+            down: defaultCursors.down,
+            left: defaultCursors.left,
+            right: defaultCursors.right
+          });
 
         juanSpeed = speed;
 
@@ -144,15 +153,25 @@ var OnlineGame = new Phaser.Class({
                 .setSize(16, 16);
 
         //Se crea una nueva cámara para guardia y se ajusta
-        guardCamera = that.cameras.add(0, 0, 0, 0);
-
-        guardCamera.setViewport(186, 0);
-        guardCamera.setScroll(186, 0);
-        guardCamera.setSize(176, 176);
-        guardCamera.startFollow(guard, true, 1, 1);
+        if(!playingAsJuantankamon)
+        {
+          guardCamera = that.cameras.main;
+          guardCamera.setViewport(93, 0);
+          guardCamera.setSize(176, 176);
+          guardCamera.setScroll(93, 0);
+          guardCamera.startFollow(guard, true, 1, 1);
+        }
 
         //Se usan las flechas de movimiento por defecto para el guardia
-        guardCursors = that.input.keyboard.createCursorKeys();
+        guardCursors = that.input.keyboard.addKeys(
+           {w:Phaser.Input.Keyboard.KeyCodes.W,
+            s:Phaser.Input.Keyboard.KeyCodes.S,
+            a:Phaser.Input.Keyboard.KeyCodes.A,
+            d:Phaser.Input.Keyboard.KeyCodes.D,
+            up: defaultCursors.up,
+            down: defaultCursors.down,
+            left: defaultCursors.left,
+            right: defaultCursors.right});
         guardSpeed = speed;
 
         that.physics.add.collider(guard, worldLayer);
@@ -203,13 +222,12 @@ var OnlineGame = new Phaser.Class({
       finalDoor = statics.create(spawnPoint.x + 16, spawnPoint.y + 16, "finalDoor").refreshBody();
 
       //Instanciación de luces de los personajes
-      lightManager = new LightingManager(this.game, [juanCamera, guardCamera]);
+      lightManager = new LightingManager(this.game, [this.cameras.main]);
 
       juanLight = new Light_focal([juan.x, juan.y], [0.0, 0.0], 0.0, 1.5, [1.0, 1.0, 1.0], 1.3, 1.0, true, 0.9, 1.0, 1.0);
       lightManager.addLight(0, juanLight);
 
-      guardLight = new Light_focal([guard.x, guard.y], [0.0, 0.0], 1.5, 1.5, [1.0, 1.0, 0.5], 1.3, 1.0, true, 0.9, 1.0, 0.5);
-      lightManager.addLight(1, guardLight);
+      guardLight = new Light_focal([guard.x, guard.y], [0.0, 1.0], 1.5, 1.5, [1.0, 1.0, 0.5], 1.3, 1.0, true, 0.9, 1.0, 0.5);
       lightManager.addLight(0, guardLight);
 
       //Instanciación de luces del escenario
@@ -230,7 +248,6 @@ var OnlineGame = new Phaser.Class({
             1.3);
 
           lightManager.addLight(0, light);
-          lightManager.addLight(1, light);
         }
       }initLights(16);
 
@@ -259,8 +276,19 @@ var OnlineGame = new Phaser.Class({
       gameMusic.play({mute: muted, loop: true});
 
       var timerInput = this.time.addEvent({
-        delay: 1000,
-        callback: function(){ /*put...*/ anyInput = false; },
+        delay: 5000,
+        callback: function()
+          {
+            if(anyInput)
+            {
+              var player = {
+                id: playerId,
+                name: playerName
+              }
+              AJAX_updatePlayer(player)
+            }
+            anyInput = false;
+          },
         //args: [],
         callbackScope: this,
         loop: true
@@ -298,7 +326,7 @@ var OnlineGame = new Phaser.Class({
 
       if(!paused)
       {
-        pointerInWorldCoordinates = guardCamera.getWorldPoint(pointer.x, pointer.y); //console.log(pointerInWorldCoordinates);
+        pointerInWorldCoordinates = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
 
         //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
         juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
@@ -331,13 +359,13 @@ var OnlineGame = new Phaser.Class({
           //Si pulsamos Up o Down quitamos o añadimos respectivamente 1 a verticalInput
           //De esta forma si se pulsan las dos a la vez es = 0 y el personaje no se Mueve
           //Misma lógica para horizontalInput con Left y Right
-          if(cursors.up.isDown) verticalInput += -1;
+          if(cursors.up.isDown || cursors.w.isDown) verticalInput += -1;
 
-          if(cursors.down.isDown) verticalInput += 1;
+          if(cursors.down.isDown || cursors.s.isDown) verticalInput += 1;
 
-          if(cursors.left.isDown) horizontalInput += -1;
+          if(cursors.left.isDown || cursors.a.isDown) horizontalInput += -1;
 
-          if(cursors.right.isDown) horizontalInput += 1;
+          if(cursors.right.isDown || cursors.d.isDown) horizontalInput += 1;
 
           //Si el jugador se estaba movimiendo lo tenemos en cuenta para que no vaya más rápido en diaganol
           if(characterMovementVector.x != 0)
@@ -350,8 +378,11 @@ var OnlineGame = new Phaser.Class({
           else
             character.setVelocityY(speed * verticalInput);
         }
-        Move(juan, juanCursors, juanSpeed, juanMovementVector);
-        Move(guard, guardCursors, guardSpeed, guardMovementVector);
+
+        if(playingAsJuantankamon)
+          Move(juan, juanCursors, juanSpeed, juanMovementVector);
+        else
+          Move(guard, guardCursors, guardSpeed, guardMovementVector);
 
         //Posición que llevan los personajes en el frame anterior
         juanPreviousPos.set(juan.x, juan.y);
@@ -360,8 +391,11 @@ var OnlineGame = new Phaser.Class({
         //LIGHT POSITION
         juanLight.position = [juan.x, juan.y];
 
-        guardMouseVector.set(pointerInWorldCoordinates.x - guard.x, pointerInWorldCoordinates.y - guard.y).normalize();
-        guardLight.direction = [guardMouseVector.x, guardMouseVector.y];
+        if(!playingAsJuantankamon)
+        {
+          guardMouseVector.set(pointerInWorldCoordinates.x - guard.x, pointerInWorldCoordinates.y - guard.y).normalize();
+          guardLight.direction = [guardMouseVector.x, guardMouseVector.y];
+        }
 
         var guardLightDistance = 3.0;
         guardLight.position = [guard.x + guardLight.direction[0] * guardLightDistance, guard.y + guardLight.direction[1] * guardLightDistance];

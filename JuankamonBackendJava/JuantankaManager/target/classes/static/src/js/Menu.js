@@ -183,3 +183,5 @@ var configKeys;
 
 const numDoors = 4;
 const numKeys = 4;
+
+var playingAsJuantankamon = true;
