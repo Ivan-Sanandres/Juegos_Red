@@ -1,5 +1,6 @@
 var waitingTime = 5;
 var fullLobby = false;
+var timeText;
 
 var WaitingRoom = new Phaser.Class({
 
@@ -29,28 +30,31 @@ var WaitingRoom = new Phaser.Class({
 
       this.add.bitmapText((this.cameras.main.width / 2) - 75,58, 'fuente', '123456789012', 22).setOrigin(0.5, 0);
       this.add.bitmapText((this.cameras.main.width / 2) + 75,58, 'fuente', '1', 22).setOrigin (0.5, 0);
-      this.add.bitmapText((this.cameras.main.width / 2), 15, 'fuente', 'XX', 20).setOrigin(0.5, 0);
+      timeText = this.add.bitmapText((this.cameras.main.width / 2), 15, 'fuente', waitingTime, 20).setOrigin(0.5, 0);
 
-      
-
+      fullLobby = true;
+      var timerInput = this.time.addEvent({
+        delay: 1000,
+        callback: setTimer,
+        //args: [],
+        callbackScope: this,
+        loop: true
+    });
     },
 
     update: function (){
-        if(fullLobby === true){
-            var timerInput = this.time.addEvent({
-                delay: 5000,
-                callback: setTimer,
-                //args: [],
-                callbackScope: this,
-                loop: true
-            });
-        }
+
     },
 
 });
 
 function setTimer(){
-    if(waitingTime > 0){
+    if(waitingTime > 0 && fullLobby === true){
         waitingTime--;
+        timeText.text = waitingTime;
+        console.log(waitingTime);
+    }
+    else if(waitingTime === 0){
+
     }
 };

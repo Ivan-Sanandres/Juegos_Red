@@ -34,6 +34,11 @@ var EndScreen = new Phaser.Class({
           this.add.bitmapText(122, 25, 'fuente', 'Desconexión', 22);
         }
 
+        var backButton = new Button(this, this.cameras.main.width/2, 20, 'buttonIcon', 'buttonIconHover', "Volver al menú", 'fuente', function(that){
+          menuMusic.stop();
+          that.scene.start("Menu");
+        }, 1.6,1);
+
         var timerInput = this.time.addEvent({
           delay: 5000,
           callback: periodicPut,
@@ -43,12 +48,3 @@ var EndScreen = new Phaser.Class({
       });
     }
 })
-
-function periodicPut()
-{
-  var player = {
-    id: playerId,
-    name: playerName
-  }
-  AJAX_updatePlayer(player)
-}

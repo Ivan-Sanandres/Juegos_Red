@@ -35,7 +35,7 @@ var SearchRooms = new Phaser.Class({
       var backButton = new Button(this, this.cameras.main.width/2, 165, 'buttonIcon', 'buttonIconHover', "Volver al menú", 'fuente', function(that){
         menuMusic.stop();
         that.scene.start("Menu");
-      }, 0.15);
+      }, 1.6,1);
 
 
 
@@ -75,7 +75,7 @@ var SearchRooms = new Phaser.Class({
 
       var refreshButton = new Button(this, this.cameras.main.width/2 + 70, 15, 'buttonIcon', 'buttonIconHover', "actualizar", 'fuente', function(that){
         roomList.updateInfo();
-      });
+      }, 1, 1);
 
       var hostAsJuanButton = new Button(this, this.cameras.main.width/2 + 125, 65, 'buttonIcon', 'buttonIconHover', ["Crear partida", "como Juantankamón"], 'fuente', function(that){
         that.scene.start("WaitingRoom");
@@ -88,7 +88,7 @@ var SearchRooms = new Phaser.Class({
         {
           that.scene.start("SearchRooms");
         });
-      }, 0.18, 0.3, 1);
+      },1.8, 1.8, 1);
       var hostAsGuardButton = new Button(this, this.cameras.main.width/2 + 125, 125, 'buttonIcon', 'buttonIconHover', ["Crear partida", "como guardia"], 'fuente', function(that){
         that.scene.start("WaitingRoom");
 
@@ -100,7 +100,7 @@ var SearchRooms = new Phaser.Class({
         {
           that.scene.start("SearchRooms");
         });
-      }, 0.18, 0.3, 1);
+      }, 1.8, 1.8, 1);
 
       var upButton = new Button(this, this.cameras.main.width/2 - 150, 60, 'arrowUpOff', 'arrowUpOn', "-", 'fuente', function(that){
         roomList.goUp();
@@ -130,12 +130,3 @@ var SearchRooms = new Phaser.Class({
 
     }
 });
-
-function periodicPut()
-{
-  var player = {
-    id: playerId,
-    name: playerName
-  }
-  AJAX_updatePlayer(player)
-}

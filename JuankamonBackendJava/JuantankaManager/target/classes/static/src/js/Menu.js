@@ -35,18 +35,18 @@ var Menu = new Phaser.Class({
       this.add.image(0, 0, "background").setOrigin(0, 0);
 
       //CREACIÓN DE TEXTOS
-      this.add.bitmapText(74, 15, 'fuente', 'JUANTANKAMÓN', 33);
-      this.add.bitmapText(152, 45, 'fuente', 'REDUX', 22);
+      this.add.bitmapText(74, 10, 'fuente', 'JUANTANKAMÓN', 33);
+      this.add.bitmapText(152, 40, 'fuente', 'REDUX', 22);
 
-      var playButton = new Button(this, this.cameras.main.width/2, 90, 'buttonIcon', 'buttonIconHover', "Jugar en local", 'fuente', function(that){
+      var playButton = new Button(this, this.cameras.main.width/2, 80, 'buttonIcon', 'buttonIconHover', "Jugar en local", 'fuente', function(that){
         menuMusic.stop();
         that.scene.start("LocalGame");
-      }, 0.15);
+      }, 1.3,1);
 
-      var playOnlineButton = new Button(this, this.cameras.main.width/2, 110, 'buttonIcon', 'buttonIconHover', "Jugar online", 'fuente', function(that){
+      var playOnlineButton = new Button(this, this.cameras.main.width/2, 105, 'buttonIcon', 'buttonIconHover', "Jugar online", 'fuente', function(that){
         menuMusic.stop();
         that.scene.start("SearchRooms");
-      }, 0.15);
+      }, 1.3,1);
 
       var musicButton = new Button(this, this.cameras.main.width/2 - 55, 165, 'buttonIcon', 'buttonIconHover', "Desactivar música", 'fuente', function(that){
         muted = !muted;
@@ -56,7 +56,7 @@ var Menu = new Phaser.Class({
         } else {
           musicButton.info.setText("Desactivar música");
         }
-      }, 0.17);
+      }, 1.6,1);
 
       function control(){
         musicButton.icon.visible = !musicButton.icon.visible;
@@ -80,14 +80,14 @@ var Menu = new Phaser.Class({
 
       var backButton = new Button(this, this.cameras.main.width/2, 165, 'buttonIcon', 'buttonIconHover', "Volver", 'fuente', function(that){
         control();
-      }, 0.1);
+      }, 1,1);
 
       backButton.icon.visible = false;
       backButton.info.visible = false;
 
       var controlsButton = new Button(this, this.cameras.main.width/2 + 55, 165, 'buttonIcon', 'buttonIconHover', "Cómo jugar", 'fuente', function(that){
         control();
-      }, 0.17);
+      }, 1.6,1);
 
       names1 = this.add.bitmapText(35, 80, 'fuente', ['Martín Ariza',
                                                       'Iván Sanandrés'], 11, 1);
@@ -121,9 +121,6 @@ var Menu = new Phaser.Class({
       //Se añade la música de fondo, se configura para que se reproduzca en bucle
       menuMusic = this.sound.add("menuMusic");
       menuMusic.play({mute: muted, loop: true});
-
-      //Variable que se usa para mover el texto de ESPACIO para comenzar
-      sineValue = 0;
 
       var timerInput = this.time.addEvent({
         delay: 5000,

@@ -405,26 +405,3 @@ var OnlineGame = new Phaser.Class({
       }
     }
 });
-  //Actualiza una llave para indicar que ha sido recogida y la destruye
-function pickUpKey(index)
-{
-    keys[index].picked = true;
-    keys[index].destroy();
-}
-
-//Actualiza una puerta para abrirla si se ha recogido su llave
-function openDoor(index)
-{
-  if(keys[index].picked)
-  {
-    doors[index].destroy();
-  }
-}
-
-function endGame(state)
-{
-  //Se dirige a la escena de fin de juego
-
-  gameMusic.stop();
-  that.scene.start("EndScreen");
-}

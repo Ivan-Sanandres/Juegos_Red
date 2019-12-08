@@ -51,10 +51,10 @@ var WaitingRoom = new Phaser.Class({
 function setTimer(){
     if(waitingTime > 0 && fullLobby === true){
         waitingTime--;
-        timeText.text = waitingTime; 
+        timeText.text = waitingTime;
         console.log(waitingTime);
     }
     else if(waitingTime === 0){
-        
+
     }
 };
