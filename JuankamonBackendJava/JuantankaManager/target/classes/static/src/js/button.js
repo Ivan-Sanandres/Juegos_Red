@@ -42,11 +42,13 @@ var TextButton = function(scene, posX, posY, text, font = 'fuente', clickCallbac
     var t = this.info.text;
     this.info.destroy();
     this.info = scene.add.bitmapText(this.posX, this.posY, this.font, t, 11);
-    this.info.setInteractive({ useHandCursor: true })
-    .on('pointerover', () => this.enterButtonHoverState() )
-    .on('pointerout', () => this.enterButtonRestState() )
-    .on('pointerdown', () => this.clickState()
-    );
+    if(this.info.text !== ""){
+      this.info.setInteractive({ useHandCursor: true })
+      .on('pointerover', () => this.enterButtonHoverState() )
+      .on('pointerout', () => this.enterButtonRestState() )
+      .on('pointerdown', () => this.clickState()
+      );
+    }
   }
 
   this.updateInteraction();
