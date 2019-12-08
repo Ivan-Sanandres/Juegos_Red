@@ -4,7 +4,9 @@ src: local(fuente), url("resources/fonts/font/Minecraftia-Regular.ttf")
 }
 
 body {
-  background-color: #472D3C;
+  /*background-color: #472D3C;*/
+  background-image: url("resources/sprites/tileStars.png");
+  background-repeat: repeat;
 }
 
 #game-container {

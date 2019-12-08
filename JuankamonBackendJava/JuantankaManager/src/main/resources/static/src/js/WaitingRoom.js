@@ -15,7 +15,7 @@ var WaitingRoom = new Phaser.Class({
     {
       this.load.bitmapFont('fuente', './resources/fonts/font/MC_0.png', './resources/fonts/font/MC.fnt');
 
-      this.load.image("background", "./resources/sprites/waitingRoomBackground.png");
+      this.load.image("backgroundImage", "./resources/sprites/waitingRoomBackground.png");
       this.load.audio("menuMusic", "./resources/sound/menuMusic.mp3");
 
       this.load.image("buttonIcon", "./resources/sprites/sobreBoton2.png");
@@ -26,11 +26,11 @@ var WaitingRoom = new Phaser.Class({
     {
 
       //Se añade la imagen de fondo del menú
-      this.add.image(0, 0, "background").setOrigin(0, 0);
+      this.add.image(0, 0, "backgroundImage").setOrigin(0, 0);
 
-      this.add.bitmapText((this.cameras.main.width / 2) - 75,58, 'fuente', '123456789012', 22).setOrigin(0.5, 0);
-      this.add.bitmapText((this.cameras.main.width / 2) + 75,58, 'fuente', '1', 22).setOrigin (0.5, 0);
-      timeText = this.add.bitmapText((this.cameras.main.width / 2), 15, 'fuente', waitingTime, 20).setOrigin(0.5, 0);
+      this.add.bitmapText((this.cameras.main.width / 2) - 84,64, 'fuente', '123456789012', 22).setOrigin(0.5, 0);
+      this.add.bitmapText((this.cameras.main.width / 2) + 84,64, 'fuente', '1', 22).setOrigin (0.5, 0);
+      timeText = this.add.bitmapText((this.cameras.main.width / 2) + 1, 18, 'fuente', waitingTime, 22).setOrigin(0.5, 0);
 
       fullLobby = true;
       var timerInput = this.time.addEvent({
