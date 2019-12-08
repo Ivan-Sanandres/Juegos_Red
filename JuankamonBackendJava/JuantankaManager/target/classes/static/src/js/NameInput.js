@@ -20,17 +20,9 @@ var NameInput = new Phaser.Class({
         var button = document.getElementById("confirm-button");
         var textbox = document.getElementById("name-field");
 
-        var maxChars = 12;
-
         button.addEventListener("click", function(event)
         {
-            if(textbox.value.length <= maxChars)
-            {
-              textbox.value = "";
-              textbox.placeholder = "Ese nombre es muy largo";
-            }
-
-            else if(textbox.value !== "")
+            if(textbox.value !== "")
             {
                 playerName = textbox.value;
                 var player = {
