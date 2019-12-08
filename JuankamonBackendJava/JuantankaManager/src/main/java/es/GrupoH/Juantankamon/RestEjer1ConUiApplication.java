@@ -11,40 +11,40 @@ public class RestEjer1ConUiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(RestEjer1ConUiApplication.class, args);
-		int frequency = 3; //cada x segundos se ejecuta checkingLoop
-		checkingLoop(frequency * 1000);
+		int frequency = 3;					//Frecuencia a la que el servidor hará las comprobaciones
+		checkingLoop(frequency * 1000);		//Llamada a la función que configura el timer
 	}
 	
 	public static void checkingLoop(int frequency) {
 		Timer timer = new Timer();
-		TimerTask checkAllTask = new TimerTask() {
+		TimerTask checkAllTask = new TimerTask() {		//Tarea que deberá realizar el timer
 			@Override
 		    public void run () {
 		        //code
-				System.out.println();
-				loopBody();
+				System.out.println();					//Se deja una línea en blanco de separación
+				loopBody();								//Se llama al cuerpo del body que hará las comprobaciones
 		    }
 		};
 		timer.schedule(checkAllTask, 0, frequency);
 	}
 	
 	public static void loopBody() {
-		for(Long id : PlayersController.players.keySet()) {
+		for(Long id : PlayersController.players.keySet()) {		//para cada jugador conectado
 			Player p = PlayersController.players.get(id);
-			System.out.println(p.toString());
-			if(p.checkInactive()) {
-				p.expelFromRoom();
+			System.out.println(p.toString());					//se muestra su información
+			if(p.checkInactive()) {								//se comprueba si está inactivo
+				p.expelFromRoom();								// si lo está, se le echa de la room en la que estuviera y se borra
 				PlayersController.players.remove(id);
 				System.out.println("Deleting player " + id + " for inactivity");
 			}
 		}
 		
-		for(Long id : RoomsController.rooms.keySet()) {
+		for(Long id : RoomsController.rooms.keySet()) {			//para cada sala creada
 			Room r = RoomsController.rooms.get(id);
-			System.out.println(r.toString());
-			if(r.checkMustDelete()) {
-				System.out.println("La partida " + id + " será eliminada");
-				RoomsController.rooms.remove(id);
+			System.out.println(r.toString());					//se muestran sus datos
+			if(r.checkMustDelete()) {							//si debe ser eliminada
+				System.out.println("Deleting room " + id);		
+				RoomsController.rooms.remove(id);				//se borra
 			}
 		}
 	}

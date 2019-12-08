@@ -21,13 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/rooms")
 public class RoomsController {
-	/*
-	 * hay que hacer que si un jugador está inactivo mucho tiempo lo elimine, y no solo eso, sino que si está en una partida, 
-	 * su id en la partida se ponga a 0. Además hay que comprobar si las partidas tienen ambos id de jugadores a 0, en tal
-	 * caso ambos jugadores han abandonado la partida por el motivo que sea y por tanto debe ser eliminada.
-	 * HAY QUE VER COMO GESTIONAR TODO ESTO EN BUCLE DESDE EL SERVIDOR
-	 * 
-	 */
 	
 	public static Map<Long, Room> rooms = new ConcurrentHashMap<>(); 
 	AtomicLong nextId = new AtomicLong(0);
@@ -41,34 +34,36 @@ public class RoomsController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Room newRoom(@RequestBody Room newRoom) {
 
-		long id = nextId.incrementAndGet();
-		newRoom.setId(id);
-		rooms.put(id, newRoom);
+		long id = nextId.incrementAndGet();											//Se incrementa y guarda el identificador
+		newRoom.setId(id);															//Se usa el nuevo id para la habitación creada
+		rooms.put(id, newRoom);														//Se coloca la nueva habitación en la lista
 
-		Player juan = PlayersController.players.get(newRoom.getJuantankamonId());
-		Player guard = PlayersController.players.get(newRoom.getGuardId());
-		if(juan != null) juan.setRoomId(newRoom.getId());
-		if(guard != null) guard.setRoomId(newRoom.getId());
+		Player juan = PlayersController.players.get(newRoom.getJuantankamonId());	//Se usan las claves ajenas a los jugadores para
+		Player guard = PlayersController.players.get(newRoom.getGuardId());			//obtener referencias a ellos
+		if(juan != null) juan.setRoomId(newRoom.getId());							//Si existen, se asigna el id de la room a su roomId
+		if(guard != null) guard.setRoomId(newRoom.getId());							//para tener en ellos una clave ajena a la room
 		
-		return newRoom;
+		return newRoom;																//Se devuelve la room creada
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Room> updateRoom(@PathVariable long id, @RequestBody Room updatedRoom) {
 
-		Room savedRoom = rooms.get(updatedRoom.getId());
-		if (savedRoom != null) {
+		Room savedRoom = rooms.get(updatedRoom.getId());									//Se guarda una referencia a la room desactualizada
+		if (savedRoom != null) {															//Si existe esa room, se puede actualizar
 			
-			rooms.put(id, updatedRoom);
+			rooms.put(id, updatedRoom);														//Se actualiza la room
 			
-			Player juan = PlayersController.players.get(updatedRoom.getJuantankamonId());
+			Player juan = PlayersController.players.get(updatedRoom.getJuantankamonId());	//Se obtienen referencias a los jugadores
 			Player guard = PlayersController.players.get(updatedRoom.getGuardId());
+			
+			//Se actualizan los room id de los jugadores que estén en la room
 			if(juan != null) {
-				System.out.println("Poniendo room id al guardia " + juan.getId() + " en la room: "+ savedRoom.getId());
+				System.out.println("Assigning Juantankamon " + juan.getId() + " to room "+ savedRoom.getId());
 				juan.setRoomId(savedRoom.getId());
 			}
 			if(guard != null) {
-				System.out.println("Poniendo room id al guardia " + guard.getId() + " en la room: "+ savedRoom.getId());
+				System.out.println("Assigning Guard " + guard.getId() + " to room "+ savedRoom.getId());
 				guard.setRoomId(savedRoom.getId());
 			}
 			
@@ -82,7 +77,7 @@ public class RoomsController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Room> getRoom(@PathVariable long id) {
 
-		Room savedRoom = rooms.get(id);
+		Room savedRoom = rooms.get(id);		//Se obtiene una referencia a la room con el id especificado para devolverla
 
 		if (savedRoom != null) {
 			return new ResponseEntity<>(savedRoom, HttpStatus.OK);
@@ -94,13 +89,14 @@ public class RoomsController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Room> deleteRoom(@PathVariable long id) {
 
-		Room savedRoom = rooms.get(id);
+		Room savedRoom = rooms.get(id);		//Se obtiene una referencia a la room con el id especificado para destruirla
 
 		if (savedRoom != null) {
 			rooms.remove(savedRoom.getId());
 			return new ResponseEntity<>(savedRoom, HttpStatus.OK);
 		}
 		
+		//En caso de haber jugadores, se les expulsa de la room
 		Player juan = PlayersController.players.get(savedRoom.getJuantankamonId());
 		Player guard = PlayersController.players.get(savedRoom.getGuardId());
 		
