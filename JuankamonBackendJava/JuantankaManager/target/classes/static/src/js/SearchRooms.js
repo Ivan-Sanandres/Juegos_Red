@@ -26,7 +26,7 @@ var SearchRooms = new Phaser.Class({
     create: function () //Código que se ejecuta al generarse la escena
     {
       //CREACIÓN DE TEXTOS
-      this.add.bitmapText(362/2, 15, 'fuente', 'Lista de partidas abiertas', 11).setOrigin(0.5, 0.5);
+      this.add.bitmapText(this.cameras.main.width/2 - 30, 15, 'fuente', 'Lista de partidas abiertas', 11).setOrigin(0.5, 0.5);
 
       //Se añade la música de fondo, se configura para que se reproduzca en bucle
       menuMusic = this.sound.add("menuMusic");
@@ -35,10 +35,13 @@ var SearchRooms = new Phaser.Class({
       var backButton = new Button(this, this.cameras.main.width/2, 165, 'buttonIcon', 'buttonIconHover', "Volver al menú", 'fuente', function(that){
         menuMusic.stop();
         that.scene.start("Menu");
-      }, 0.15);
+      }, 1.6,1);
 
-      var roomList = new TextButtonList(this, this.cameras.main.width/2 - 10, 55, 5, function() {
+
+
+      var roomList = new TextButtonList(this, this.cameras.main.width/2 - 120, 40, 7, function() {
         roomList.info = [];
+        roomList.auxValues = [];
         var that = this;
 
         AJAX_getRooms(function(rooms)
@@ -51,6 +54,7 @@ var SearchRooms = new Phaser.Class({
               AJAX_getPlayer(rooms[i].juantankamonId, function(player)
               {
                 line = "Partida " + player.roomId + " Juantankamón: " + player.name;
+                roomList.auxValues.push(player.roomId);
                 roomList.info.push(line);
                 roomList.updateButtons();
               });
@@ -58,28 +62,66 @@ var SearchRooms = new Phaser.Class({
               AJAX_getPlayer(rooms[i].guardId, function(player)
               {
                 line = "Partida " + player.roomId + " Guardia: " + player.name;
+                roomList.auxValues.push(player.roomId);
                 roomList.info.push(line);
                 roomList.updateButtons();
               });
-
             } // if end
           } //for end
         }); //AJAX_getRooms end
-
       });
-
       roomList.updateInfo();
+      roomList.updateButtons();
 
-      var upButton = new Button(this, this.cameras.main.width/2 - 100, 50, 'arrowUpOff', 'arrowUpOn', "-", 'fuente', function(that){
+
+
+
+      var refreshButton = new Button(this, this.cameras.main.width/2 + 70, 15, 'buttonIcon', 'buttonIconHover', "actualizar", 'fuente', function(that){
+        roomList.updateInfo();
+      }, 1, 1);
+
+      var hostAsJuanButton = new Button(this, this.cameras.main.width/2 + 125, 65, 'buttonIcon', 'buttonIconHover', ["Crear partida", "como Juantankamón"], 'fuente', function(that){
+        that.scene.start("WaitingRoom");
+
+        var roomData = {
+          juantankamonId : playerId
+        };
+
+        AJAX_createRoom(roomData, function(r){console.log("Partida creada")}, function(r)
+        {
+          that.scene.start("SearchRooms");
+        });
+      },1.8, 1.8, 1);
+      var hostAsGuardButton = new Button(this, this.cameras.main.width/2 + 125, 125, 'buttonIcon', 'buttonIconHover', ["Crear partida", "como guardia"], 'fuente', function(that){
+        that.scene.start("WaitingRoom");
+
+        var roomData = {
+          guardId : playerId
+        };
+
+        AJAX_createRoom(roomData, function(r){console.log("Partida creada")}, function(r)
+        {
+          that.scene.start("SearchRooms");
+        });
+      }, 1.8, 1.8, 1);
+
+      var upButton = new Button(this, this.cameras.main.width/2 - 150, 60, 'arrowUpOff', 'arrowUpOn', "-", 'fuente', function(that){
         roomList.goUp();
-        roomList.updateInfo();
+        roomList.updateButtons();
       }, 1, 1, 1);
 
-      var downButton = new Button(this, this.cameras.main.width/2 - 100, 110, 'arrowDownOff', 'arrowDownOn', "+", 'fuente', function(that){
+      var downButton = new Button(this, this.cameras.main.width/2 - 150, 120, 'arrowDownOff', 'arrowDownOn', "+", 'fuente', function(that){
         roomList.goDown();
-        roomList.updateInfo();
+        roomList.updateButtons();
       }, 1, 1, 1);
 
+      var timerInput = this.time.addEvent({
+        delay: 5000,
+        callback: periodicPut,
+        //args: [],
+        callbackScope: this,
+        loop: true
+    });
 
       //var somebutton = new Button();
       //var testButton = new Button(this, 300, 60, 'buttonIcon', 'buttonIconHover', "xd", 'fuente', 0.1, 0.1);

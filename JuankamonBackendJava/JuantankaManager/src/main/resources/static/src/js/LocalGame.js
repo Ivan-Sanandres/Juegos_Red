@@ -1,38 +1,3 @@
-var lightManager;
-
-var anyInput = false;
-
-var juan; //Contiene el objeto físico de Juan
-var juanSpeed;
-var juanMovementVector = new Phaser.Math.Vector2(0, 0);
-var juanPreviousPos = new Phaser.Math.Vector2(0, 0);
-var juanCursors; //Teclas con las que se mueve Juan
-var juanCamera;
-var juanLight;
-
-var guard; //Contiene el objeto físico del guardia
-var guardSpeed;
-var guardMovementVector = new Phaser.Math.Vector2(0, 0);
-var guardPreviousPos = new Phaser.Math.Vector2(0, 0);
-var guardMouseVector = new Phaser.Math.Vector2(0, 0);
-var guardCursors; //Teclas con las que se mueve el guardia
-var guardCamera;
-var guardLight;
-
-var statics = {}; //Objetos estáticos de la escena
-
-var doors = {};
-var keys = {};
-var spawnPoints = {};
-var finalDoor;
-
-var pointer;
-
-var configKeys;
-
-const numDoors = 4;
-const numKeys = 4;
-
 var LocalGame = new Phaser.Class({
 
     Extends: Phaser.Scene,
@@ -275,22 +240,34 @@ var LocalGame = new Phaser.Class({
         }
       }initLights(16);
 
+      var timerInput = this.time.addEvent({
+        delay: 5000,
+        callback: periodicPut,
+        //args: [],
+        callbackScope: this,
+        loop: true
+      });
+
       //Colisiones de juan y el guardia con las paredes y props
-      this.physics.add.collider(juan, this.walls);
+      //this.physics.add.collider(juan, this.walls);
       this.physics.add.collider(guard, this.walls);
-      this.physics.add.collider(juan, propsLayer);
+      //this.physics.add.collider(juan, propsLayer);
       this.physics.add.collider(guard, propsLayer);
 
       //Se asocia la callback endGame a la colisión de Juan con la puerta de salida y con el guardia
       this.physics.add.collider(juan, finalDoor, function() {
         endGameState = endGameStates.JUAN_WINS;
-        endGame();
+        timerInput.remove();
+        endGame(that);
+
       }, null, this);
 
       this.physics.add.overlap(juan, guard, function()
       {
+        console.log("FUNCIONA JODER")
         endGameState = endGameStates.GUARD_WINS;
-        endGame();
+        timerInput.remove();
+        endGame(that);
       }, null, this);
 
       txtMP = this.add.bitmapText(juan.x, juan.y, "fuente", "ESPACIO para volver").setOrigin(0.5, 0.5);
@@ -299,13 +276,7 @@ var LocalGame = new Phaser.Class({
       gameMusic = this.sound.add("gameMusic");
       gameMusic.play({mute: muted, loop: true});
 
-      /*var timerInput = this.time.addEvent({
-        delay: 1000,
-        callback: checkInput,
-        //args: [],
-        callbackScope: this,
-        loop: true
-    });*/
+
 
       paused = false;
     },
@@ -408,7 +379,6 @@ var LocalGame = new Phaser.Class({
         var guardLightDistance = 3.0;
         guardLight.position = [guard.x + guardLight.direction[0] * guardLightDistance, guard.y + guardLight.direction[1] * guardLightDistance];
 
-
         lightManager.updateAllUniforms(delta);
       }
     }
@@ -429,15 +399,9 @@ function openDoor(index)
   }
 }
 
-function endGame(state)
+function endGame(that)
 {
   //Se dirige a la escena de fin de juego
-
   gameMusic.stop();
   that.scene.start("EndScreen");
-}
-
-function checkInput()
-{
-
 }
