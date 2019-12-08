@@ -1,46 +1,12 @@
-var lightManager;
 
-var anyInput = false;
-var pointerInWorldCoordinates = {x: 0, y: 0};
 
-var juan; //Contiene el objeto físico de Juan
-var juanSpeed;
-var juanMovementVector = new Phaser.Math.Vector2(0, 0);
-var juanPreviousPos = new Phaser.Math.Vector2(0, 0);
-var juanCursors; //Teclas con las que se mueve Juan
-var juanCamera;
-var juanLight;
-
-var guard; //Contiene el objeto físico del guardia
-var guardSpeed;
-var guardMovementVector = new Phaser.Math.Vector2(0, 0);
-var guardPreviousPos = new Phaser.Math.Vector2(0, 0);
-var guardMouseVector = new Phaser.Math.Vector2(0, 0);
-var guardCursors; //Teclas con las que se mueve el guardia
-var guardCamera;
-var guardLight;
-
-var statics = {}; //Objetos estáticos de la escena
-
-var doors = {};
-var keys = {};
-var spawnPoints = {};
-var finalDoor;
-
-var pointer;
-
-var configKeys;
-
-const numDoors = 4;
-const numKeys = 4;
-
-var LocalGame = new Phaser.Class({
+var OnlineGame = new Phaser.Class({
 
     Extends: Phaser.Scene,
 
     initialize: function LocalGame ()
     {
-        Phaser.Scene.call(this, {key: 'LocalGame'})
+        Phaser.Scene.call(this, {key: 'OnlineGame'})
     },
 
     preload: function ()
@@ -72,7 +38,7 @@ var LocalGame = new Phaser.Class({
       var that = this;
 
       pointer = this.input.mousePointer; //Referencia al ratón
-      
+
       this.input.keyboard.on('keydown', function (event) {anyInput = true;})
       //this.input.keyboard.on('keyup', function (event) {anyInput = false;})
 
@@ -293,8 +259,19 @@ var LocalGame = new Phaser.Class({
       gameMusic.play({mute: muted, loop: true});
 
       var timerInput = this.time.addEvent({
-        delay: 1000,
-        callback: function(){ /*put...*/ anyInput = false; },
+        delay: 5000,
+        callback: function()
+          {
+            if(anyInput)
+            {
+              var player = {
+                id: playerId,
+                name: playerName
+              }
+              AJAX_updatePlayer(player)
+            }
+            anyInput = false;
+          },
         //args: [],
         callbackScope: this,
         loop: true
