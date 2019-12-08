@@ -21,10 +21,14 @@ var SearchRooms = new Phaser.Class({
       this.load.image("arrowUpOn", "./resources/sprites/hoverArrowUp.png");
       this.load.image("arrowDownOff", "./resources/sprites/idleArrowDown.png");
       this.load.image("arrowDownOn", "./resources/sprites/hoverArrowDown.png");
+
+      this.load.image("genericBackground", "./resources/sprites/genericBackground.png");
     },
 
     create: function () //Código que se ejecuta al generarse la escena
     {
+      this.add.image(0, 0, "genericBackground").setOrigin(0, 0);
+
       this.events.on('shutdown', function(){
         console.log("SE DESTRUYÓ");
       }, this);
@@ -91,6 +95,7 @@ var SearchRooms = new Phaser.Class({
         for(var i = 0; i < list.size; i++){
           list.buttons[i].clickCallback = function(){
             var roomId = this.auxValue;
+            //console.log("aux value" + roomId);
             AJAX_getRoom(roomId, function(room){  //get success
               var roomUpdated = {
                 id : roomId,
@@ -109,6 +114,8 @@ var SearchRooms = new Phaser.Class({
                 roomUpdated.guardId = playerId;
                 playingAsJuantankamon = false;
               }
+
+              console.log("player id : " + playerId);
 
               AJAX_updateRoom(roomUpdated, function(room){  //put success
                 playerRoomId = room.id;

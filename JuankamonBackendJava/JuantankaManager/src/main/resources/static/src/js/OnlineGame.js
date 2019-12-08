@@ -43,9 +43,7 @@ var OnlineGame = new Phaser.Class({
       this.input.on('pointermove', function (pointer) {anyInput = true;});
 
       configKeys = this.input.keyboard.addKeys({ //Teclas usadas para opciones de configuración
-        pause: Phaser.Input.Keyboard.KeyCodes.P,
-        mute: Phaser.Input.Keyboard.KeyCodes.M,
-        space: Phaser.Input.Keyboard.KeyCodes.SPACE
+        mute: Phaser.Input.Keyboard.KeyCodes.M
       });
 
       this.add.image(0, 0, 'backGround').setScale(130 * 64, 75 * 64);
@@ -296,7 +294,20 @@ var OnlineGame = new Phaser.Class({
         loop: true
       });
 
-      paused = false;
+      var timerGetRoom = this.time.addEvent({
+        delay: 2000,
+        callback: function()
+          {
+              AJAX_getRoom(playerRoomId, function(){}, function(){
+                endGameState = endGameStates.DISCONNECT;
+                endGame(that);
+              });
+          },
+        //args: [],
+        callbackScope: this,
+        loop: true
+      });
+
     },
 
     update: function (time, delta)
@@ -304,104 +315,88 @@ var OnlineGame = new Phaser.Class({
       txtMP.x = juan.x;
       txtMP.y = juan.y;
 
-      //Si se pulsa la P se pausa el juego y no se actualizan las posiciones y luces
-      if(Phaser.Input.Keyboard.JustDown(configKeys.pause))
-      {
-        paused = !paused;
-        txtMP.visible = !txtMP.visible;
-
-        juan.setVelocityX(0); juan.setVelocityY(0);
-        guard.setVelocityX(0); guard.setVelocityY(0);
-      }
       if(Phaser.Input.Keyboard.JustDown(configKeys.mute))
       {
           muted = !muted;
           gameMusic.mute = muted;
       }
-      if(Phaser.Input.Keyboard.JustDown(configKeys.space) && paused)
+
+
+      pointerInWorldCoordinates = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+
+      //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
+      juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
+      guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
+
+      function Move(character, cursors, speed, characterMovementVector)
       {
-        gameMusic.stop();
-        this.scene.start("Menu");
-      }
+        var horizontalInput = 0; //Input horizontal del jugador (-1 a la izquieda y 1 a la derecha)
+        var verticalInput = 0; // Input vertical del jugador (-1 arriba y 1 abajo)
 
-      if(!paused)
-      {
-        pointerInWorldCoordinates = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+        //Se elimina la velocidad que pudiera llevar el personaje
+        character.setVelocityX(0);
+        character.setVelocityY(0);
 
-        //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
-        juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
-        guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
-
-        function Move(character, cursors, speed, characterMovementVector)
-        {
-          var horizontalInput = 0; //Input horizontal del jugador (-1 a la izquieda y 1 a la derecha)
-          var verticalInput = 0; // Input vertical del jugador (-1 arriba y 1 abajo)
-
-          //Se elimina la velocidad que pudiera llevar el personaje
-          character.setVelocityX(0);
-          character.setVelocityY(0);
-
-          //Usamos el vector de dirección de los jugadores normalizado y en valor absoluto
-          characterMovementVector = characterMovementVector.normalize();
-          characterMovementVector = new Phaser.Math.Vector2(Math.abs(characterMovementVector.x), Math.abs(characterMovementVector.y));
+        //Usamos el vector de dirección de los jugadores normalizado y en valor absoluto
+        characterMovementVector = characterMovementVector.normalize();
+        characterMovementVector = new Phaser.Math.Vector2(Math.abs(characterMovementVector.x), Math.abs(characterMovementVector.y));
 
 
-          //ANIMATIONS
-          var movVecLength = characterMovementVector.length();
-          if(movVecLength == 0.0 && !character.anims.currentAnim.paused){
-            //console.log("Pausando");
-            character.anims.currentAnim.pause();
-          } else if (movVecLength > 0.0 && character.anims.currentAnim.paused){
-            //console.log("Continuando");
-            character.anims.currentAnim.resume();
-          }
-
-          //Si pulsamos Up o Down quitamos o añadimos respectivamente 1 a verticalInput
-          //De esta forma si se pulsan las dos a la vez es = 0 y el personaje no se Mueve
-          //Misma lógica para horizontalInput con Left y Right
-          if(cursors.up.isDown || cursors.w.isDown) verticalInput += -1;
-
-          if(cursors.down.isDown || cursors.s.isDown) verticalInput += 1;
-
-          if(cursors.left.isDown || cursors.a.isDown) horizontalInput += -1;
-
-          if(cursors.right.isDown || cursors.d.isDown) horizontalInput += 1;
-
-          //Si el jugador se estaba movimiendo lo tenemos en cuenta para que no vaya más rápido en diaganol
-          if(characterMovementVector.x != 0)
-            character.setVelocityX(speed * horizontalInput * characterMovementVector.x);
-          else
-            character.setVelocityX(speed * horizontalInput);
-
-          if(characterMovementVector.y != 0)
-            character.setVelocityY(speed * verticalInput * characterMovementVector.y);
-          else
-            character.setVelocityY(speed * verticalInput);
+        //ANIMATIONS
+        var movVecLength = characterMovementVector.length();
+        if(movVecLength == 0.0 && !character.anims.currentAnim.paused){
+          //console.log("Pausando");
+          character.anims.currentAnim.pause();
+        } else if (movVecLength > 0.0 && character.anims.currentAnim.paused){
+          //console.log("Continuando");
+          character.anims.currentAnim.resume();
         }
 
-        if(playingAsJuantankamon)
-          Move(juan, juanCursors, juanSpeed, juanMovementVector);
+        //Si pulsamos Up o Down quitamos o añadimos respectivamente 1 a verticalInput
+        //De esta forma si se pulsan las dos a la vez es = 0 y el personaje no se Mueve
+        //Misma lógica para horizontalInput con Left y Right
+        if(cursors.up.isDown || cursors.w.isDown) verticalInput += -1;
+
+        if(cursors.down.isDown || cursors.s.isDown) verticalInput += 1;
+
+        if(cursors.left.isDown || cursors.a.isDown) horizontalInput += -1;
+
+        if(cursors.right.isDown || cursors.d.isDown) horizontalInput += 1;
+
+        //Si el jugador se estaba movimiendo lo tenemos en cuenta para que no vaya más rápido en diaganol
+        if(characterMovementVector.x != 0)
+          character.setVelocityX(speed * horizontalInput * characterMovementVector.x);
         else
-          Move(guard, guardCursors, guardSpeed, guardMovementVector);
+          character.setVelocityX(speed * horizontalInput);
 
-        //Posición que llevan los personajes en el frame anterior
-        juanPreviousPos.set(juan.x, juan.y);
-        guardPreviousPos.set(guard.x, guard.y);
-
-        //LIGHT POSITION
-        juanLight.position = [juan.x, juan.y];
-
-        if(!playingAsJuantankamon)
-        {
-          guardMouseVector.set(pointerInWorldCoordinates.x - guard.x, pointerInWorldCoordinates.y - guard.y).normalize();
-          guardLight.direction = [guardMouseVector.x, guardMouseVector.y];
-        }
-
-        var guardLightDistance = 3.0;
-        guardLight.position = [guard.x + guardLight.direction[0] * guardLightDistance, guard.y + guardLight.direction[1] * guardLightDistance];
-
-
-        lightManager.updateAllUniforms(delta);
+        if(characterMovementVector.y != 0)
+          character.setVelocityY(speed * verticalInput * characterMovementVector.y);
+        else
+          character.setVelocityY(speed * verticalInput);
       }
+
+      if(playingAsJuantankamon)
+        Move(juan, juanCursors, juanSpeed, juanMovementVector);
+      else
+        Move(guard, guardCursors, guardSpeed, guardMovementVector);
+
+      //Posición que llevan los personajes en el frame anterior
+      juanPreviousPos.set(juan.x, juan.y);
+      guardPreviousPos.set(guard.x, guard.y);
+
+      //LIGHT POSITION
+      juanLight.position = [juan.x, juan.y];
+
+      if(!playingAsJuantankamon)
+      {
+        guardMouseVector.set(pointerInWorldCoordinates.x - guard.x, pointerInWorldCoordinates.y - guard.y).normalize();
+        guardLight.direction = [guardMouseVector.x, guardMouseVector.y];
+      }
+
+      var guardLightDistance = 3.0;
+      guardLight.position = [guard.x + guardLight.direction[0] * guardLightDistance, guard.y + guardLight.direction[1] * guardLightDistance];
+
+
+      lightManager.updateAllUniforms(delta);
     }
 });

@@ -58,12 +58,19 @@ public class RoomsController {
 
 		Room savedRoom = rooms.get(updatedRoom.getId());
 		if (savedRoom != null) {
+			
 			rooms.put(id, updatedRoom);
 			
-			Player juan = PlayersController.players.get(savedRoom.getJuantankamonId());
-			Player guard = PlayersController.players.get(savedRoom.getGuardId());
-			if(juan != null) juan.setRoomId(savedRoom.getId());
-			if(guard != null) guard.setRoomId(savedRoom.getId());
+			Player juan = PlayersController.players.get(updatedRoom.getJuantankamonId());
+			Player guard = PlayersController.players.get(updatedRoom.getGuardId());
+			if(juan != null) {
+				System.out.println("Poniendo room id al guardia " + juan.getId() + " en la room: "+ savedRoom.getId());
+				juan.setRoomId(savedRoom.getId());
+			}
+			if(guard != null) {
+				System.out.println("Poniendo room id al guardia " + guard.getId() + " en la room: "+ savedRoom.getId());
+				guard.setRoomId(savedRoom.getId());
+			}
 			
 			return new ResponseEntity<>(updatedRoom, HttpStatus.OK);
 		}

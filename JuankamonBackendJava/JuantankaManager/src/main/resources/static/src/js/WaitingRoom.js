@@ -24,13 +24,27 @@ var WaitingRoom = new Phaser.Class({
 
     create: function () //Código que se ejecuta al generarse la escena
     {
+
+
       var that = this;
+
+
+      var timerInput = this.time.addEvent({
+        delay: 5000,
+        callback: periodicPut,
+        //args: [],
+        callbackScope: this,
+        loop: true
+      });
+
+
       //Se añade la imagen de fondo del menú
       this.add.image(0, 0, "backgroundImage").setOrigin(0, 0);
 
       var juanName = this.add.bitmapText((this.cameras.main.width / 2) - 84,64, 'fuente', 'Esperando...', 22).setOrigin(0.5, 0);
       var guardName = this.add.bitmapText((this.cameras.main.width / 2) + 84,64, 'fuente', 'Esperando...', 22).setOrigin (0.5, 0);
       timeText = this.add.bitmapText((this.cameras.main.width / 2) + 1, 18, 'fuente', waitingTime, 22).setOrigin(0.5, 0);
+      timeText.visible = false;
 
 
       if(playingAsJuantankamon) juanName.text = playerName;
@@ -69,6 +83,7 @@ var WaitingRoom = new Phaser.Class({
               running = room.running;
               timerGet.paused = true;
               timerStart.paused = false;
+              timeText.visible = true;
 
               var pId = 0; // id del otro jugador
               if(playingAsJuantankamon){
@@ -91,6 +106,9 @@ var WaitingRoom = new Phaser.Class({
         callbackScope: this,
         loop: true
       });
+
+
+
     },
 
     update: function (){
