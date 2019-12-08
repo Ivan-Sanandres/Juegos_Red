@@ -39,7 +39,7 @@ var WaitingRoom = new Phaser.Class({
         //args: [],
         callbackScope: this,
         loop: true
-    });
+      });
     },
 
     update: function (){

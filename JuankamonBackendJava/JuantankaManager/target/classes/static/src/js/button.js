@@ -81,6 +81,7 @@ var TextButtonList = function(scene, posX, posY, size, updateCallBack, font = 'f
   this.info = [];
   this.currentStart = 0;
   this.size = size;
+  this.auxValues = [];
 
   for(var i = 0; i < size; i++){
     this.buttons.push(new TextButton(scene, posX, posY + i * this.lineHeight, i));

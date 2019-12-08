@@ -41,12 +41,12 @@ var SearchRooms = new Phaser.Class({
 
       var roomList = new TextButtonList(this, this.cameras.main.width/2 - 120, 40, 7, function() {
         roomList.info = [];
+        roomList.auxValues = [];
         var that = this;
 
         AJAX_getRooms(function(rooms)
         {
           var line = "";
-
           for(var i = 0; i < rooms.length; i++)
           {
             if(rooms[i].open)
@@ -54,6 +54,7 @@ var SearchRooms = new Phaser.Class({
               AJAX_getPlayer(rooms[i].juantankamonId, function(player)
               {
                 line = "Partida " + player.roomId + " Juantankamón: " + player.name;
+                roomList.auxValues.push(player.roomId);
                 roomList.info.push(line);
                 roomList.updateButtons();
               });
@@ -61,17 +62,19 @@ var SearchRooms = new Phaser.Class({
               AJAX_getPlayer(rooms[i].guardId, function(player)
               {
                 line = "Partida " + player.roomId + " Guardia: " + player.name;
+                roomList.auxValues.push(player.roomId);
                 roomList.info.push(line);
                 roomList.updateButtons();
               });
-
             } // if end
           } //for end
         }); //AJAX_getRooms end
-
       });
       roomList.updateInfo();
       roomList.updateButtons();
+
+
+
 
       var refreshButton = new Button(this, this.cameras.main.width/2 + 70, 15, 'buttonIcon', 'buttonIconHover', "actualizar", 'fuente', function(that){
         roomList.updateInfo();
