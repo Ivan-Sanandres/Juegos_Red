@@ -1,5 +1,5 @@
 var waitingTime = 5;
-var fullLobby = false;
+var running = false;
 var timeText;
 
 var WaitingRoom = new Phaser.Class({
@@ -24,18 +24,69 @@ var WaitingRoom = new Phaser.Class({
 
     create: function () //Código que se ejecuta al generarse la escena
     {
-
+      var that = this;
       //Se añade la imagen de fondo del menú
       this.add.image(0, 0, "backgroundImage").setOrigin(0, 0);
 
-      this.add.bitmapText((this.cameras.main.width / 2) - 84,64, 'fuente', '123456789012', 22).setOrigin(0.5, 0);
-      this.add.bitmapText((this.cameras.main.width / 2) + 84,64, 'fuente', '1', 22).setOrigin (0.5, 0);
+      var juanName = this.add.bitmapText((this.cameras.main.width / 2) - 84,64, 'fuente', 'Esperando...', 22).setOrigin(0.5, 0);
+      var guardName = this.add.bitmapText((this.cameras.main.width / 2) + 84,64, 'fuente', 'Esperando...', 22).setOrigin (0.5, 0);
       timeText = this.add.bitmapText((this.cameras.main.width / 2) + 1, 18, 'fuente', waitingTime, 22).setOrigin(0.5, 0);
 
-      fullLobby = true;
-      var timerInput = this.time.addEvent({
+
+      if(playingAsJuantankamon) juanName.text = playerName;
+      else guardName.text = playerName;
+      //timerStart.paused = true;
+
+      var timerStart = this.time.addEvent({
         delay: 1000,
-        callback: setTimer,
+        callback: function(){
+          if(waitingTime > 0 && running === true){
+              waitingTime--;
+              timeText.text = waitingTime;
+              console.log(waitingTime);
+          }
+          else if(waitingTime === 0){
+            //CAMBIAR ESCENAS
+            console.log("STARTING");
+            timerStart.paused = true;
+            that.scene.start("OnlineGame");
+          }
+        },
+        //args: [],
+        callbackScope: this,
+        loop: true,
+        paused: true
+      });
+
+      var timerGet = this.time.addEvent({
+        delay: 1000,
+        callback: function(){
+          AJAX_getRoom(playerRoomId, function(room){
+            if(room.full){
+              console.log("IS FULL");
+              //console.log(timerStart);
+              //timerStart.paused = false;
+              running = room.running;
+              timerGet.paused = true;
+              timerStart.paused = false;
+
+              var pId = 0; // id del otro jugador
+              if(playingAsJuantankamon){
+                pId = room.guardId;
+              } else {
+                pId = room.juantankamonId;
+              }
+
+              AJAX_getPlayer(pId, function(player){
+                if(playingAsJuantankamon){
+                  guardName.text = player.name;
+                } else {
+                  juanName.text = player.name;
+                }
+              })
+            }
+          });
+        },
         //args: [],
         callbackScope: this,
         loop: true
@@ -47,14 +98,3 @@ var WaitingRoom = new Phaser.Class({
     },
 
 });
-
-function setTimer(){
-    if(waitingTime > 0 && fullLobby === true){
-        waitingTime--;
-        timeText.text = waitingTime;
-        console.log(waitingTime);
-    }
-    else if(waitingTime === 0){
-
-    }
-};

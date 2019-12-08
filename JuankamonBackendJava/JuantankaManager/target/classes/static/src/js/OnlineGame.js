@@ -225,7 +225,8 @@ var OnlineGame = new Phaser.Class({
       lightManager = new LightingManager(this.game, [this.cameras.main]);
 
       juanLight = new Light_focal([juan.x, juan.y], [0.0, 0.0], 0.0, 1.5, [1.0, 1.0, 1.0], 1.3, 1.0, true, 0.9, 1.0, 1.0);
-      lightManager.addLight(0, juanLight);
+
+      if(playingAsJuantankamon) lightManager.addLight(0, juanLight);
 
       guardLight = new Light_focal([guard.x, guard.y], [0.0, 1.0], 1.5, 1.5, [1.0, 1.0, 0.5], 1.3, 1.0, true, 0.9, 1.0, 0.5);
       lightManager.addLight(0, guardLight);
@@ -260,13 +261,13 @@ var OnlineGame = new Phaser.Class({
       //Se asocia la callback endGame a la colisión de Juan con la puerta de salida y con el guardia
       this.physics.add.collider(juan, finalDoor, function() {
         endGameState = endGameStates.JUAN_WINS;
-        endGame();
+        endGame(that);
       }, null, this);
 
       this.physics.add.overlap(juan, guard, function()
       {
         endGameState = endGameStates.GUARD_WINS;
-        endGame();
+        endGame(that);
       }, null, this);
 
       txtMP = this.add.bitmapText(juan.x, juan.y, "fuente", "ESPACIO para volver").setOrigin(0.5, 0.5);
@@ -283,7 +284,8 @@ var OnlineGame = new Phaser.Class({
             {
               var player = {
                 id: playerId,
-                name: playerName
+                name: playerName,
+                roomId : playerRoomId
               }
               AJAX_updatePlayer(player)
             }
@@ -301,8 +303,6 @@ var OnlineGame = new Phaser.Class({
     {
       txtMP.x = juan.x;
       txtMP.y = juan.y;
-
-      console.log(anyInput);
 
       //Si se pulsa la P se pausa el juego y no se actualizan las posiciones y luces
       if(Phaser.Input.Keyboard.JustDown(configKeys.pause))

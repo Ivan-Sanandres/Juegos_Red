@@ -1,7 +1,6 @@
 //La variable la declaro global para que se guarde el valor para el juego. Si ya es true, cuando empiece el juego tampoco sonará música
-var playingAsJuantankamon = false;
 var muted = false;
-
+var playerRoomId = 0;
 //ESCENA MENÚ
 var SearchRooms = new Phaser.Class({
 
@@ -26,6 +25,11 @@ var SearchRooms = new Phaser.Class({
 
     create: function () //Código que se ejecuta al generarse la escena
     {
+      this.events.on('shutdown', function(){
+        console.log("SE DESTRUYÓ");
+      }, this);
+
+      console.log("JEJE RETURNS");
       //CREACIÓN DE TEXTOS
       this.add.bitmapText(this.cameras.main.width/2 - 30, 15, 'fuente', 'Lista de partidas abiertas', 11).setOrigin(0.5, 0.5);
 
@@ -107,7 +111,9 @@ var SearchRooms = new Phaser.Class({
               }
 
               AJAX_updateRoom(roomUpdated, function(room){  //put success
+                playerRoomId = room.id;
                 that.scene.start('WaitingRoom');
+                that.scene.stop('SearchRooms');
               }, function(){  //put failed
                 roomList.updateInfo();
               });
@@ -121,32 +127,30 @@ var SearchRooms = new Phaser.Class({
         } // end for
       } //end function
 
-      var refreshButton = new Button(this, this.cameras.main.width/2 + 70, 15, 'buttonIcon', 'buttonIconHover', "actualizar", 'fuente', function(that){
+      var refreshButton = new Button(this, this.cameras.main.width/2 + 70, 15, 'buttonIcon', 'buttonIconHover', "Actualizar", 'fuente', function(that){
         roomList.updateInfo();
       }, 1, 1);
 
       var hostAsJuanButton = new Button(this, this.cameras.main.width/2 + 125, 65, 'buttonIcon', 'buttonIconHover', ["Crear partida", "como Juantankamón"], 'fuente', function(that){
-        that.scene.start("WaitingRoom");
-
+        playingAsJuantankamon = true;
         var roomData = {
           juantankamonId : playerId
         };
 
-        AJAX_createRoom(roomData, function(r){console.log("Partida creada")}, function(r)
-        {
-          that.scene.start("SearchRooms");
+        AJAX_createRoom(roomData, function(room){
+          playerRoomId = room.id;
+          that.scene.start("WaitingRoom");
         });
       },1.8, 1.8, 1);
       var hostAsGuardButton = new Button(this, this.cameras.main.width/2 + 125, 125, 'buttonIcon', 'buttonIconHover', ["Crear partida", "como guardia"], 'fuente', function(that){
-        that.scene.start("WaitingRoom");
-
+        playingAsJuantankamon = false;
         var roomData = {
           guardId : playerId
         };
 
-        AJAX_createRoom(roomData, function(r){console.log("Partida creada")}, function(r)
-        {
-          that.scene.start("SearchRooms");
+        AJAX_createRoom(roomData, function(room){
+          playerRoomId = room.id;
+          that.scene.start("WaitingRoom");
         });
       }, 1.8, 1.8, 1);
 

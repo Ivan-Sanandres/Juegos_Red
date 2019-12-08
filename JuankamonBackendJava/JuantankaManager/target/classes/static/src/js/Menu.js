@@ -45,6 +45,7 @@ var Menu = new Phaser.Class({
 
       var playOnlineButton = new Button(this, this.cameras.main.width/2, 105, 'buttonIcon', 'buttonIconHover', "Jugar online", 'fuente', function(that){
         menuMusic.stop();
+        console.log("HUMMMDKLFSJSKL");
         that.scene.start("SearchRooms");
       }, 1.3,1);
 
@@ -141,7 +142,8 @@ function periodicPut()
 {
   var player = {
     id: playerId,
-    name: playerName
+    name: playerName,
+    roomId: playerRoomId
   }
   AJAX_updatePlayer(player)
 }
