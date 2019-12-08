@@ -1,8 +1,9 @@
-var Button = function(scene, posX, posY, image, hoverImage, text, font = 'fuente', clickCallback = function() {console.log("callback not defined")}, scaleX = 0.1, scaleY = 0.1)
+var Button = function(scene, posX, posY, image, hoverImage, text, font = 'fuente', clickCallback = function() {console.log("callback not defined")}, scaleX = 0.1, scaleY = 0.1, hoverScale = 1.15)
 {
   this.image = image;
   this.hoverImage = hoverImage;
   this.scene = scene;
+  this.hoverScale = hoverScale;
 
   this.icon = scene.add.sprite(posX, posY, image).setScale(scaleX, scaleY)
     .setOrigin(0.5, 0.5)
@@ -16,7 +17,7 @@ var Button = function(scene, posX, posY, image, hoverImage, text, font = 'fuente
   this.enterButtonHoverState = function()
   {
     this.icon.setTexture(this.hoverImage);
-    this.icon.setScale(scaleX *1.15, scaleY * 1.15);
+    this.icon.setScale(scaleX *this.hoverScale, scaleY * this.hoverScale);
   }
 
   this.enterButtonRestState = function()
@@ -31,7 +32,7 @@ var Button = function(scene, posX, posY, image, hoverImage, text, font = 'fuente
 var TextButton = function(scene, posX, posY, text, font = 'fuente', clickCallback = function() {console.log("callback not defined")})
 {
   this.scene = scene;
-  this.info = scene.add.bitmapText(posX, posY, font, text, 11)
+  this.info = scene.add.bitmapText(posX, posY, font, text + "999999999999999999999999999999999999", 11)
   .setOrigin(0.5, 0.5)
   .setInteractive({ useHandCursor: true })
   .on('pointerover', () => this.enterButtonHoverState() )
@@ -65,7 +66,7 @@ var TextButtonList = function(scene, posX, posY, size, updateCallBack, font = 'f
   this.buttons = [];
   this.lineHeight = 15;
   this.info = [];
-  this.currentStart = 1;
+  this.currentStart = 0;
   this.size = size;
 
   for(var i = 0; i < size; i++){
@@ -75,7 +76,7 @@ var TextButtonList = function(scene, posX, posY, size, updateCallBack, font = 'f
 
   this.updateInfo = function(){
     updateCallBack();
-    this.updateButtons();
+    //this.updateButtons();
   }
 
   this.updateButtons = function(){

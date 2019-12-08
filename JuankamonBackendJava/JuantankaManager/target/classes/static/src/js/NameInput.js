@@ -19,6 +19,7 @@ var NameInput = new Phaser.Class({
         inputContainer.style.display = "block";
         var button = document.getElementById("confirm-button");
         var textbox = document.getElementById("name-field");
+
         button.addEventListener("click", function(event)
         {
             if(textbox.value !== "")

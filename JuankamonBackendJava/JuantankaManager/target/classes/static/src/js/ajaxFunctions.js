@@ -12,7 +12,7 @@ function AJAX_getPlayers(callback = function(){}, failCallback = function(){}) {
         console.log('Players loaded: ' + JSON.stringify(players));
         callback(players);
     }).fail(function() {
-        console.log('Players loaded FAIL: ' + JSON.stringify(players));
+        console.log('Players loaded FAIL');
         failCallback();
     })
 }
@@ -26,7 +26,7 @@ function AJAX_getPlayer(playerId, callback = function(){}, failCallback = functi
         console.log('Player loaded: ' + JSON.stringify(player));
         callback(player);
     }).fail(function() {
-        console.log('Player loaded FAIL: ' + JSON.stringify(player));
+        console.log('Player loaded FAIL');
         failCallback();
     })
 }
@@ -45,7 +45,7 @@ function AJAX_createPlayer(player, callback = function(){}, failCallback = funct
         console.log("Player created: " + JSON.stringify(player));
         callback(player);
     }).fail(function() {
-        console.log("Player created FAIL: " + JSON.stringify(player));
+        console.log("Player created FAIL");
         failCallback();
     })
 }
@@ -64,7 +64,7 @@ function AJAX_updatePlayer(player, callback = function(){}, failCallback = funct
         console.log("Updated player: " + JSON.stringify(player));
         callback(player);
     }).fail(function() {
-        console.log("Updated player FAIL: " + JSON.stringify(player));
+        console.log("Updated player FAIL");
         failCallback();
     })
 }
@@ -78,7 +78,7 @@ function AJAX_deletePlayer(playerId, callback = function(){}, failCallback = fun
         console.log("Deleted player: " + playerId)
         callback(player);
     }).fail(function() {
-      console.log("Deleted player FAIL: " + playerId)
+      console.log("Deleted player FAIL")
       failCallback();
     })
 }
@@ -93,7 +93,7 @@ function AJAX_getRooms(callback = function(){}, failCallback = function(){}) {
         console.log('Rooms loaded: ' + JSON.stringify(rooms));
         callback(rooms);
     }).fail(function() {
-        console.log('Rooms loaded FAIL: ' + JSON.stringify(rooms));
+        console.log('Rooms loaded FAIL');
         failCallback();
     })
 }
@@ -107,7 +107,7 @@ function AJAX_getRoom(roomId, callback = function(){}, failCallback = function()
         console.log('Room loaded: ' + JSON.stringify(room));
         callback(room);
     }).fail(function() {
-        console.log('Rooms loaded FAIL: ' + JSON.stringify(rooms));
+        console.log('Rooms loaded FAIL');
         failCallback();
     })
 }
@@ -126,7 +126,7 @@ function AJAX_createRoom(room, callback = function(){}, failCallback = function(
         console.log("Room created: " + JSON.stringify(room));
         callback(room);
     }).fail(function() {
-        console.log("Room created FAIL: " + JSON.stringify(room));
+        console.log("Room created FAIL");
         failCallback();
     })
 }
@@ -145,7 +145,7 @@ function AJAX_updateRoom(room, callback = function(){}, failCallback = function(
         console.log("Updated room: " + JSON.stringify(room));
         callback(room);
     }).fail(function() {
-        console.log("Updated room FAIL: " + JSON.stringify(room));
+        console.log("Updated room FAIL");
         failCallback();
     })
 }
@@ -158,7 +158,7 @@ function AJAX_deleteRoom(roomId, callback = function(){}, failCallback = functio
     }).done(function (player) {
         console.log("Deleted room: " + roomId)
     }).fail(function() {
-        console.log("Deleted room FAIL: " + roomId)
+        console.log("Deleted room FAIL")
         failCallback();
     })
 }
