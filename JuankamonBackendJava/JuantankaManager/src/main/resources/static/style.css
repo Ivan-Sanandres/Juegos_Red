@@ -7,6 +7,7 @@ body {
   /*background-color: #472D3C;*/
   background-image: url("resources/sprites/tileStars.png");
   background-repeat: repeat;
+  cursor: url("resources/sprites/calaquita.png"), default;
 }
 
 #game-container {
@@ -40,7 +41,10 @@ input {
 
 input:hover {
   background-color: #da85b9;
+  cursor: url("resources/sprites/calaquita sonriente.png"), default;
 }
+
+#name-field{ cursor: url("resources/sprites/cursorText.png"), default; }
 
 ::placeholder {
   color: white;
