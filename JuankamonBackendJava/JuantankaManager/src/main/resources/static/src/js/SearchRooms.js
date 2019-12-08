@@ -1,4 +1,5 @@
 //La variable la declaro global para que se guarde el valor para el juego. Si ya es true, cuando empiece el juego tampoco sonará música
+var playingAsJuantankamon = false;
 var muted = false;
 
 //ESCENA MENÚ
@@ -44,11 +45,14 @@ var SearchRooms = new Phaser.Class({
         roomList.auxValues = [];
         var that = this;
 
+
         AJAX_getRooms(function(rooms)
         {
+          console.log("updating info");
           var line = "";
           for(var i = 0; i < rooms.length; i++)
           {
+            console.log("for");
             if(rooms[i].open)
             {
               AJAX_getPlayer(rooms[i].juantankamonId, function(player)
@@ -57,6 +61,7 @@ var SearchRooms = new Phaser.Class({
                 roomList.auxValues.push(player.roomId);
                 roomList.info.push(line);
                 roomList.updateButtons();
+                updateButtonCallbacks(this, roomList);
               });
 
               AJAX_getPlayer(rooms[i].guardId, function(player)
@@ -65,7 +70,11 @@ var SearchRooms = new Phaser.Class({
                 roomList.auxValues.push(player.roomId);
                 roomList.info.push(line);
                 roomList.updateButtons();
+                updateButtonCallbacks(this, roomList);
               });
+            } else {
+              roomList.updateButtons();
+              updateButtonCallbacks(this, roomList);
             } // if end
           } //for end
         }); //AJAX_getRooms end
@@ -74,7 +83,43 @@ var SearchRooms = new Phaser.Class({
       roomList.updateButtons();
 
 
+      function updateButtonCallbacks(scene, list){
+        for(var i = 0; i < list.size; i++){
+          list.buttons[i].clickCallback = function(){
+            var roomId = this.auxValue;
+            AJAX_getRoom(roomId, function(room){  //get success
+              var roomUpdated = {
+                id : roomId,
+                juantankamonId : room.juantankamonId,
+                guardId : room.guardId,
+                running : true,
+                empty: false,
+                open: false,
+                full: true
+              }
 
+              if(room.juantankamonId == 0){
+                roomUpdated.juantankamonId = playerId;
+                playingAsJuantankamon = true;
+              } else if(room.guardId == 0){
+                roomUpdated.guardId = playerId;
+                playingAsJuantankamon = false;
+              }
+
+              AJAX_updateRoom(roomUpdated, function(room){  //put success
+                that.scene.start('WaitingRoom');
+              }, function(){  //put failed
+                roomList.updateInfo();
+              });
+
+            }, function(){  //get failed
+              console.log("FAILING");
+              console.log(roomList);
+              roomList.updateInfo();
+            });
+          } //end button callback
+        } // end for
+      } //end function
 
       var refreshButton = new Button(this, this.cameras.main.width/2 + 70, 15, 'buttonIcon', 'buttonIconHover', "actualizar", 'fuente', function(that){
         roomList.updateInfo();

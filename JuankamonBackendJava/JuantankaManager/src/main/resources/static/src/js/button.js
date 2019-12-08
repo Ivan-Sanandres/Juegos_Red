@@ -29,12 +29,13 @@ var Button = function(scene, posX, posY, image, hoverImage, text, font = 'fuente
   this.clickCallback = clickCallback;
 }
 
-var TextButton = function(scene, posX, posY, text, font = 'fuente', clickCallback = function() {console.log("callback not defined")})
+var TextButton = function(scene, parent, posX, posY, text, font = 'fuente', clickCallback = function() {console.log("callback not defined")})
 {
   this.posX = posX;
   this.posY = posY;
   this.font = font;
   this.scene = scene;
+  this.parent = parent;
   this.info = scene.add.bitmapText(posX, posY, font, text/* + "999999999999999999999999999999999999"*/, 11)
   .setOrigin(0.5, 0.5);
 
@@ -69,7 +70,7 @@ var TextButton = function(scene, posX, posY, text, font = 'fuente', clickCallbac
 
   this.clickState = function(){
     if(this.info.text !== ""){
-      this.clickCallback(this.scene);
+      this.clickCallback(this.scene, this.parent);
     }
   }
 
@@ -84,7 +85,7 @@ var TextButtonList = function(scene, posX, posY, size, updateCallBack, font = 'f
   this.auxValues = [];
 
   for(var i = 0; i < size; i++){
-    this.buttons.push(new TextButton(scene, posX, posY + i * this.lineHeight, i));
+    this.buttons.push(new TextButton(scene, this, posX, posY + i * this.lineHeight, i));
     this.buttons[i].info.setOrigin(0,0.5);
   }
 
@@ -96,6 +97,7 @@ var TextButtonList = function(scene, posX, posY, size, updateCallBack, font = 'f
   this.updateButtons = function(){
     for(var i = 0; i < this.size; i++){
       this.buttons[i].info.text = this.info[this.currentStart + i];
+      this.buttons[i].auxValue = this.auxValues[this.currentStart + i];
       this.buttons[i].updateInteraction();
     }
   }
