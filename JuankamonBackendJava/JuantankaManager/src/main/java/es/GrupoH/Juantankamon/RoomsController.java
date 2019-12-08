@@ -26,6 +26,7 @@ public class RoomsController {
 	 * su id en la partida se ponga a 0. Además hay que comprobar si las partidas tienen ambos id de jugadores a 0, en tal
 	 * caso ambos jugadores han abandonado la partida por el motivo que sea y por tanto debe ser eliminada.
 	 * HAY QUE VER COMO GESTIONAR TODO ESTO EN BUCLE DESDE EL SERVIDOR
+	 * 
 	 */
 	
 	public static Map<Long, Room> rooms = new ConcurrentHashMap<>(); 

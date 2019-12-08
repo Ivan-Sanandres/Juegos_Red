@@ -1,0 +1,46 @@
+@font-face {
+font-family: "fuente";
+src: local(fuente), url("resources/fonts/font/Minecraftia-Regular.ttf")
+}
+
+body {
+  background-color: #472D3C;
+}
+
+#game-container {
+  position: absolute;
+  top: 5%;
+  bottom: 5%;
+  left: 5%;
+  right: 5%;
+  text-align: center;
+}
+
+#input-container {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+input {
+  font-family: "fuente", monospace;
+  font-size: 22pt;
+  text-align: center;
+  text-emphasis-color: white;
+  border-color: white;
+  color: white;
+  background-color: #714560;
+  border-width: thick;
+  border-style: solid;
+}
+
+input:hover {
+  background-color: #da85b9;
+}
+
+::placeholder {
+  color: white;
+  opacity: 1;
+}

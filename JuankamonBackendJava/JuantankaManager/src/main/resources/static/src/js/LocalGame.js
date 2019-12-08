@@ -71,7 +71,7 @@ var LocalGame = new Phaser.Class({
       var that = this;
 
       pointer = this.input.mousePointer; //Referencia al ratón
-      
+
       this.input.keyboard.on('keydown', function(event)
       {
         anyInput = true;
@@ -315,7 +315,7 @@ var LocalGame = new Phaser.Class({
       txtMP.x = juan.x;
       txtMP.y = juan.y;
 
-      console.log(anyInput);
+      //console.log(anyInput);
 
       //Si se pulsa la P se pausa el juego y no se actualizan las posiciones y luces
       if(Phaser.Input.Keyboard.JustDown(configKeys.pause))

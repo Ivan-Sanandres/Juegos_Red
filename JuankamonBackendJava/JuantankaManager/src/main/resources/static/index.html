@@ -5,13 +5,16 @@
 
     <title>JUANTANKAMÓN REDUX</title>
 
+    <link rel="stylesheet" type="text/css" href="style.css">
+
     <script type="text/javascript" src = "./src/js/jquery-3.4.1.min.js">No se pudo cargar jQuery</script>
     <script type="text/javascript" src = "./src/js/ajaxFunctions.js">No se pudieron cargar las funciones de</script>
 
     <script type = "text/javascript" src = "./src/js/phaser.min.js">No se pudo cargar phaser</script>
 
     <script type="text/javascript" src = "./src/js/pipelines.js">No se pudo cargar la pipeline gráfica</script>
-    <script type="text/javascript" src = "./src/js/lights.js"></script>
+    <script type="text/javascript" src = "./src/js/lights.js">No se han podido cargar las luces</script>
+    <script type="text/javascript" src = "./src/js/button.js">No se han podido cargar los botones</script>
 
     <script type="text/javascript" src = "./src/js/NameInput.js">No se pudo cargar la escena de introducir nombre</script>
     <script type="text/javascript" src = "./src/js/Menu.js">No se pudo cargar la escena de menu</script>
@@ -21,9 +24,9 @@
     <script type="text/javascript" src = "./src/js/GameConfig.js">No se pudo cargar la configuración del juego</script>
   </head>
 
-  <body style="background-color:#472D3C;">
-    <div id="game-container" style="position: absolute; top: 5%; bottom: 5%; left: 5%; right: 5%;">
-      <div id="input-container" style="display: block; position: absolute; width: 300px; height: 150px; top: 50%; left: 50%; margin: -100px 0 0 -150px">
+  <body>
+    <div id="game-container">
+      <div id="input-container">
         <input type="text" id="name-field" placeholder="Introduce tu nombre">
         <input type="button" id="confirm-button" value="Confirmar">
       </div>
