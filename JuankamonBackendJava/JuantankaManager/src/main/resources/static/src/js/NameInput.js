@@ -10,21 +10,19 @@ var NameInput = new Phaser.Class({
         Phaser.Scene.call(this, { key: 'NameInput'} ) //La key es la referencia en el código de esta escena para cuando la llamemos
     },
 
-    preload: function(){},
-
     create: function()
     {
         that = this;
-        var inputContainer = document.getElementById("input-container");
-        inputContainer.style.display = "block";
-        var button = document.getElementById("confirm-button");
-        var textbox = document.getElementById("name-field");
+        var inputContainer = document.getElementById("input-container");  // Se recibe  del DOM el div que contiene el botón y el campo de texto
+        inputContainer.style.display = "block";                           // Se muestra por pantalla (estaba en "none", oculto)
+        var button = document.getElementById("confirm-button");           // Se recibe el botón de confirmación
+        var textbox = document.getElementById("name-field");              // Se recibe el campo de texto
 
-        button.addEventListener("click", function(event)
+        button.addEventListener("click", function(event)                  // Al pulsar el botón:
         {
-            if(textbox.value !== "")
+            if(textbox.value !== "")                                      // No se puede avanzar a menos que se escriba algo en el campo de texto
             {
-                playerName = textbox.value;
+                playerName = textbox.value;                               // Se asigna el nombre del jugador
                 var player = {
                   name : playerName
                 }
@@ -44,7 +42,7 @@ var NameInput = new Phaser.Class({
                       playerId = p.id;
                       console.log("id: " + playerId);
                     });
-                    that.scene.start("Menu");
+                    that.scene.start("Menu");                             // Se pasa a la escena menú
                     button.style.display = "none";
                     textbox.style.display = "none";
                     inputContainer.style.display = "none";
