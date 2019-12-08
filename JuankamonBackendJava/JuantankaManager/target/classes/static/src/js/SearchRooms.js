@@ -38,8 +38,36 @@ var SearchRooms = new Phaser.Class({
       }, 0.15);
 
       var roomList = new TextButtonList(this, this.cameras.main.width/2 - 10, 55, 5, function() {
-        roomList.info = [0,1,2,3,4,5,6,7,8,9];
+        roomList.info = [];
+        var that = this;
+
+        AJAX_getRooms(function(rooms)
+        {
+          var line = "";
+          for(var i = 0; i < rooms.length; i++)
+          {
+            if(rooms[i].open)
+            {
+              AJAX_getPlayer(rooms[i].juantankamonId, function(player)
+              {
+                line = "Partida " + player.roomId + " Juantankamón: " + player.name;
+                roomList.info.push(line);
+                roomList.updateButtons();
+              });
+
+              AJAX_getPlayer(rooms[i].guardId, function(player)
+              {
+                line = "Partida " + player.roomId + " Guardia: " + player.name;
+                roomList.info.push(line);
+                roomList.updateButtons();
+              });
+
+            } // if end
+          } //for end
+        }); //AJAX_getRooms end
+
       });
+
       roomList.updateInfo();
 
       var upButton = new Button(this, this.cameras.main.width/2 - 100, 50, 'arrowUpOff', 'arrowUpOn', "-", 'fuente', function(that){
