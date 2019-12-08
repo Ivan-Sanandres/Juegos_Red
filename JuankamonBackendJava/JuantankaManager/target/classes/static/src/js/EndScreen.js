@@ -10,9 +10,9 @@ var EndScreen = new Phaser.Class({
     preload: function()
     {
         this.load.bitmapFont('fuente', './resources/fonts/font/MC_0.png', './resources/fonts/font/MC.fnt');
-        
+
         //this.load.image("juanWinsBG", "./resources/sprites/background.png");
-        //this.load.image("guardWinsBG", "./resources/sprites/background.png");        
+        //this.load.image("guardWinsBG", "./resources/sprites/background.png");
     },
 
     create: function()
@@ -27,5 +27,22 @@ var EndScreen = new Phaser.Class({
             this.add.image(0, 0, 'background').setOrigin(0, 0);
             this.add.bitmapText(152, 55, 'fuente', 'POS EL GUARDIA A GANAO :/', 22);
         }
+
+        var timerInput = this.time.addEvent({
+          delay: 1000,
+          callback: periodicPut,
+          //args: [],
+          callbackScope: this,
+          loop: true
+      });
     }
 })
+
+function periodicPut()
+{
+  var player = {
+    id: playerId,
+    name: playerName
+  }
+  AJAX_updatePlayer(player)
+}

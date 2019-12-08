@@ -80,6 +80,13 @@ var SearchRooms = new Phaser.Class({
         roomList.updateInfo();
       }, 1, 1, 1);
 
+      var timerInput = this.time.addEvent({
+        delay: 1000,
+        callback: periodicPut,
+        //args: [],
+        callbackScope: this,
+        loop: true
+    });
 
       //var somebutton = new Button();
       //var testButton = new Button(this, 300, 60, 'buttonIcon', 'buttonIconHover', "xd", 'fuente', 0.1, 0.1);
@@ -91,3 +98,12 @@ var SearchRooms = new Phaser.Class({
 
     }
 });
+
+function periodicPut()
+{
+  var player = {
+    id: playerId,
+    name: playerName
+  }
+  AJAX_updatePlayer(player)
+}

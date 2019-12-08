@@ -1,37 +1,3 @@
-var lightManager;
-
-var anyInput = false;
-
-var juan; //Contiene el objeto físico de Juan
-var juanSpeed;
-var juanMovementVector = new Phaser.Math.Vector2(0, 0);
-var juanPreviousPos = new Phaser.Math.Vector2(0, 0);
-var juanCursors; //Teclas con las que se mueve Juan
-var juanCamera;
-var juanLight;
-
-var guard; //Contiene el objeto físico del guardia
-var guardSpeed;
-var guardMovementVector = new Phaser.Math.Vector2(0, 0);
-var guardPreviousPos = new Phaser.Math.Vector2(0, 0);
-var guardMouseVector = new Phaser.Math.Vector2(0, 0);
-var guardCursors; //Teclas con las que se mueve el guardia
-var guardCamera;
-var guardLight;
-
-var statics = {}; //Objetos estáticos de la escena
-
-var doors = {};
-var keys = {};
-var spawnPoints = {};
-var finalDoor;
-
-var pointer;
-
-var configKeys;
-
-const numDoors = 4;
-const numKeys = 4;
 
 var LocalGame = new Phaser.Class({
 
@@ -299,13 +265,13 @@ var LocalGame = new Phaser.Class({
       gameMusic = this.sound.add("gameMusic");
       gameMusic.play({mute: muted, loop: true});
 
-      /*var timerInput = this.time.addEvent({
-        delay: 1000,
-        callback: checkInput,
+      var timerInput = this.time.addEvent({
+        delay: 5000,
+        callback: periodicPut,
         //args: [],
         callbackScope: this,
         loop: true
-    });*/
+    });
 
       paused = false;
     },
@@ -437,7 +403,11 @@ function endGame(state)
   that.scene.start("EndScreen");
 }
 
-function checkInput()
+function periodicPut()
 {
-
+  var player = {
+    id: playerId,
+    name: playerName
+  }
+  AJAX_updatePlayer(player)
 }

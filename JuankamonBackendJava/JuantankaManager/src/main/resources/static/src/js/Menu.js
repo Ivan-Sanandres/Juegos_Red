@@ -124,6 +124,14 @@ var Menu = new Phaser.Class({
 
       //Variable que se usa para mover el texto de ESPACIO para comenzar
       sineValue = 0;
+
+      var timerInput = this.time.addEvent({
+        delay: 5000,
+        callback: periodicPut,
+        //args: [],
+        callbackScope: this,
+        loop: true
+    });
     },
 
     update: function (time, delta) //Código que se ejecuta en cada frame de la escena
@@ -131,3 +139,47 @@ var Menu = new Phaser.Class({
 
     }
 });
+
+function periodicPut()
+{
+  var player = {
+    id: playerId,
+    name: playerName
+  }
+  AJAX_updatePlayer(player)
+}
+
+var lightManager;
+
+var anyInput = false;
+
+var juan; //Contiene el objeto físico de Juan
+var juanSpeed;
+var juanMovementVector = new Phaser.Math.Vector2(0, 0);
+var juanPreviousPos = new Phaser.Math.Vector2(0, 0);
+var juanCursors; //Teclas con las que se mueve Juan
+var juanCamera;
+var juanLight;
+
+var guard; //Contiene el objeto físico del guardia
+var guardSpeed;
+var guardMovementVector = new Phaser.Math.Vector2(0, 0);
+var guardPreviousPos = new Phaser.Math.Vector2(0, 0);
+var guardMouseVector = new Phaser.Math.Vector2(0, 0);
+var guardCursors; //Teclas con las que se mueve el guardia
+var guardCamera;
+var guardLight;
+
+var statics = {}; //Objetos estáticos de la escena
+
+var doors = {};
+var keys = {};
+var spawnPoints = {};
+var finalDoor;
+
+var pointer;
+
+var configKeys;
+
+const numDoors = 4;
+const numKeys = 4;
