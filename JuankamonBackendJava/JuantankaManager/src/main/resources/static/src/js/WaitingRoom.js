@@ -54,4 +54,7 @@ function setTimer(){
         timeText.text = waitingTime; 
         console.log(waitingTime);
     }
+    else if(waitingTime === 0){
+        
+    }
 };
