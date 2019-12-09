@@ -50,6 +50,6 @@ public class Room {
 	
 	@Override
 	public String toString() {
-		return "Item [id=" + id + ", Juantankamon=" + juantankamonId + ", Guardia=" + guardId + "]";
+		return "Room [id=" + id + ", Juantankamon=" + juantankamonId + ", Guardia=" + guardId + "]";
 	}
 }
