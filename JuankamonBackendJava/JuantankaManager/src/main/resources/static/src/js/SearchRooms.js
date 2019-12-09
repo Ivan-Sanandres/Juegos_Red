@@ -29,11 +29,6 @@ var SearchRooms = new Phaser.Class({
     {
       this.add.image(0, 0, "genericBackground").setOrigin(0, 0);
 
-      this.events.on('shutdown', function(){
-        console.log("SE DESTRUYÓ");
-      }, this);
-
-      console.log("JEJE RETURNS");
       //CREACIÓN DE TEXTOS
       this.add.bitmapText(this.cameras.main.width/2 - 30, 15, 'fuente', 'Lista de partidas abiertas', 11).setOrigin(0.5, 0.5);
 
@@ -46,23 +41,21 @@ var SearchRooms = new Phaser.Class({
         that.scene.start("Menu");
       }, 1.6,1);
 
-
-
       var roomList = new TextButtonList(this, this.cameras.main.width/2 - 120, 40, 7, function() {
         roomList.info = [];
         roomList.auxValues = [];
         var that = this;
 
-
+        //Se obtienen todas las rooms del servidor
         AJAX_getRooms(function(rooms)
         {
-          console.log("updating info");
           var line = "";
           for(var i = 0; i < rooms.length; i++)
           {
-            console.log("for");
+            //Por cada room abierta obtenida
             if(rooms[i].open)
             {
+              //Se obtiene el jugador que la ha abierto para ponerlo en el mensaje por pantalla
               AJAX_getPlayer(rooms[i].juantankamonId, function(player)
               {
                 line = "Partida " + player.roomId + " Juantankamón: " + player.name;
@@ -95,7 +88,8 @@ var SearchRooms = new Phaser.Class({
         for(var i = 0; i < list.size; i++){
           list.buttons[i].clickCallback = function(){
             var roomId = this.auxValue;
-            //console.log("aux value" + roomId);
+
+            //Al pulsar un botón se obtiene la room asociada a ese botón
             AJAX_getRoom(roomId, function(room){  //get success
               var roomUpdated = {
                 id : roomId,
@@ -107,6 +101,8 @@ var SearchRooms = new Phaser.Class({
                 full: true
               }
 
+              //Se le asigna este jugador a la id de Juantankamón o del guardia
+              //Según la que esté vacía
               if(room.juantankamonId == 0){
                 roomUpdated.juantankamonId = playerId;
                 playingAsJuantankamon = true;
@@ -115,8 +111,8 @@ var SearchRooms = new Phaser.Class({
                 playingAsJuantankamon = false;
               }
 
-              console.log("player id : " + playerId);
-
+              //Se sube la room con los ids de jugadores actualizados
+              //y se carga la sala de espera de la partida
               AJAX_updateRoom(roomUpdated, function(room){  //put success
                 playerRoomId = room.id;
                 that.scene.start('WaitingRoom');
@@ -126,8 +122,6 @@ var SearchRooms = new Phaser.Class({
               });
 
             }, function(){  //get failed
-              console.log("FAILING");
-              console.log(roomList);
               roomList.updateInfo();
             });
           } //end button callback
@@ -144,6 +138,7 @@ var SearchRooms = new Phaser.Class({
           juantankamonId : playerId
         };
 
+        //Si se hostea la partida como juantankamon se crea una room y asignamos la id de este jugador a la de juantankamon
         AJAX_createRoom(roomData, function(room){
           playerRoomId = room.id;
           that.scene.start("WaitingRoom");
@@ -155,6 +150,7 @@ var SearchRooms = new Phaser.Class({
           guardId : playerId
         };
 
+        //Si se hostea la partida como guardia se crea una room y asignamos la id de este jugador a la de guardia
         AJAX_createRoom(roomData, function(room){
           playerRoomId = room.id;
           that.scene.start("WaitingRoom");
@@ -171,17 +167,14 @@ var SearchRooms = new Phaser.Class({
         roomList.updateButtons();
       }, 1, 1, 1);
 
+      //Cada 5 segundos se actualiza el jugador en el server para que no lo borre
       var timerInput = this.time.addEvent({
         delay: 5000,
         callback: periodicPut,
         //args: [],
         callbackScope: this,
         loop: true
-    });
-
-      //var somebutton = new Button();
-      //var testButton = new Button(this, 300, 60, 'buttonIcon', 'buttonIconHover', "xd", 'fuente', 0.1, 0.1);
-      //var testButton2 = new TextButton(this, 100, 60, "salu2", 'fuente', 0.1, 0.1);
+      });
     },
 
     update: function (time, delta) //Código que se ejecuta en cada frame de la escena

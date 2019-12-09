@@ -34,6 +34,8 @@ var EndScreen = new Phaser.Class({
           this.add.bitmapText(122, 30, 'fuente', 'Desconexión', 22);
         }
 
+        //Al pulsar el botón de volver al menú y estar en la pantalla de desconexión
+        //se le pide al jugador que vuelva a logearse
         var backButton = new Button(this, this.cameras.main.width/2, 20, 'buttonIcon', 'buttonIconHover', "Volver al menú", 'fuente', function(that){
           menuMusic.stop();
           if(endGameState != endGameStates.DISCONNECT) that.scene.start("Menu");
@@ -41,6 +43,8 @@ var EndScreen = new Phaser.Class({
 
         }, 1.6,1);
 
+        //Cada 5 segundos se hace un put del jugador para actualizarlo en el servidor
+        //y que no se borre por inactividad
         var timerInput = this.time.addEvent({
           delay: 5000,
           callback: function(){
@@ -50,5 +54,10 @@ var EndScreen = new Phaser.Class({
           callbackScope: this,
           loop: true
       });
+    },
+
+    update: function (time, delta) //Código que se ejecuta en cada frame de la escena
+    {
+
     }
 })

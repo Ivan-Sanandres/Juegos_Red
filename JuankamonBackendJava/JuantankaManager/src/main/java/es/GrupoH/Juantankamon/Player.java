@@ -5,14 +5,14 @@ import java.time.temporal.TemporalUnit;
 
 public class Player {
 	//STATICS
-	public static double maxInactivityTime = 60; //in seconds
+	public static double maxInactivityTime = 60; //máximo tiempo de inactividad permitido
 	
 	//VARIABLES
 	private long id;
-	private long roomId; //si la partida no se borra pero el jugador ha salido esto no cambia automáticamente, debe hacerlo el cliente
+	private long roomId;						//clave ajena a la room en la que está el jugador
 	private String name;
 	private LocalDateTime logInDate;
-	private LocalDateTime lastInteractionDate;
+	private LocalDateTime lastInteractionDate;	//última vez que el usuario actualizó sus datos
 	
 	//CONSTRUCTORS
 	public Player() {}
@@ -31,33 +31,33 @@ public class Player {
 	public void setRoomId(long newRoomId) { roomId = newRoomId; }
 	
 	public String getName() { return this.name; }
-	//public void setName(String newName) { name = newName; }
+	public void setName(String newName) { name = newName; }
 	
 	public LocalDateTime getLogInDate () { return logInDate; }
-	public void setLogInDate(LocalDateTime newTime) { logInDate = newTime; } //IGUAL ESTO DEBERÍA QUITARLO XD
+	public void setLogInDate(LocalDateTime newTime) { logInDate = newTime; }
 	
 	public LocalDateTime getLastInteractionDate() { return lastInteractionDate; }
 	public void updateLastInteractionDate() {lastInteractionDate = LocalDateTime.now(); }
 	
 	public double getInactiveTime() {
+		//se devuelve la diferencia en segundos entre el momento actual y la última vez que el jugador interactuó con el servidor
 		Duration diff = Duration.between(LocalDateTime.now(), lastInteractionDate);
 		double inactiveTime = (double)diff.abs().getSeconds();
 		return inactiveTime;
 	}
 	
 	public boolean checkInactive() {
-		
+		//Si lleva más tiempo inactivo del máximo especificado, se considera inactivo
 		if(getInactiveTime() > maxInactivityTime) return true;
 		return false;
 	}
 	
 	public void expelFromRoom() {
 		
-		Room r = RoomsController.rooms.get(roomId);
-		System.out.println("Echando de la habitación" + roomId);
-		if(r != null) {
-			System.out.println("Habitación encontrada");
-			if(r.getJuantankamonId() == id) r.setJuantankamonId(0);
+		Room r = RoomsController.rooms.get(roomId); //Se obtiene una referencia por clave ajena a la room en la que se encuentra el jugador
+		System.out.println("Expelling player "+id + " from room " + roomId);
+		if(r != null) {														//si la room existe, pone el id del jugador en la room a 0
+			if(r.getJuantankamonId() == id) r.setJuantankamonId(0);			//dependiendo del rol que tenga en la room
 			if(r.getGuardId() == id) r.setGuardId(0);
 		}
 		roomId = 0;

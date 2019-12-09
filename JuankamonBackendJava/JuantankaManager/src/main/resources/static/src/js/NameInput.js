@@ -33,6 +33,7 @@ var NameInput = new Phaser.Class({
       textbox.style.display = "inline";
       inputContainer.style.display = "inline";
 
+      //Al pulsar el botón de submit
       button.addEventListener("click", function(event)
       {
           if(textbox.value !== "")
@@ -42,7 +43,7 @@ var NameInput = new Phaser.Class({
                 name : playerName
               }
 
-              //get all PLAYERS
+              //Obtenemos todos los jugadores y comprobamos si el nombre introducido ya está en uso
               AJAX_getPlayers(function(p){
                 var exists = false;
                 for(var i = 0; i < p.length; i++){
@@ -53,9 +54,10 @@ var NameInput = new Phaser.Class({
                   textbox.value = "";
                   textbox.placeholder = "Ese nombre ya existe";
                 } else {
+                  //Si no está en uso se crea un nuevo jugador con este nombre
+                  //Y se guarda la id de este nuevo jugador que devulve el servidor
                   AJAX_createPlayer(player, function(p){
                     playerId = p.id;
-                    console.log("id: " + playerId);
                   });
                   that.scene.start("Menu");
                   button.style.display = "none";

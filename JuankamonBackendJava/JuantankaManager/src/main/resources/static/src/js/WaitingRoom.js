@@ -24,11 +24,9 @@ var WaitingRoom = new Phaser.Class({
 
     create: function () //Código que se ejecuta al generarse la escena
     {
-
-
       var that = this;
 
-
+      //Cada 5 segundos se actualiza el jugador en el server para que no lo borre
       var timerInput = this.time.addEvent({
         delay: 5000,
         callback: periodicPut,
@@ -37,7 +35,6 @@ var WaitingRoom = new Phaser.Class({
         loop: true
       });
 
-
       //Se añade la imagen de fondo del menú
       this.add.image(0, 0, "backgroundImage").setOrigin(0, 0);
 
@@ -45,7 +42,6 @@ var WaitingRoom = new Phaser.Class({
       var guardName = this.add.bitmapText((this.cameras.main.width / 2) + 84,64, 'fuente', 'Esperando...', 22).setOrigin (0.5, 0);
       timeText = this.add.bitmapText((this.cameras.main.width / 2) + 1, 18, 'fuente', waitingTime, 22).setOrigin(0.5, 0);
       timeText.visible = false;
-
 
       if(playingAsJuantankamon) juanName.text = playerName;
       else guardName.text = playerName;
@@ -57,11 +53,9 @@ var WaitingRoom = new Phaser.Class({
           if(waitingTime > 0 && running === true){
               waitingTime--;
               timeText.text = waitingTime;
-              console.log(waitingTime);
           }
           else if(waitingTime === 0){
             //CAMBIAR ESCENAS
-            console.log("STARTING");
             timerStart.paused = true;
             that.scene.start("OnlineGame");
           }
@@ -72,14 +66,13 @@ var WaitingRoom = new Phaser.Class({
         paused: true
       });
 
+      //Cada segundo se comprueba si la room actual está llena (ambos jugadores han entrado)
+      //se asignan las ids de la room a los jugadores y obtenemos su nombre para mostrarlos por pantalla
       var timerGet = this.time.addEvent({
         delay: 1000,
         callback: function(){
           AJAX_getRoom(playerRoomId, function(room){
             if(room.full){
-              console.log("IS FULL");
-              //console.log(timerStart);
-              //timerStart.paused = false;
               running = room.running;
               timerGet.paused = true;
               timerStart.paused = false;
@@ -106,13 +99,5 @@ var WaitingRoom = new Phaser.Class({
         callbackScope: this,
         loop: true
       });
-
-
-
     },
-
-    update: function (){
-
-    },
-
 });

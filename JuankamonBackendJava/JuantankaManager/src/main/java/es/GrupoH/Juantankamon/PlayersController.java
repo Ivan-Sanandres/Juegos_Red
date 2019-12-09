@@ -34,11 +34,11 @@ public class PlayersController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Player newPlayer(@RequestBody Player newPlayer) {
 
-		long id = nextId.incrementAndGet();
-		newPlayer.setUp(id);
-		players.put(id, newPlayer);
+		long id = nextId.incrementAndGet();							//Se incrementa y guarda el identificador
+		newPlayer.setUp(id);										//Se usa el nuevo id para el jugador creado
+		players.put(id, newPlayer);									//Se incluye el nuevo jugador en la lista
 
-		return newPlayer;
+		return newPlayer;											//Se devuelve el jugador creado
 	}
 
 	@PutMapping("/{id}")
@@ -62,10 +62,10 @@ public class PlayersController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Player> getPlayer(@PathVariable long id) {
 
-		Player savedPlayer = players.get(id);
+		Player savedPlayer = players.get(id);							//Se obtiene una referencia al jugador especificado en la id
 
 		if (savedPlayer != null) {
-			return new ResponseEntity<>(savedPlayer, HttpStatus.OK);
+			return new ResponseEntity<>(savedPlayer, HttpStatus.OK);	//Si existe se devuelve
 		}
 		
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -74,10 +74,10 @@ public class PlayersController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Player> deletePlayer(@PathVariable long id) {
 
-		Player savedPlayer = players.get(id);
-
-		if (savedPlayer != null) {
-			savedPlayer.expelFromRoom();
+		Player savedPlayer = players.get(id);							//Se obtiene una referencia al jugador especificado en la id
+		
+		if (savedPlayer != null) {										//si existe
+			savedPlayer.expelFromRoom();								//se le expulsa de la room
 			players.remove(savedPlayer.getId());
 			return new ResponseEntity<>(savedPlayer, HttpStatus.OK);
 		}

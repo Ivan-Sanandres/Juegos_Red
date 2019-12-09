@@ -126,6 +126,8 @@ var Menu = new Phaser.Class({
       menuMusic = this.sound.add("menuMusic");
       menuMusic.play({mute: muted, loop: true});
 
+      //Cada 5 segundos se hace un put del jugador para actualizarlo en el servidor
+      //y que no se borre por inactividad
       var timerInput = this.time.addEvent({
         delay: 5000,
         callback: periodicPut,
@@ -141,6 +143,7 @@ var Menu = new Phaser.Class({
     }
 });
 
+//Actualiza en el servidor el jugador con los datos guardados en playerId, playerName y playerRoomId
 function periodicPut()
 {
   var player = {

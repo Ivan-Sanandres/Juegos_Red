@@ -40,15 +40,11 @@ var LocalGame = new Phaser.Class({
       this.input.keyboard.on('keydown', function(event)
       {
         anyInput = true;
-        //console.log(anyInput);
       })
       this.input.keyboard.on('keyup', function(event)
       {
         anyInput = false;
-        //console.log(anyInput);
       })
-
-      //this.input.mousePointer.
 
       configKeys = this.input.keyboard.addKeys({ //Teclas usadas para opciones de configuración
         mute: Phaser.Input.Keyboard.KeyCodes.M
@@ -238,6 +234,8 @@ var LocalGame = new Phaser.Class({
         }
       }initLights(16);
 
+      //Cada 5 segundos se hace un put del jugador para actualizarlo en el servidor
+      //y que no se borre por inactividad
       var timerInput = this.time.addEvent({
         delay: 5000,
         callback: periodicPut,
@@ -247,9 +245,9 @@ var LocalGame = new Phaser.Class({
       });
 
       //Colisiones de juan y el guardia con las paredes y props
-      //this.physics.add.collider(juan, this.walls);
+      this.physics.add.collider(juan, this.walls);
       this.physics.add.collider(guard, this.walls);
-      //this.physics.add.collider(juan, propsLayer);
+      this.physics.add.collider(juan, propsLayer);
       this.physics.add.collider(guard, propsLayer);
 
       //Se asocia la callback endGame a la colisión de Juan con la puerta de salida y con el guardia
@@ -262,7 +260,6 @@ var LocalGame = new Phaser.Class({
 
       this.physics.add.overlap(juan, guard, function()
       {
-        console.log("FUNCIONA JODER")
         endGameState = endGameStates.GUARD_WINS;
         timerInput.remove();
         endGame(that);
@@ -310,10 +307,8 @@ var LocalGame = new Phaser.Class({
         //ANIMATIONS
         var movVecLength = characterMovementVector.length();
         if(movVecLength == 0.0 && !character.anims.currentAnim.paused){
-          //console.log("Pausando");
           character.anims.currentAnim.pause();
         } else if (movVecLength > 0.0 && character.anims.currentAnim.paused){
-          //console.log("Continuando");
           character.anims.currentAnim.resume();
         }
 

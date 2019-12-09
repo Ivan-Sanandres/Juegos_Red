@@ -1,3 +1,7 @@
+//La variable playingAsJuantankamon define si el jugador está jugando con JUANTANKAMÓN o con el guardia
+//Según esta variable el jugador podrá controlar a uno u otro personaje
+//El que no sea controlado se moverá con websockets
+
 var OnlineGame = new Phaser.Class({
 
     Extends: Phaser.Scene,
@@ -77,8 +81,6 @@ var OnlineGame = new Phaser.Class({
           wall.body.setSize(wallCol.width,wallCol.height);
           wall.setVisible(false);
         });
-
-        console.log(that.input.keyboard.createCursorKeys());
 
       //Inicializa a Juan y todas sus variables
       function initJuan(speed)
@@ -274,6 +276,9 @@ var OnlineGame = new Phaser.Class({
       gameMusic = this.sound.add("gameMusic");
       gameMusic.play({mute: muted, loop: true});
 
+      //Cada 5 segundos se comprueba si el jugador ha hecho algún tipo de input
+      //Si ha hecho algún input se hace un put al jugador, si no no se hace el put
+      //El servidor detecta si un jugador lleva mucho tiempo sin hacer un put y en ese caso lo elimina
       var timerInput = this.time.addEvent({
         delay: 5000,
         callback: function()
@@ -294,6 +299,9 @@ var OnlineGame = new Phaser.Class({
         loop: true
       });
 
+      //Cada 2 segundos se intenta obtener la room de este jugador
+      //Si no se puede obtener es porque la partida ha sido borrada (porque uno de los jugadores ha sido desconectado)
+      //Por tanto se lleva a la pantalla de fin por desconexión
       var timerGetRoom = this.time.addEvent({
         delay: 2000,
         callback: function()
@@ -345,10 +353,8 @@ var OnlineGame = new Phaser.Class({
         //ANIMATIONS
         var movVecLength = characterMovementVector.length();
         if(movVecLength == 0.0 && !character.anims.currentAnim.paused){
-          //console.log("Pausando");
           character.anims.currentAnim.pause();
         } else if (movVecLength > 0.0 && character.anims.currentAnim.paused){
-          //console.log("Continuando");
           character.anims.currentAnim.resume();
         }
 
@@ -395,7 +401,6 @@ var OnlineGame = new Phaser.Class({
 
       var guardLightDistance = 3.0;
       guardLight.position = [guard.x + guardLight.direction[0] * guardLightDistance, guard.y + guardLight.direction[1] * guardLightDistance];
-
 
       lightManager.updateAllUniforms(delta);
     }
