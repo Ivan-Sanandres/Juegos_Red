@@ -41,9 +41,9 @@ var OnlineGame = new Phaser.Class({
       var defaultCursors;
       pointer = this.input.mousePointer; //Referencia al ratón
 
+      // Se establecen eventos para detectar inputs, que sirven para controlar la desconexión por inactividad
+      // actualizando el bool anyInput a true al pulsar una tecla o mover el ratón
       this.input.keyboard.on('keydown', function (event) {anyInput = true;})
-      //this.input.keyboard.on('keyup', function (event) {anyInput = false;})
-
       this.input.on('pointermove', function (pointer) {anyInput = true;});
 
       configKeys = this.input.keyboard.addKeys({ //Teclas usadas para opciones de configuración

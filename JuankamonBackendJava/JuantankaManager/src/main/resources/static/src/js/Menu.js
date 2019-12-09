@@ -40,16 +40,19 @@ var Menu = new Phaser.Class({
       var musicText = this.add.bitmapText(this.cameras.main.width/2, 120, 'fuente', 'M: Poner/quitar música', 11).setOrigin(0.5,0);
       musicText.visible = false;
 
+      // Al pulsar el botón de juego local se va a iniciar la escena de juego local
       var playButton = new Button(this, this.cameras.main.width/2, 80, 'buttonIcon', 'buttonIconHover', "Jugar en local", 'fuente', function(that){
         menuMusic.stop();
         that.scene.start("LocalGame");
       }, 1.3,1);
 
+      // Al pulsar el botón de juego online se va a iniciar la escena de buscar salas
       var playOnlineButton = new Button(this, this.cameras.main.width/2, 105, 'buttonIcon', 'buttonIconHover', "Jugar online", 'fuente', function(that){
         menuMusic.stop();
         that.scene.start("SearchRooms");
       }, 1.3,1);
 
+      // Alternar entre música muteada o no, y cambiar el texto del botón correspondientemente
       var musicButton = new Button(this, this.cameras.main.width/2 - 55, 165, 'buttonIcon', 'buttonIconHover', "Desactivar música", 'fuente', function(that){
         muted = !muted;
         menuMusic.mute = muted;
@@ -60,7 +63,7 @@ var Menu = new Phaser.Class({
         }
       }, 1.6,1);
 
-      function control(){
+      function control(){ // Alterna entre revelar y ocultar los elementos de la pantalla de menú principal y la de cómo jugar
         musicButton.icon.visible = !musicButton.icon.visible;
         musicButton.info.visible = !musicButton.info.visible;
 
@@ -82,6 +85,7 @@ var Menu = new Phaser.Class({
         arrows.visible = !arrows.visible;
       }
 
+      // Botón que aparece en la pantalla de cómo jugar para volver a la pantalla principal
       var backButton = new Button(this, this.cameras.main.width/2, 165, 'buttonIcon', 'buttonIconHover', "Volver", 'fuente', function(that){
         control();
       }, 1,1);
@@ -89,10 +93,12 @@ var Menu = new Phaser.Class({
       backButton.icon.visible = false;
       backButton.info.visible = false;
 
+      // Botón que aparece en el menú principal para acceder a la pantalla que explica cómo jugar
       var controlsButton = new Button(this, this.cameras.main.width/2 + 55, 165, 'buttonIcon', 'buttonIconHover', "Cómo jugar", 'fuente', function(that){
         control();
       }, 1.6,1);
 
+      // Creación de textos que aparecerán en el menú principal
       names1 = this.add.bitmapText(35, 80, 'fuente', ['Martín Ariza',
                                                       'Iván Sanandrés'], 11, 1);
       names2 = this.add.bitmapText(250, 80, 'fuente', ['Pedro Casas',
@@ -153,6 +159,8 @@ function periodicPut()
   }
   AJAX_updatePlayer(player)
 }
+
+// Se inicializan variables globales que van a ser necesarias tanto para LocalGame como para OnlineGame
 
 var lightManager;
 
