@@ -38,18 +38,21 @@ var WaitingRoom = new Phaser.Class({
       //Se añade la imagen de fondo del menú
       this.add.image(0, 0, "backgroundImage").setOrigin(0, 0);
 
+      //Se añaden los textos correspondientes a cada jugador y el contador
       var juanName = this.add.bitmapText((this.cameras.main.width / 2) - 84,64, 'fuente', 'Esperando...', 22).setOrigin(0.5, 0);
       var guardName = this.add.bitmapText((this.cameras.main.width / 2) + 84,64, 'fuente', 'Esperando...', 22).setOrigin (0.5, 0);
       timeText = this.add.bitmapText((this.cameras.main.width / 2) + 1, 18, 'fuente', waitingTime, 22).setOrigin(0.5, 0);
-      timeText.visible = false;
+      timeText.visible = false; //Se oculta el contador hasta quemla sala esté llena
 
+      //Se asigna al texto correspondiente el nombre del jugador
       if(playingAsJuantankamon) juanName.text = playerName;
       else guardName.text = playerName;
       //timerStart.paused = true;
 
+      //Timer que se ejecuta cada segundo
       var timerStart = this.time.addEvent({
         delay: 1000,
-        callback: function(){
+        callback: function(){ //Si la sala está llena, se activa el contador y se asigna el texto correspondiente al mismo
           if(waitingTime > 0 && running === true){
               waitingTime--;
               timeText.text = waitingTime;

@@ -17,14 +17,13 @@ var NameInput = new Phaser.Class({
 
     create: function()
     {
-      this.add.image(0, 0, "genericBackground").setOrigin(0, 0);
-
       that = this;
-      var inputContainer = document.getElementById("input-container");
-      inputContainer.style.display = "block";
+      var inputContainer = document.getElementById("input-container");  // Se reciben del DOM el botón, el campo de texto y el div que los contiene
       var button = document.getElementById("confirm-button");
       var textbox = document.getElementById("name-field");
-      button.style.display = "inline";
+      this.add.image(0, 0, "genericBackground").setOrigin(0, 0);
+
+      button.style.display = "inline";                                  // Se muestran por pantalla los componentes del DOM (no se veían, estaban en "none")
       textbox.style.display = "inline";
       inputContainer.style.display = "inline";
 

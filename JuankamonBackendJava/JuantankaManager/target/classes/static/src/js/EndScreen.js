@@ -18,6 +18,8 @@ var EndScreen = new Phaser.Class({
 
     create: function()
     {
+        // Se establece el diseño de la escena en función de la causa por la que ha
+        // terminado la partida (ha ganado Juan, el guardia, o ha habido una desconexión)
         if(endGameState == endGameStates.JUAN_WINS)
         {
             this.add.image(0, 0, 'juanWinsBackground').setOrigin(0, 0);
