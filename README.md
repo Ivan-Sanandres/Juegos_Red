@@ -191,6 +191,13 @@ Para un mejor entendimiento del backend, hemos creado una diagrama UML:
 También hemos creado un diagrama de relaciones entre las distintas clases, así como el uso de API Rest en ellas:
 ![](Imágenes/BackendRelations.png)
 
+### Instrucciones para la ejecución
+Se ha creado un ejecutable de java (.jar), por alguna razón que desconocemos el sprite de los botones no se carga, pero el resto de la aplicación funciona correctamente. Por esto, se recomienda ejecutar el proyecto de spring con Spring Tool Suite, donde funciona perfectamente. En ambos casos para cargar la aplicación en el navegador se pueden usar las siguientes URLs:
+* http://localhost:8080/
+* http://127.0.0.1:8080/
+
+Como alternativa, siempre que se esté conectado a la red donde se esté ejecutando el servidor, se puede usar como URL la dirección IPv4 de la máquina que ejecuta el servidor, accediendo al puerto 8080.
+
 ### Bibliografía y créditos
 #### Programas usados
 * Atom, VS Code: IDEs para programación <br/>
