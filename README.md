@@ -188,6 +188,9 @@ Además, se hace una comprobación periódica de las habitaciones y los jugadore
 Para un mejor entendimiento del backend, hemos creado una diagrama UML:
 ![](Imágenes/BackendUML.png)
 
+También hemos creado un diagrama de relaciones entre las distintas clases, así como el uso de API Rest en ellas:
+![](Imágenes/BackendRelations.png)
+
 ### Bibliografía y créditos
 #### Programas usados
 * Atom, VS Code: IDEs para programación <br/>
