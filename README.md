@@ -140,7 +140,7 @@ Para la iluminación hemos desarrollado un shader de iluminación y sombreado.
 ![](Imágenes/conBlending.png)
 > Aquí se ve la iluminación de la Versión 3.0. Se puede observar la implementación de bloom y blending, puesto que las luces son más intensas y los niveles tienen cierta interpolación, además de que los niveles de diferentes luces se mezclan.
 
-![](Imágenes/JER_Fase_3_pantallas.png)
+![](Imágenes/diagrama.png)
 >Finalmente, aquí se puede ver el diagrama de navegación de las distintas pantallas en la Versión 3.
 
 ### Aspectos desarrollados en la Fase 2
