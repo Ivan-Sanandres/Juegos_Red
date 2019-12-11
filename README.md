@@ -186,7 +186,7 @@ El backend está creado en base a un modelo relacional, de forma que estas dos c
 Además, se hace una comprobación periódica de las habitaciones y los jugadores, de forma que se eliminan las instancias de habitaciones vacías y jugadores que llevan demasiado tiempo sin interactuar (eliminando previamente su referencia de la habitación en la que se encontraba).
 
 Para un mejor entendimiento del backend, hemos creado una diagrama UML:
-![](Imágenes/JuantankamonBackendUML.png)
+![](Imágenes/BackendUML.png)
 
 ### Bibliografía y créditos
 #### Programas usados
