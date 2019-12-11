@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
+Built-By: pedro
+Build-Jdk: 13.0.1
 Implementation-Title: JuantankamonRedux
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: pedro
 Implementation-Vendor-Id: es.juantankaManager
-Build-Jdk: 1.8.0_231
+Implementation-Vendor: Pivotal Software, Inc.
 Implementation-URL: http://maven.apache.org
 Created-By: Maven Integration for Eclipse
-Implementation-Vendor: Pivotal Software, Inc.
 
