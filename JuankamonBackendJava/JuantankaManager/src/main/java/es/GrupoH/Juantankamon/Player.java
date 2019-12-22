@@ -3,6 +3,8 @@ package es.GrupoH.Juantankamon;
 import java.time.*;
 import java.time.temporal.TemporalUnit;
 
+import org.springframework.web.socket.WebSocketSession;
+
 public class Player {
 	//STATICS
 	public static double maxInactivityTime = 60; //máximo tiempo de inactividad permitido
@@ -61,6 +63,10 @@ public class Player {
 			if(r.getGuardId() == id) r.setGuardId(0);
 		}
 		roomId = 0;
+		
+		//Además se elimina la sesión de websocket del mapa de sesiones
+		WebSocketSession session = WebsocketEchoHandler.sessions.get(id);
+		if(session != null) WebsocketEchoHandler.sessions.remove(id);
 	}
 
 	@Override

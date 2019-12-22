@@ -5,10 +5,26 @@ import java.util.TimerTask;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 @SpringBootApplication
-public class RestBackendApplication {
-
+@EnableWebSocket
+public class RestBackendApplication implements WebSocketConfigurer {
+	//WEBSOCKETS
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+		registry.addHandler(echoHandler(), "/echo").setAllowedOrigins("*");
+	}
+	
+	@Bean
+	public WebsocketEchoHandler echoHandler() {
+		return new WebsocketEchoHandler();
+	}
+	
+	//API REST
 	public static int frequency = 3;					//Frecuencia a la que el servidor hará las comprobaciones
 	
 	public static void main(String[] args) {
