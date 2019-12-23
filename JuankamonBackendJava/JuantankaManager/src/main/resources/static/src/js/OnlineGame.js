@@ -258,9 +258,9 @@ var OnlineGame = new Phaser.Class({
       }initLights(16);
 
       //Colisiones de juan y el guardia con las paredes y props
-      //this.physics.add.collider(juan, this.walls);
+      this.physics.add.collider(juan, this.walls);
       this.physics.add.collider(guard, this.walls);
-      //this.physics.add.collider(juan, propsLayer);
+      this.physics.add.collider(juan, propsLayer);
       this.physics.add.collider(guard, propsLayer);
 
       //Se asocia la callback endGame a la colisión de Juan con la puerta de salida y con el guardia

@@ -432,8 +432,10 @@ console.log(websocketData);
       {
         var json = JSON.parse(msg.data);
 
+        //Si juegas como Juantankamón se debe actualizar el guardia
         if(playingAsJuantankamon)
         {
+          //Se actualiza la posición y dirección del guardia según el mensaje de websockets
           UpdateCharacter(guard, json);
           guardLight.direction = [json.dirX, json.dirY];
 
@@ -443,8 +445,10 @@ console.log(websocketData);
           else if(guard.anims.currentAnim.paused && guardMovementVector.length() > animTolerance)
             guard.anims.currentAnim.resume();
         }
+        //Si juegas como el guardia se debe actualizar a Juantankamón
         else
         {
+          //Se actualiza la posición y dirección del guardia según el mensaje de websockets
           UpdateCharacter(juan, json);
 
           if(!juan.anims.currentAnim.paused && juanMovementVector.length() <= animTolerance )
@@ -456,6 +460,7 @@ console.log(websocketData);
 
         if(json.gameState == 1)
         {
+          //Si Juantankamón gana queremos teletransportar a Juantankamón hacia la puerta de salida
           endGameState = endGameStates.JUAN_WINS;
 
           juan.x = finalDoor.x;
@@ -463,6 +468,7 @@ console.log(websocketData);
         }
         else if(json.gameState == 2)
         {
+          //Si el guardia gana queremos teletransportar a Juantankamón hacia el guardia para activar el trigger
           endGameState = endGameStates.GUARD_WINS;
 
           juan.x = guard.x;
@@ -470,6 +476,7 @@ console.log(websocketData);
         }
       }
 
+      //Actualiza la posición y la dirección de movimiento del jugador que se mueve por websockets
       function sendWebsocketData()
       {
         if(playingAsJuantankamon)
@@ -488,7 +495,7 @@ console.log(websocketData);
         }
         connection.send(JSON.stringify(websocketData));
       }
-
+      //Solo se actualiza la posición del jugador si la partida no ha acabado
       if(endGameState == endGameStates.PLAYING)
         sendWebsocketData();
 
@@ -499,8 +506,5 @@ console.log(websocketData);
       //Posición que llevan los personajes en el frame anterior
       juanPreviousPos.set(juan.x, juan.y);
       guardPreviousPos.set(guard.x, guard.y);
-      console.log(websocketData);
     }
-
-
 });
