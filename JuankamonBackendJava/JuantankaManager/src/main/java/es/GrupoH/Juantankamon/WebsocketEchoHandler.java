@@ -24,6 +24,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
 		 * dirY,
 		 * P1(id del jugador que envia),
 		 * P2 (id del jugador al que se pretende mandar la información)
+		 * ended (false = sigue funcionando, true = el oponente ha ganado)
 		*/
 		String msg = message.getPayload();
 		System.out.println("Message received: " + msg);
