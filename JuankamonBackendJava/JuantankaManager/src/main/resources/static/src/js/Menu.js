@@ -1,8 +1,8 @@
 //La variable la declaro global para que se guarde el valor para el juego. Si ya es true, cuando empiece el juego tampoco sonará música
 var muted = false;
 
-var endGameStates = {JUAN_WINS: "JUAN_WINS", GUARD_WINS: "GUARD_WINS", DISCONNECTION: "DISCONNECTION"}
-var endGameState;
+var endGameStates = {JUAN_WINS: "JUAN_WINS", GUARD_WINS: "GUARD_WINS", DISCONNECTION: "DISCONNECTION", PLAYING: "PLAYING"}
+var endGameState = endGameStates.PLAYING;
 
 //ESCENA MENÚ
 var Menu = new Phaser.Class({

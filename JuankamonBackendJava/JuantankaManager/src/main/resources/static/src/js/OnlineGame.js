@@ -44,6 +44,8 @@ var OnlineGame = new Phaser.Class({
       var defaultCursors;
       pointer = this.input.mousePointer; //Referencia al ratón
 
+      endGameState = endGameStates.PLAYING;
+
       // Se establecen eventos para detectar inputs, que sirven para controlar la desconexión por inactividad
       // actualizando el bool anyInput a true al pulsar una tecla o mover el ratón
       this.input.keyboard.on('keydown', function (event) {anyInput = true;})
@@ -256,20 +258,28 @@ var OnlineGame = new Phaser.Class({
       }initLights(16);
 
       //Colisiones de juan y el guardia con las paredes y props
-      this.physics.add.collider(juan, this.walls);
+      //this.physics.add.collider(juan, this.walls);
       this.physics.add.collider(guard, this.walls);
-      this.physics.add.collider(juan, propsLayer);
+      //this.physics.add.collider(juan, propsLayer);
       this.physics.add.collider(guard, propsLayer);
 
       //Se asocia la callback endGame a la colisión de Juan con la puerta de salida y con el guardia
       this.physics.add.collider(juan, finalDoor, function() {
         endGameState = endGameStates.JUAN_WINS;
+
+        websocketData.gameState = 1;
+        connection.send(JSON.stringify(websocketData));
+        console.log(websocketData);
         endGame(that);
       }, null, this);
 
       this.physics.add.overlap(juan, guard, function()
       {
         endGameState = endGameStates.GUARD_WINS;
+
+        websocketData.gameState = 2;
+        connection.send(JSON.stringify(websocketData));
+console.log(websocketData);
         endGame(that);
       }, null, this);
 
@@ -323,11 +333,15 @@ var OnlineGame = new Phaser.Class({
 
     update: function (time, delta)
     {
+      //gameState = 0 La partida debe continuar
+      //gameState = 1 Gana Juan
+      //gameState = 2 Gana el guardia
       websocketData = {
         posX: 0.0,
         posY: 0.0,
         dirX: 0.0,
         dirY: 0.0,
+        gameState: 0,
         P1: playerId,
         P2: opponentId
       };
@@ -342,8 +356,6 @@ var OnlineGame = new Phaser.Class({
       }
 
       pointerInWorldCoordinates = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
-
-
 
       function Move(character, cursors, speed, characterMovementVector)
       {
@@ -420,42 +432,51 @@ var OnlineGame = new Phaser.Class({
       {
         var json = JSON.parse(msg.data);
 
+        //Si juegas como Juantankamón se debe actualizar el guardia
         if(playingAsJuantankamon)
         {
+          //Se actualiza la posición y dirección del guardia según el mensaje de websockets
           UpdateCharacter(guard, json);
           guardLight.direction = [json.dirX, json.dirY];
 
           if(!guard.anims.currentAnim.paused && guardMovementVector.length() <= animTolerance )
-          {
             guard.anims.currentAnim.pause();
-            console.log("guard pause");
-          }
 
           else if(guard.anims.currentAnim.paused && guardMovementVector.length() > animTolerance)
-          {
             guard.anims.currentAnim.resume();
-            console.log("guard resume");
-          }
-
         }
+        //Si juegas como el guardia se debe actualizar a Juantankamón
         else
         {
+          //Se actualiza la posición y dirección del guardia según el mensaje de websockets
           UpdateCharacter(juan, json);
 
           if(!juan.anims.currentAnim.paused && juanMovementVector.length() <= animTolerance )
-          {
             juan.anims.currentAnim.pause();
-            console.log("juan pause");
-          }
 
           else if(juan.anims.currentAnim.paused && juanMovementVector.length() > animTolerance)
-          {
             juan.anims.currentAnim.resume();
-            console.log("juan resume");
-          }
+        }
+
+        if(json.gameState == 1)
+        {
+          //Si Juantankamón gana queremos teletransportar a Juantankamón hacia la puerta de salida
+          endGameState = endGameStates.JUAN_WINS;
+
+          juan.x = finalDoor.x;
+          juan.y = finalDoor.y;
+        }
+        else if(json.gameState == 2)
+        {
+          //Si el guardia gana queremos teletransportar a Juantankamón hacia el guardia para activar el trigger
+          endGameState = endGameStates.GUARD_WINS;
+
+          juan.x = guard.x;
+          juan.y = guard.y;
         }
       }
 
+      //Actualiza la posición y la dirección de movimiento del jugador que se mueve por websockets
       function sendWebsocketData()
       {
         if(playingAsJuantankamon)
@@ -474,7 +495,9 @@ var OnlineGame = new Phaser.Class({
         }
         connection.send(JSON.stringify(websocketData));
       }
-      sendWebsocketData();
+      //Solo se actualiza la posición del jugador si la partida no ha acabado
+      if(endGameState == endGameStates.PLAYING)
+        sendWebsocketData();
 
       //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
       juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);

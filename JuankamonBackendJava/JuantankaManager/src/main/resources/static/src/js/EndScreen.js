@@ -56,10 +56,5 @@ var EndScreen = new Phaser.Class({
           callbackScope: this,
           loop: true
       });
-    },
-
-    update: function (time, delta) //Código que se ejecuta en cada frame de la escena
-    {
-
     }
 })

@@ -34,7 +34,7 @@ var LocalGame = new Phaser.Class({
     create: function ()
     {
       var that = this;
-
+      
       pointer = this.input.mousePointer; //Referencia al ratón
 
       this.input.keyboard.on('keydown', function(event)

@@ -26,7 +26,7 @@ var WaitingRoom = new Phaser.Class({
     create: function () //Código que se ejecuta al generarse la escena
     {
       var that = this;
-
+      waitingTime = 5;
       //Cada 5 segundos se actualiza el jugador en el server para que no lo borre
       var timerInput = this.time.addEvent({
         delay: 5000,
