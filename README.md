@@ -22,7 +22,8 @@
 13. Aspectos desarrollados en la Fase 3
 14. Aspectos desarrollados en la Fase 4
 15. Detalles clave de la implementación
-16. Bibliografía y créditos
+16. Vídeo explicativo
+17. Bibliografía y créditos
 
 ### Historial de versiones
 #### Versión 1.0:
@@ -33,17 +34,17 @@ Creación del documento de diseño del juego. Se han añadido los siguientes apa
 * Controles
 * Requisitos técnicos
 * Cámara
-*	Mecánicas
-*	Niveles del juego
-*	Apartado gráfico
+* Mecánicas
+* Niveles del juego
+* Apartado gráfico
 
 #### Versión 2.0:
 Se ha desarrollado la versión local del juego. Se han modificado los siguientes apartados: <br/>
-*	Objetivos del juego
-*	Controles
-*	Requisitos técnicos
-*	Mecánicas
-*	Niveles del juego
+* Objetivos del juego
+* Controles
+* Requisitos técnicos
+* Mecánicas
+* Niveles del juego
 
 Y añadido los siguientes apartados:
 * Aspectos desarrollados en la Fase 2
@@ -72,6 +73,7 @@ Se ha implementado comunicación con Websockets para actualizar la posición del
 
 Y añadido los siguientes apartados:
 * Aspectos desarrollados en la Fase 4
+* Vídeo explicativo
 
 ### Objetivos del juego
 Crear un juego en red que emplee el modelo cliente-servidor de forma que dos clientes puedan jugar en la misma partida mediante el servidor.
@@ -224,6 +226,10 @@ Se ha creado un ejecutable de java (.jar), por alguna razón que desconocemos el
 * http://127.0.0.1:8080/
 
 Como alternativa, siempre que se esté conectado a la red donde se esté ejecutando el servidor, se puede usar como URL la dirección IPv4 de la máquina que ejecuta el servidor, accediendo al puerto 8080.
+
+### Vídeo explicativo
+[![Vídeo explicativo](https://img.youtube.com/vi/Jj5Y1iEa7Hk/maxresdefault.jpg)](https://youtu.be/Jj5Y1iEa7Hk)
+> Pulsar la imagen para acceder al vídeo
 
 ### Bibliografía y créditos
 #### Programas usados
