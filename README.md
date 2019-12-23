@@ -1,8 +1,10 @@
-﻿﻿# Juegos_Red
+# Juegos_Red
 
 ------------------------------------------------------------------------------------------------------------------
 
 ## GAME DESIGN DOCUMENT<br>Juantankamón Redux<br>(Versión 4.0)
+
+[![Vídeo explicativo](https://img.youtube.com/vi/DB23pVzyo_g/maxresdefault.jpg)](https://youtu.be/DB23pVzyo_g "Vídeo explicativo publicado en YouTube")
 
 ###### Autores:<br><br>[Adrián Vaquero Portillo](https://github.com/adrvapor "Git de Adrián Vaquero Portillo")<br>Correo: a.vaquero.2017@alumnos.urjc.es<br><br>[Iván Sanandrés Gutiérrez](https://github.com/Ivan-Sanandres "Git de Iván Sanandrés Gutiérrez")<br>Correo: i.sanandres.2017@alumnos.urjc.es<br><br>[Martín Ariza García](https://github.com/Daoab "Git de Martín Ariza García")<br>Correo: m.ariza.2017@alumnos.urjc.es<br><br>[Pedro Casas Martínez](https://github.com/thePeter876 "Git de Pedro Casas Martínez")<br>Correo: p.casas.2017@alumnos.urjc.es<br><br>[Tablero de Trello](https://trello.com/b/K7lkKa6A/juegos-en-red)<br>[Repositorio de GitHub](https://github.com/Ivan-Sanandres/Juegos_Red)
 
@@ -226,10 +228,6 @@ Se ha creado un ejecutable de java (.jar), por alguna razón que desconocemos el
 * http://127.0.0.1:8080/
 
 Como alternativa, siempre que se esté conectado a la red donde se esté ejecutando el servidor, se puede usar como URL la dirección IPv4 de la máquina que ejecuta el servidor, accediendo al puerto 8080.
-
-### Vídeo explicativo
-[![Vídeo explicativo](https://img.youtube.com/vi/Jj5Y1iEa7Hk/maxresdefault.jpg)](https://youtu.be/Jj5Y1iEa7Hk)
-> Pulsar la imagen para acceder al vídeo
 
 ### Bibliografía y créditos
 #### Programas usados
