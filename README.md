@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------------------------------------------------
 
-## GAME DESIGN DOCUMENT<br>Juantankamón Redux<br>(Versión 3.0)
+## GAME DESIGN DOCUMENT<br>Juantankamón Redux<br>(Versión 4.0)
 
 ###### Autores:<br><br>[Adrián Vaquero Portillo](https://github.com/adrvapor "Git de Adrián Vaquero Portillo")<br>Correo: a.vaquero.2017@alumnos.urjc.es<br><br>[Iván Sanandrés Gutiérrez](https://github.com/Ivan-Sanandres "Git de Iván Sanandrés Gutiérrez")<br>Correo: i.sanandres.2017@alumnos.urjc.es<br><br>[Martín Ariza García](https://github.com/Daoab "Git de Martín Ariza García")<br>Correo: m.ariza.2017@alumnos.urjc.es<br><br>[Pedro Casas Martínez](https://github.com/thePeter876 "Git de Pedro Casas Martínez")<br>Correo: p.casas.2017@alumnos.urjc.es<br><br>[Tablero de Trello](https://trello.com/b/K7lkKa6A/juegos-en-red)<br>[Repositorio de GitHub](https://github.com/Ivan-Sanandres/Juegos_Red)
 
@@ -20,8 +20,9 @@
 11. Pantallas del juego
 12. Aspectos desarrollados en la Fase 2
 13. Aspectos desarrollados en la Fase 3
-14. Detalles clave de la implementación
-15. Bibliografía y créditos
+14. Aspectos desarrollados en la Fase 4
+15. Detalles clave de la implementación
+16. Bibliografía y créditos
 
 ### Historial de versiones
 #### Versión 1.0:
@@ -62,6 +63,15 @@ Y añadido los siguientes apartados:
 * Aspectos desarrollados en la Fase 3
 
 También se ha reformateado el documento para una mayor consistencia.
+
+#### Versión 4.0
+Se ha implementado comunicación con Websockets para actualizar la posición del oponente. Se han modificado los siguientes apartados:
+* Pantallas del juego
+* Detalles clave de la implementación
+* Bibliografía y créditos
+
+Y añadido los siguientes apartados:
+* Aspectos desarrollados en la Fase 4
 
 ### Objetivos del juego
 Crear un juego en red que emplee el modelo cliente-servidor de forma que dos clientes puedan jugar en la misma partida mediante el servidor.
@@ -141,7 +151,10 @@ Para la iluminación hemos desarrollado un shader de iluminación y sombreado.
 > Aquí se ve la iluminación de la Versión 3.0. Se puede observar la implementación de bloom y blending, puesto que las luces son más intensas y los niveles tienen cierta interpolación, además de que los niveles de diferentes luces se mezclan.
 
 ![](Imágenes/diagrama.png)
->Finalmente, aquí se puede ver el diagrama de navegación de las distintas pantallas en la Versión 3.
+> Aquí se puede ver el diagrama de navegación de las distintas pantallas en la Versión 3.0.
+
+![](Imágenes/BackendRelations2.png)
+> Aquí se puede ver el diagrama de clases del Backend en la Versión 4.0.
 
 ### Aspectos desarrollados en la Fase 2
 En esta fase del desarrollo se ha creado un juego en navegador para dos jugadores en pantalla partida. Está programado en JavaScript, utilizando el framework para videojuegos Phaser 3. Está dividido en dos escenas de Phaser: Menu, que ofrece información sobre cómo jugar, y LocalGame, que incluye todo lo relacionado con el modo de juego local.
@@ -165,6 +178,15 @@ Los diferentes aspectos que se han desarrollado son:
 * Sprites propios, animados para los personajes, y cursores personalizados
 * Blending entre luces y bloom.
 * Hoja de estilos CSS
+
+### Aspectos desarrollados en la Fase 4
+En esta fase del desarrollo se ha añadido comunicación mediante Websockets que permite actualizar la posición del adversario cuando se está jugando al modo en línea. No se han añadido nuevas escenas ni funcionalidades aparte, puesto que en la anterior fase se dejaron muchos aspectos preparados de forma que en esta fase se agilizara el implementar la nueva funcionalidad.
+
+Los diferentes aspectos que se han desarrollado son:
+* Handler de mensajes de Websocket en el Backend Java
+* Envío y recepción de mensajes en el cliente
+* Gestión de animaciones y posiciones del adversario
+* Gestión de final de partida para que el juego termine para ambos jugadores
 
 ### Detalles clave de la implementación
 #### SHADER
@@ -190,6 +212,11 @@ Para un mejor entendimiento del backend, hemos creado una diagrama UML:
 
 También hemos creado un diagrama de relaciones entre las distintas clases, así como el uso de API Rest en ellas:
 ![](Imágenes/BackendRelations.png)
+
+#### WEBSOCKETS
+En el lado del servidor, el handler de mensajes por Websocket funciona de forma que cuando un jugador manda un mensaje, el servidor lo reenvía al jugador que está en la sala con él. Los mensajes incluyen posición y dirección del jugador, su ID, la del receptor y una variable que según su valor determina si la partida continúa o, si ha concluído, qué jugador ha ganado.
+
+En el lado del cliente, el jugador lanza un mensaje en la función update en el que especifica sus propios datos, y también actualiza la posición y dirección del adversario en su propia escena de Phaser mediante los datos del mensaje que ha recibido del otro jugador. Se especifican las particularidades de cada personaje (por ejemplo, la dirección de la linterna del guardia, rasgo que Juantankamón no tiene) mediante ifs que comprueban si se está jugando como Juantankamón o como el guardia. La animación del adversario por defecto no se detiene, así que se compara la última posición del adversario con la actual: si coinciden, el personaje está parado, y se detiene la animación. Por último, cuando uno de los jugadores gana, se tiene que asegurar que el juego termina para el otro jugador también. Si un jugador colisiona con otro, se ha de actualizar la posición del personaje en el lado del otro jugador de forma que también colisionen en su partida; si Juantankamón llega a la puerta del museo, también tendrá que actualizarse la posición de este personaje en lado del guardia para que también colisione con la puerta.
 
 ### Instrucciones para la ejecución
 Se ha creado un ejecutable de java (.jar), por alguna razón que desconocemos el sprite de los botones no se carga, pero el resto de la aplicación funciona correctamente. Por esto, se recomienda ejecutar el proyecto de spring con Spring Tool Suite, donde funciona perfectamente. En ambos casos para cargar la aplicación en el navegador se pueden usar las siguientes URLs:
@@ -230,3 +257,4 @@ Como alternativa, siempre que se esté conectado a la red donde se esté ejecuta
 * Documentación sobre Phaser 3: https://photonstorm.github.io/phaser3-docs/
 * Documentación sobre HTML/CSS: https://developer.mozilla.org/en-US/docs/Web
 * Documentación sobre HTML/CSS: https://www.w3schools.com
+* Pregunta en Stack Overflow sobre Websockets: https://stackoverflow.com/questions/9056159/websocket-closing-connection-automatically
