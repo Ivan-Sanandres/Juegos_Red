@@ -65,8 +65,8 @@ public class Player {
 		roomId = 0;
 		
 		//Además se elimina la sesión de websocket del mapa de sesiones
-		WebSocketSession session = WebsocketEchoHandler.sessions.get(id);
-		if(session != null) WebsocketEchoHandler.sessions.remove(id);
+		WebSocketSession session = WebsocketHandler.sessions.get(id);
+		if(session != null) WebsocketHandler.sessions.remove(id);
 	}
 
 	@Override

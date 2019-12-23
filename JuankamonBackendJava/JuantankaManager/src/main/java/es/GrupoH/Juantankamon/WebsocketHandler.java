@@ -10,7 +10,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class WebsocketEchoHandler extends TextWebSocketHandler {
+public class WebsocketHandler extends TextWebSocketHandler {
 	public static ObjectMapper mapper = new ObjectMapper();
 	public static Map<Long, WebSocketSession> sessions = new ConcurrentHashMap<>();
 	
@@ -24,7 +24,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
 		 * dirY,
 		 * P1(id del jugador que envia),
 		 * P2 (id del jugador al que se pretende mandar la información)
-		 * ended (false = sigue funcionando, true = el oponente ha ganado)
+		 * gameState (false = sigue funcionando, true = el oponente ha ganado)
 		*/
 		String msg = message.getPayload();
 		System.out.println("Message received: " + msg);
@@ -39,7 +39,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
 		if(srcSession == null) sessions.put(P1, session);
 		
 		//Si existe la sesión de destino, se le envía el mensaje
-		WebSocketSession dstSession = sessions.get(node.get("P2").asLong());
+		WebSocketSession dstSession = sessions.get(P2);
 		if(dstSession != null) dstSession.sendMessage(new TextMessage(msg));
 	}
 }

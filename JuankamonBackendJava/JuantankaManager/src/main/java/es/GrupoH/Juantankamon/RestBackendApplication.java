@@ -20,8 +20,8 @@ public class RestBackendApplication implements WebSocketConfigurer {
 	}
 	
 	@Bean
-	public WebsocketEchoHandler echoHandler() {
-		return new WebsocketEchoHandler();
+	public WebsocketHandler echoHandler() {
+		return new WebsocketHandler();
 	}
 	
 	//API REST
