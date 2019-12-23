@@ -153,9 +153,6 @@ Para la iluminación hemos desarrollado un shader de iluminación y sombreado.
 ![](Imágenes/diagrama.png)
 > Aquí se puede ver el diagrama de navegación de las distintas pantallas en la Versión 3.0.
 
-![](Imágenes/BackendRelations2.png)
-> Aquí se puede ver el diagrama de clases del Backend en la Versión 4.0.
-
 ### Aspectos desarrollados en la Fase 2
 En esta fase del desarrollo se ha creado un juego en navegador para dos jugadores en pantalla partida. Está programado en JavaScript, utilizando el framework para videojuegos Phaser 3. Está dividido en dos escenas de Phaser: Menu, que ofrece información sobre cómo jugar, y LocalGame, que incluye todo lo relacionado con el modo de juego local.
 
@@ -215,6 +212,9 @@ También hemos creado un diagrama de relaciones entre las distintas clases, así
 
 #### WEBSOCKETS
 En el lado del servidor, el handler de mensajes por Websocket funciona de forma que cuando un jugador manda un mensaje, el servidor lo reenvía al jugador que está en la sala con él. Los mensajes incluyen posición y dirección del jugador, su ID, la del receptor y una variable que según su valor determina si la partida continúa o, si ha concluído, qué jugador ha ganado.
+
+![](Imágenes/BackendRelations2.png)
+> Aquí se puede ver el diagrama de clases del Backend actualizado.
 
 En el lado del cliente, el jugador lanza un mensaje en la función update en el que especifica sus propios datos, y también actualiza la posición y dirección del adversario en su propia escena de Phaser mediante los datos del mensaje que ha recibido del otro jugador. Se especifican las particularidades de cada personaje (por ejemplo, la dirección de la linterna del guardia, rasgo que Juantankamón no tiene) mediante ifs que comprueban si se está jugando como Juantankamón o como el guardia. La animación del adversario por defecto no se detiene, así que se compara la última posición del adversario con la actual: si coinciden, el personaje está parado, y se detiene la animación. Por último, cuando uno de los jugadores gana, se tiene que asegurar que el juego termina para el otro jugador también. Si un jugador colisiona con otro, se ha de actualizar la posición del personaje en el lado del otro jugador de forma que también colisionen en su partida; si Juantankamón llega a la puerta del museo, también tendrá que actualizarse la posición de este personaje en lado del guardia para que también colisione con la puerta.
 
