@@ -2,6 +2,9 @@
 //Según esta variable el jugador podrá controlar a uno u otro personaje
 //El que no sea controlado se moverá con websockets
 
+var websocketData;
+var animTolerance = 0;
+
 var OnlineGame = new Phaser.Class({
 
     Extends: Phaser.Scene,
@@ -320,6 +323,15 @@ var OnlineGame = new Phaser.Class({
 
     update: function (time, delta)
     {
+      websocketData = {
+        posX: 0.0,
+        posY: 0.0,
+        dirX: 0.0,
+        dirY: 0.0,
+        P1: playerId,
+        P2: opponentId
+      };
+
       txtMP.x = juan.x;
       txtMP.y = juan.y;
 
@@ -329,12 +341,9 @@ var OnlineGame = new Phaser.Class({
           gameMusic.mute = muted;
       }
 
-
       pointerInWorldCoordinates = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
 
-      //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
-      juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
-      guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
+
 
       function Move(character, cursors, speed, characterMovementVector)
       {
@@ -386,10 +395,6 @@ var OnlineGame = new Phaser.Class({
       else
         Move(guard, guardCursors, guardSpeed, guardMovementVector);
 
-      //Posición que llevan los personajes en el frame anterior
-      juanPreviousPos.set(juan.x, juan.y);
-      guardPreviousPos.set(guard.x, guard.y);
-
       //LIGHT POSITION
       juanLight.position = [juan.x, juan.y];
 
@@ -403,5 +408,80 @@ var OnlineGame = new Phaser.Class({
       guardLight.position = [guard.x + guardLight.direction[0] * guardLightDistance, guard.y + guardLight.direction[1] * guardLightDistance];
 
       lightManager.updateAllUniforms(delta);
+
+      //Websockets
+      function UpdateCharacter(character, json)
+      {
+        character.x = json.posX;
+        character.y = json.posY;
+      }
+
+      connection.onmessage = function(msg)
+      {
+        var json = JSON.parse(msg.data);
+
+        if(playingAsJuantankamon)
+        {
+          UpdateCharacter(guard, json);
+          guardLight.direction = [json.dirX, json.dirY];
+
+          if(!guard.anims.currentAnim.paused && guardMovementVector.length() <= animTolerance )
+          {
+            guard.anims.currentAnim.pause();
+            console.log("guard pause");
+          }
+
+          else if(guard.anims.currentAnim.paused && guardMovementVector.length() > animTolerance)
+          {
+            guard.anims.currentAnim.resume();
+            console.log("guard resume");
+          }
+
+        }
+        else
+        {
+          UpdateCharacter(juan, json);
+
+          if(!juan.anims.currentAnim.paused && juanMovementVector.length() <= animTolerance )
+          {
+            juan.anims.currentAnim.pause();
+            console.log("juan pause");
+          }
+
+          else if(juan.anims.currentAnim.paused && juanMovementVector.length() > animTolerance)
+          {
+            juan.anims.currentAnim.resume();
+            console.log("juan resume");
+          }
+        }
+      }
+
+      function sendWebsocketData()
+      {
+        if(playingAsJuantankamon)
+        {
+          websocketData.posX = juan.x;
+          websocketData.posY = juan.y;
+          websocketData.dirX = juanMovementVector.x;
+          websocketData.dirY = juanMovementVector.y;
+        }
+        else
+        {
+          websocketData.posX = guard.x;
+          websocketData.posY = guard.y;
+          websocketData.dirX = guardMouseVector.x;
+          websocketData.dirY = guardMouseVector.y;
+        }
+        connection.send(JSON.stringify(websocketData));
+      }
+      sendWebsocketData();
+
+      //Mueve a un personaje según unas teclas de movimiento, una velocidad y su vecto de dirección
+      juanMovementVector.set(juan.x - juanPreviousPos.x, juan.y - juanPreviousPos.y);
+      guardMovementVector.set(guard.x - guardPreviousPos.x, guard.y - guardPreviousPos.y);
+
+      //Posición que llevan los personajes en el frame anterior
+      juanPreviousPos.set(juan.x, juan.y);
+      guardPreviousPos.set(guard.x, guard.y);
     }
 });

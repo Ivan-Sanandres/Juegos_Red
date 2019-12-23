@@ -52,7 +52,13 @@ var NameInput = new Phaser.Class({
                   //Y se guarda la id de este nuevo jugador que devulve el servidor
                   AJAX_createPlayer(player, function(p){
                     playerId = p.id;
+
+                    //https://stackoverflow.com/questions/10406930/how-to-construct-a-websocket-uri-relative-to-the-page-uri
+                    connection = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/echo");
+                    connection.onopen = function(){console.log("Conexión WebSocket establecida");}
+                    connection.onclose = function(){console.log("Conexión WebSocket cerrada :(");}
                   });
+
                   that.scene.start("Menu");
                   button.style.display = "none";
                   textbox.style.display = "none";

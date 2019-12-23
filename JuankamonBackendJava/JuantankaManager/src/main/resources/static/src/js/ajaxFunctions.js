@@ -1,3 +1,4 @@
+var connection;
 var serverUrl = window.location.href; //Obtenemos la url del servidor al que hacer peticiones
 
 //Los ids de los jugadores empiezan por el 1. Si valen 0 en una room es porque no está conectado ese personaje

@@ -1,6 +1,7 @@
 var waitingTime = 5;
 var running = false;
 var timeText;
+var opponentId;
 
 var WaitingRoom = new Phaser.Class({
 
@@ -81,14 +82,14 @@ var WaitingRoom = new Phaser.Class({
               timerStart.paused = false;
               timeText.visible = true;
 
-              var pId = 0; // id del otro jugador
+              opponentId = 0; // id del otro jugador
               if(playingAsJuantankamon){
-                pId = room.guardId;
+                opponentId = room.guardId;
               } else {
-                pId = room.juantankamonId;
+                opponentId = room.juantankamonId;
               }
 
-              AJAX_getPlayer(pId, function(player){
+              AJAX_getPlayer(opponentId, function(player){
                 if(playingAsJuantankamon){
                   guardName.text = player.name;
                 } else {
