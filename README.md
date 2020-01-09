@@ -8,6 +8,8 @@
 
 ###### Autores:<br><br>[Adrián Vaquero Portillo](https://github.com/adrvapor "Git de Adrián Vaquero Portillo")<br>Correo: a.vaquero.2017@alumnos.urjc.es<br><br>[Iván Sanandrés Gutiérrez](https://github.com/Ivan-Sanandres "Git de Iván Sanandrés Gutiérrez")<br>Correo: i.sanandres.2017@alumnos.urjc.es<br><br>[Martín Ariza García](https://github.com/Daoab "Git de Martín Ariza García")<br>Correo: m.ariza.2017@alumnos.urjc.es<br><br>[Pedro Casas Martínez](https://github.com/thePeter876 "Git de Pedro Casas Martínez")<br>Correo: p.casas.2017@alumnos.urjc.es<br><br>[Tablero de Trello](https://trello.com/b/K7lkKa6A/juegos-en-red)<br>[Repositorio de GitHub](https://github.com/Ivan-Sanandres/Juegos_Red)
 
+###### Enlaces para jugar al juego:<br><br>[itch.io](https://adrvapor.itch.io/juantankamon-redux "Juego en itch.io")<br>[Newgrounds](https://www.newgrounds.com/portal/view/745795?updated=1578573432 "Juego en Newgrounds")<br>[Game Jolt](https://gamejolt.com/games/juantankamonredux/461566 "Juego en Game Jolt")<br>[Kongregate](https://www.kongregate.com/games/Ivan_ss/juantankamon-redux "Juego en Kongregate")
+
 ### Índice
 1. Historial de versiones
 2. Objetivos del juego
@@ -164,7 +166,7 @@ Para la iluminación hemos desarrollado un shader de iluminación y sombreado.
 ![](Imágenes/diagrama.png)
 > Aquí se puede ver el diagrama de navegación de las distintas pantallas en la Versión 3.0.
 
-![](Imágenes/diagramalocal.png)
+![](Imágenes/diagramalocal.jpg)
 > Aquí se puede ver el diagrama de navegación de las distintas pantallas en la Versión 5.0 (versión local).
 
 ### Aspectos desarrollados en la Fase 2
