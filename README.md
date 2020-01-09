@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------------------------------------------------
 
-## GAME DESIGN DOCUMENT<br>Juantankamón Redux<br>(Versión 4.0)
+## GAME DESIGN DOCUMENT<br>Juantankamón Redux<br>(Versión 5.0)
 
 [![Vídeo explicativo](https://img.youtube.com/vi/DB23pVzyo_g/maxresdefault.jpg)](https://youtu.be/DB23pVzyo_g "Vídeo explicativo publicado en YouTube")
 
@@ -76,6 +76,13 @@ Se ha implementado comunicación con Websockets para actualizar la posición del
 Y añadido los siguientes apartados:
 * Aspectos desarrollados en la Fase 4
 * Vídeo explicativo
+
+#### Versión 5.0
+Se ha desarrollado una nueva versión local para ser subida a webs de juegos en línea. Se han modificado los siguientes apartados:
+* Pantallas del juego
+
+Y añadido los siguientes apartados:
+* Aspectos desarrollados en la Fase 5
 
 ### Objetivos del juego
 Crear un juego en red que emplee el modelo cliente-servidor de forma que dos clientes puedan jugar en la misma partida mediante el servidor.
@@ -157,6 +164,9 @@ Para la iluminación hemos desarrollado un shader de iluminación y sombreado.
 ![](Imágenes/diagrama.png)
 > Aquí se puede ver el diagrama de navegación de las distintas pantallas en la Versión 3.0.
 
+![](Imágenes/diagramalocal.png)
+> Aquí se puede ver el diagrama de navegación de las distintas pantallas en la Versión 5.0 (versión local).
+
 ### Aspectos desarrollados en la Fase 2
 En esta fase del desarrollo se ha creado un juego en navegador para dos jugadores en pantalla partida. Está programado en JavaScript, utilizando el framework para videojuegos Phaser 3. Está dividido en dos escenas de Phaser: Menu, que ofrece información sobre cómo jugar, y LocalGame, que incluye todo lo relacionado con el modo de juego local.
 
@@ -188,6 +198,14 @@ Los diferentes aspectos que se han desarrollado son:
 * Envío y recepción de mensajes en el cliente
 * Gestión de animaciones y posiciones del adversario
 * Gestión de final de partida para que el juego termine para ambos jugadores
+
+### Aspectos desarrollados en la Fase 5
+En esta fase del desarrollo se ha desarrollado una versión local del juego con todas las mejoras que se han ido añadiendo al juego hasta ahora. Además se ha traducido el juego al inglés y se ha mejorado la opción de pausar, que se había quitado por no tener sentido en un entorno online.
+
+Los diferentes aspectos que se han desarrollado son:
+* Escena de pausa
+* Traducción al inglés
+* Opción de cambiar entre español e inglés
 
 ### Detalles clave de la implementación
 #### SHADER
